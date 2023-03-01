@@ -1,0 +1,44 @@
+"Subgenus","Species","Accession.","Individual","AOI....Sample.per.Replicate.","Tissue","Measurement.Date","Time","Comments","exclude","Tissue.edit","ID","Metric","Value"
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",1,"flower","2018-06-20","12:30:52 PM","","","f",209,"Fv.Fm",0.643117261
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",2,"flower","2018-06-26","4:50:06 PM","","","f",242,"Fv.Fm",0.699318041
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",2,"flower","2018-06-21","3:58:53 PM","","","f",273,"Fv.Fm",0.667675545
+"Ipomoea_nil","Ipomoea_nil","IPNI","A",1,"young","2018-04-19","11:04:19 AM","","","y",318,"Fv.Fm",0.666213645
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",1,"seed","2018-06-26","5:15:03 PM","","","s",329,"Fv.Fm",0.774251344
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",3,"flower","2018-07-06","1:42:12 PM","","","f",339,"Fv.Fm",0.68860662
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",1,"old","2018-04-19","12:01:28 PM","","","o",342,"Fv.Fm",0.706873315
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",2,"seed","2018-06-26","5:15:03 PM","","","s",347,"Fv.Fm",0.763061651
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",4,"flower","2018-06-23","5:22:41 PM","","","f",349,"Fv.Fm",0.686184812
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",3,"flower","2018-06-22","1:28:35 PM","","","f",351,"Fv.Fm",0.727543424
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",1,"flower","2018-06-12","5:26:04 PM","","","f",367,"Fv.Fm",0.636329728
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",4,"seed","2018-07-06","1:58:18 PM","","","s",384,"Fv.Fm",0.79108932
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",3,"seed","2018-07-06","1:58:18 PM","","","s",402,"Fv.Fm",0.789218067
+"Ipomoea_nil","Ipomoea_nil","IPNI","A",1,"seed","2018-06-26","4:57:58 PM","","","s",410,"Fv.Fm",0.819787986
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",2,"seed","2018-07-06","1:58:18 PM","","","s",420,"Fv.Fm",0.795283019
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",1,"seed","2018-05-25","3:55:26 PM","","","s",422,"Fv.Fm",0.777977798
+"Ipomoea_nil","Ipomoea_nil","IPNI","C",1,"young","2018-04-19","12:29:01","","","y",429,"Fv.Fm",0.711061618
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",5,"flower","2018-07-06","1:49:54 PM","","","f",441,"Fv.Fm",0.684363636
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",1,"young","2018-04-19","3:22:18 PM","","","y",449,"Fv.Fm",0.687324734
+"Ipomoea_nil","Ipomoea_nil","IPNI","D",1,"young","2018-04-19","1:07:38 PM","","","y",458,"Fv.Fm",0.715755806
+"Ipomoea_nil","Ipomoea_nil","IPNI","A",2,"old","2018-04-19","11:31:34 AM","","","o",461,"Fv.Fm",0.685751343
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",2,"seed","2018-05-25","5:19:57 PM","","","s",463,"Fv.Fm",0.741256477
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",2,"young","2018-04-19","11:42:08 AM","","","y",471,"Fv.Fm",0.733142857
+"Ipomoea_nil","Ipomoea_nil","IPNI","A",1,"seed","2018-06-26","5:05:47 PM","","","s",473,"Fv.Fm",0.781683168
+"Ipomoea_nil","Ipomoea_nil","IPNI","A",1,"young","2018-05-01","10:28:32 AM","","","y",474,"Fv.Fm",0.705252676
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",1,"old","2018-04-19","3:45:54 PM","","","o",496,"Fv.Fm",0.681243063
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",1,"seed","2018-05-25","5:19:57 PM","","","s",501,"Fv.Fm",0.737433254
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",1,"leaf","2018-05-03","3:02:35 PM","","","l",505,"Fv.Fm",0.751633181
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",1,"seed","2018-07-06","1:58:18 PM","","","s",509,"Fv.Fm",0.796484972
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",3,"seed","2018-05-25","5:19:57 PM","","","s",532,"Fv.Fm",0.747656681
+"Ipomoea_nil","Ipomoea_nil","IPNI","D",1,"old","2018-04-19","13:34:54","","","o",537,"Fv.Fm",0.723054703
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",2,"seed","2018-05-25","3:55:26 PM","","","s",545,"Fv.Fm",0.798088411
+"Ipomoea_nil","Ipomoea_nil","IPNI","C",2,"old","2018-04-19","12:58:05 PM","","","o",643,"Fv.Fm",0.73231456
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",2,"leaf","2018-04-19","11:49:56 AM","","","l",687,"Fv.Fm",0.740151106
+"Ipomoea_nil","Ipomoea_nil","IPNI","D",1,"leaf","2018-05-03","2:55:09 PM","","","l",689,"Fv.Fm",0.76373896
+"Ipomoea_nil","Ipomoea_nil","IPNI","B",1,"leaf","2018-05-03","2:09:47 PM","","","l",760,"Fv.Fm",0.759968102
+"Ipomoea_nil","Ipomoea_nil","IPNI","A",2,"Leaf","2018-04-19","11:21:24 AM","","","l",764,"Fv.Fm",0.720414899
+"Ipomoea_nil","Ipomoea_nil","IPNI","E",2,"leaf","2018-04-19","3:32:35 PM","","","l",819,"Fv.Fm",0.736395093
+"Ipomoea_nil","Ipomoea_nil","IPNI","C",3,"leaf","2018-04-19","12:31:58 PM","","","l",855,"Fv.Fm",0.748665355
+"Ipomoea_nil","Ipomoea_nil","IPNI","A",4,"Leaf","2018-04-19","11:12:40 AM","","","l",866,"Fv.Fm",0.735433553
+"Ipomoea_nil","Ipomoea_nil","IPNI","C",1,"leaf","2018-05-03","2:02:26 PM","","","l",877,"Fv.Fm",0.76643698
+"Ipomoea_nil","Ipomoea_nil","IPNI","A",1,"leaf","2018-05-03","3:08:41 PM","","","l",890,"Fv.Fm",0.706799939
+"Ipomoea_nil","Ipomoea_nil","IPNI","D",1,"leaf","2018-04-19","1:15:31 PM","","","l",891,"Fv.Fm",0.740383014
