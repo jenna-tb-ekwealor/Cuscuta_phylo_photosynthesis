@@ -35,7 +35,7 @@ seed<- "#6db6ff" #Malibu
 # load data
 data_no_outliers <- read.csv(file = "../output/stat_results/data_no_outliers_for_plots.csv", stringsAsFactors = T)
 dat_text_plot_kruskal <- read.csv(file = "../output/stat_results/dat_text_plot_kruskal.csv")
-data_no_outliers_Grammica_plot <- read.csv(file = "../output/stat_results/data_no_outliers_for_Grammica_plots.csv", stringsAsFactors = T)
+data_no_outliers_Grammica_plot <- read.csv(file = "../output/stat_results/data_no_outliers_Grammica_plot.csv", stringsAsFactors = T)
 dat_text_plot_kruskal_Grammica <- read.csv(file = "../output/stat_results/dat_text_plot_kruskal_Grammica.csv")
 summary_accession <- read.csv(file = "../output/stat_results/fluorescence_species_summary.csv", stringsAsFactors = T)
 wilcox_list <- readRDS("../output/stat_results/wilcox_list.RData")
@@ -1002,7 +1002,7 @@ wrap_elements(gridtext::richtext_grob('*F*<sub>v</sub>/*F*<sub>m</sub>', rot = 9
 
 fluorescence_boxplot_new 
 
-pdf("../output/stat_results/boxplots/fluorescence_boxplot_new.pdf", width=7,height=7) 
+pdf("../output/boxplots/fluorescence_boxplot_new.pdf", width=7,height=7) 
 fluorescence_boxplot_new
 dev.off()
 
@@ -2872,7 +2872,7 @@ wrap_elements(gridtext::richtext_grob('*F*<sub>v</sub>/*F*<sub>m</sub>', rot = 9
 
 fluorescence_boxplot_Grammica_new 
 
-pdf("../output/stat_results/boxplots/fluorescence_boxplot_Grammica_new.pdf", width=9,height=5.5) 
+pdf("../output/boxplots/fluorescence_boxplot_Grammica_new.pdf", width=9,height=5.5) 
 fluorescence_boxplot_Grammica_new
 dev.off()
 

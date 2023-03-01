@@ -410,6 +410,15 @@ dat_text_plot_kruskal$Subgenus <- factor(dat_text_plot_kruskal$Subgenus,
 write.csv(dat_text_plot_kruskal, file = "../output/stat_results/dat_text_plot_kruskal.csv", row.names = F)
 
 
+# write this to csv for plotting
+write_csv(data_no_outliers, file = "../output/stat_results/data_no_outliers_for_plots.csv")
+
+
+
+
+
+#### GRAMMICA ONLY ####
+
 #### stats to be used for Grammica only pigment plots ####
 
 # remove species with n = 1 in Grammica 
@@ -548,4 +557,7 @@ dat_text_plot_kruskal_Grammica$Species <- factor(dat_text_plot_kruskal_Grammica$
 
 # save a copy of this plot text df
 write.csv(dat_text_plot_kruskal_Grammica, file = "../output/stat_results/dat_text_plot_kruskal_Grammica.csv", row.names = F)
+
+# write this to csv for plotting
+write_csv(data_no_outliers_Grammica_plot, file = "../output/stat_results/data_no_outliers_Grammica_plot.csv")
 
