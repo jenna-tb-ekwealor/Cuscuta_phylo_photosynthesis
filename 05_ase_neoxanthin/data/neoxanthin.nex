@@ -1,0 +1,25 @@
+#NEXUS
+
+BEGIN DATA;
+	DIMENSIONS NTAX=17 NCHAR=1;
+	FORMAT DATATYPE=STANDARD SYMBOLS="01" MISSING=? GAP=-;
+MATRIX
+Cuscuta_africana                 ?
+Cuscuta_australis                    1
+Cuscuta_californica              0
+Cuscuta_cephalanthi              1
+Cuscuta_compacta             0
+Cuscuta_costaricensis        0
+Cuscuta_denticulata 0
+Cuscuta_epithymum                0
+Cuscuta_gracillima               0
+Cuscuta_indecora                 0
+Cuscuta_lupuliformis             1
+Cuscuta_monogyna                 1
+Cuscuta_polygonorum             1
+Cuscuta_purpurata               0
+Cuscuta_sandwichiana         0
+Cuscuta_tasmanica                    0
+Ipomoea_spp_AF146016_MG973745        1
+;
+END;

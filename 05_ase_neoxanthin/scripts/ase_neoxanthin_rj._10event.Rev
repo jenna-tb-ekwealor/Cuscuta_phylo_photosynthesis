@@ -1,0 +1,107 @@
+analysis_name = "cuscuta_neoxanthin_rj"
+burnin_gen = 1000
+mcmc_gen = 5000
+log_freq = 1
+
+mvi = 0
+mni = 0
+
+# read in the tree
+tree <- readTrees("../data/Cuscuta_rbcL_26S.raxml.support_chrom_sandwichiaina_nr.tre")[1]
+
+# read in character data
+data = readDiscreteCharacterData("../data/neoxanthin.nex")
+num_states = data.getStateDescriptions().size()
+
+# exponential priors for non-zero transition rates
+# rates (when not zero) to have an average prior rate of 1 event (or num_events) for the whole tree
+num_events <- 10.0
+rate_pr := tree.treeLength() / num_events
+rates[1] ~ dnRJMixture(0, dnExp(rate_pr), 0.5)
+rates[2] ~ dnExp(rate_pr)
+
+# append to moves
+moves[++mvi] = mvRJSwitch( rates[1], weight=2 )
+moves[++mvi] = mvScale( rates[1], weight=2 )
+moves[++mvi] = mvScale( rates[2], weight=2 )
+
+# posterior probability is reversibility, tracking a variable 
+is_irreverisible := ifelse(rates[1] == 0, 1, 0)
+
+# here we set up the rate matrix Q
+Q := fnFreeK( rates, rescaled=false )
+
+# set up the root state frequencies 
+rf <- [0,1]
+
+# set up the CTMC 
+ctmc ~ dnPhyloCTMC( tree, Q, branchRates=1.0, rootFrequencies=rf, type="Standard")
+ctmc.clamp( data )
+
+
+# set up the MCMC monitors
+monitors[++mni] = mnModel(filename="../output/output_ase_rjmcmc_10/" + analysis_name + ".log", printgen=log_freq)
+monitors[++mni] = mnScreen(printgen=log_freq, rates)
+monitors[++mni] = mnJointConditionalAncestralState(tree=tree, ctmc=ctmc, type="Standard", printgen=log_freq, withTips=true, withStartStates=false, filename="../output/output_ase_rjmcmc_10/" + analysis_name + "-anc.log")
+monitors[++mni] = mnFile(filename="../output/output_ase_rjmcmc_10/" + analysis_name + ".trees", printgen=log_freq, tree)
+
+# finalize the model 
+mymodel = model(Q)
+
+
+## run the MCMC simulation 
+mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="sequential")
+mymcmc.burnin(generations=burnin_gen,tuningInterval=log_freq)
+mymcmc.run(generations=mcmc_gen)
+
+
+# summarize ancestral states for all runs combined
+
+# first read in the sampled ancestral states
+anc_states = readAncestralStateTrace("../output/output_ase_rjmcmc_10/" + analysis_name + "-anc.log")
+# read in the tree samples that correspond with each ancestral state sample
+anc_trees = readAncestralStateTreeTrace("../output/output_ase_rjmcmc_10/" + analysis_name + ".trees", treetype="clock")
+# annotate the MAP tree with the MAP ancestral states
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, tree_trace=anc_trees, include_start_states=false, file="../output/output_ase_rjmcmc_10/ancestral_states_" + analysis_name + ".tree", burnin=burnin_gen, summary_statistic="MAP", site=1)
+
+# summarize ancestral states for run 1
+
+# first read in the sampled ancestral states
+anc_states = readAncestralStateTrace("../output/output_ase_rjmcmc_10/" + analysis_name + "-anc_run_1.log")
+# read in the tree samples that correspond with each ancestral state sample
+anc_trees = readAncestralStateTreeTrace("../output/output_ase_rjmcmc_10/" + analysis_name + "_run_1.trees", treetype="clock")
+# annotate the MAP tree with the MAP ancestral states
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, tree_trace=anc_trees, include_start_states=false, file="../output/output_ase_rjmcmc_10/ancestral_states_" + analysis_name + "_run_1.tree", burnin=burnin_gen, summary_statistic="MAP", site=1)
+
+
+# summarize ancestral states for run 2
+
+# first read in the sampled ancestral states
+anc_states = readAncestralStateTrace("../output/output_ase_rjmcmc_10/" + analysis_name + "-anc_run_2.log")
+# read in the tree samples that correspond with each ancestral state sample
+anc_trees = readAncestralStateTreeTrace("../output/output_ase_rjmcmc_10/" + analysis_name + "_run_2.trees", treetype="clock")
+# annotate the MAP tree with the MAP ancestral states
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, tree_trace=anc_trees, include_start_states=false, file="../output/output_ase_rjmcmc_10/ancestral_states_" + analysis_name + "_run_2.tree", burnin=burnin_gen, summary_statistic="MAP", site=1)
+
+
+# summarize ancestral states for run 3
+
+# first read in the sampled ancestral states
+anc_states = readAncestralStateTrace("../output/output_ase_rjmcmc_10/" + analysis_name + "-anc_run_3.log")
+# read in the tree samples that correspond with each ancestral state sample
+anc_trees = readAncestralStateTreeTrace("../output/output_ase_rjmcmc_10/" + analysis_name + "_run_3.trees", treetype="clock")
+# annotate the MAP tree with the MAP ancestral states
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, tree_trace=anc_trees, include_start_states=false, file="../output/output_ase_rjmcmc_10/ancestral_states_" + analysis_name + "_run_3.tree", burnin=burnin_gen, summary_statistic="MAP", site=1)
+
+
+# summarize ancestral states for run 4
+
+# first read in the sampled ancestral states
+anc_states = readAncestralStateTrace("../output/output_ase_rjmcmc_10/" + analysis_name + "-anc_run_4.log")
+# read in the tree samples that correspond with each ancestral state sample
+anc_trees = readAncestralStateTreeTrace("../output/output_ase_rjmcmc_10/" + analysis_name + "_run_4.trees", treetype="clock")
+# annotate the MAP tree with the MAP ancestral states
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, tree_trace=anc_trees, include_start_states=false, file="../output/output_ase_rjmcmc_10/ancestral_states_" + analysis_name + "_run_4.tree", burnin=burnin_gen, summary_statistic="MAP", site=1)
+
+q()
+

@@ -86,9 +86,8 @@ le_fvfm_seedling <- le_fvfm_seedling[-1,] # delete first row
 # add rownames
 rownames(le_fvfm_seedling) <- c("le", "fvfm") # did not need perhaps 
 
-dir.create("../output/le_fvfm_seedling/")
 # write to nexus 
-write.nexus.data(le_fvfm_seedling, file = "../output/le_fvfm_seedling/le_fvfm_seedling.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_fvfm_seedling, file = "../output/le_fvfm_seedling.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -152,9 +151,8 @@ le_fvfm_young <- le_fvfm_young[-1,] # delete first row
 # add rownames
 rownames(le_fvfm_young) <- c("le", "fvfm") # did not need perhaps 
 
-dir.create("../output/le_fvfm_young")
 # write to nexus 
-write.nexus.data(le_fvfm_young, file = "../output/le_fvfm_young/le_fvfm_young.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_fvfm_young, file = "../output/le_fvfm_young.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -217,9 +215,8 @@ le_fvfm_old <- le_fvfm_old[-1,] # delete first row
 # add rownames
 rownames(le_fvfm_old) <- c("le", "fvfm") # did not need perhaps 
 
-dir.create("../output/le_fvfm_old/")
 # write to nexus 
-write.nexus.data(le_fvfm_old, file = "../output/le_fvfm_old/le_fvfm_old.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_fvfm_old, file = "../output/le_fvfm_old.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -281,9 +278,8 @@ le_fvfm_haustorium <- le_fvfm_haustorium[-1,] # delete first row
 # add rownames
 rownames(le_fvfm_haustorium) <- c("le", "fvfm") # did not need perhaps 
 
-dir.create("../output/le_fvfm_haustorium/")
 # write to nexus 
-write.nexus.data(le_fvfm_haustorium, file = "../output/le_fvfm_haustorium/le_fvfm_haustorium.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_fvfm_haustorium, file = "../output/le_fvfm_haustorium.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -345,9 +341,8 @@ le_fvfm_flower <- le_fvfm_flower[-1,] # delete first row
 # add rownames
 rownames(le_fvfm_flower) <- c("le", "fvfm") # did not need perhaps 
 
-dir.create("../output/le_fvfm_flower")
 # write to nexus 
-write.nexus.data(le_fvfm_flower, file = "../output/le_fvfm_flower/le_fvfm_flower.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_fvfm_flower, file = "../output/le_fvfm_flower.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -409,9 +404,8 @@ le_fvfm_seed <- le_fvfm_seed[-1,] # delete first row
 # add rownames
 rownames(le_fvfm_seed) <- c("le", "fvfm") # did not need perhaps 
 
-dir.create("../output/le_fvfm_seed")
 # write to nexus 
-write.nexus.data(le_fvfm_seed, file = "../output/le_fvfm_seed/le_fvfm_seed.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_fvfm_seed, file = "../output/le_fvfm_seed.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -478,9 +472,8 @@ le_phipsii_seedling <- le_phipsii_seedling[-1,] # delete first row
 # add rownames
 rownames(le_phipsii_seedling) <- c("le", "phipsii") # did not need perhaps 
 
-dir.create("../output/le_phipsii_seedling")
 # write to nexus 
-write.nexus.data(le_phipsii_seedling, file = "../output/le_phipsii_seedling/le_phipsii_seedling.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_phipsii_seedling, file = "../output/le_phipsii_seedling.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -544,9 +537,8 @@ le_phipsii_young <- le_phipsii_young[-1,] # delete first row
 # add rownames
 rownames(le_phipsii_young) <- c("le", "phipsii") # did not need perhaps 
 
-dir.create("../output/le_phipsii_young")
 # write to nexus 
-write.nexus.data(le_phipsii_young, file = "../output/le_phipsii_young/le_phipsii_young.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_phipsii_young, file = "../output/le_phipsii_young.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -609,9 +601,8 @@ le_phipsii_old <- le_phipsii_old[-1,] # delete first row
 # add rownames
 rownames(le_phipsii_old) <- c("le", "phipsii") # did not need perhaps 
 
-dir.create("../output/le_phipsii_old")
 # write to nexus 
-write.nexus.data(le_phipsii_old, file = "../output/le_phipsii_old/le_phipsii_old.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_phipsii_old, file = "../output/le_phipsii_old.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -673,9 +664,8 @@ le_phipsii_haustorium <- le_phipsii_haustorium[-1,] # delete first row
 # add rownames
 rownames(le_phipsii_haustorium) <- c("le", "phipsii") # did not need perhaps 
 
-dir.create("../output/le_phipsii_haustorium")
 # write to nexus 
-write.nexus.data(le_phipsii_haustorium, file = "../output/le_phipsii_haustorium/le_phipsii_haustorium.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_phipsii_haustorium, file = "../output/le_phipsii_haustorium.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -737,9 +727,8 @@ le_phipsii_flower <- le_phipsii_flower[-1,] # delete first row
 # add rownames
 rownames(le_phipsii_flower) <- c("le", "phipsii") # did not need perhaps 
 
-dir.create("../output/le_phipsii_flower")
 # write to nexus 
-write.nexus.data(le_phipsii_flower, file = "../output/le_phipsii_flower/le_phipsii_flower.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_phipsii_flower, file = "../output/le_phipsii_flower.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -801,9 +790,8 @@ le_phipsii_seed <- le_phipsii_seed[-1,] # delete first row
 # add rownames
 rownames(le_phipsii_seed) <- c("le", "phipsii") # did not need perhaps 
 
-dir.create("../output/le_phipsii_seed")
 # write to nexus 
-write.nexus.data(le_phipsii_seed, file = "../output/le_phipsii_seed/le_phipsii_seed.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_phipsii_seed, file = "../output/le_phipsii_seed.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -869,9 +857,8 @@ le_car.chl_seedling <- le_car.chl_seedling[-1,] # delete first row
 # add rownames
 rownames(le_car.chl_seedling) <- c("le", "car.chl") # did not need perhaps 
 
-dir.create("../output/le_car.chl_seedling")
 # write to nexus 
-write.nexus.data(le_car.chl_seedling, file = "../output/le_car.chl_seedling/le_car.chl_seedling.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_car.chl_seedling, file = "../output/le_car.chl_seedling.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -935,9 +922,8 @@ le_car.chl_young <- le_car.chl_young[-1,] # delete first row
 # add rownames
 rownames(le_car.chl_young) <- c("le", "car.chl") # did not need perhaps 
 
-dir.create("../output/le_car.chl_young")
 # write to nexus 
-write.nexus.data(le_car.chl_young, file = "../output/le_car.chl_young/le_car.chl_young.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_car.chl_young, file = "../output/le_car.chl_young.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1000,9 +986,8 @@ le_car.chl_old <- le_car.chl_old[-1,] # delete first row
 # add rownames
 rownames(le_car.chl_old) <- c("le", "car.chl") # did not need perhaps 
 
-dir.create("../output/le_car.chl_old")
 # write to nexus 
-write.nexus.data(le_car.chl_old, file = "../output/le_car.chl_old/le_car.chl_old.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_car.chl_old, file = "../output/le_car.chl_old.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1064,9 +1049,8 @@ le_car.chl_haustorium <- le_car.chl_haustorium[-1,] # delete first row
 # add rownames
 rownames(le_car.chl_haustorium) <- c("le", "car.chl") # did not need perhaps 
 
-dir.create("../output/le_car.chl_haustorium")
 # write to nexus 
-write.nexus.data(le_car.chl_haustorium, file = "../output/le_car.chl_haustorium/le_car.chl_haustorium.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_car.chl_haustorium, file = "../output/le_car.chl_haustorium.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1128,9 +1112,8 @@ le_car.chl_flower <- le_car.chl_flower[-1,] # delete first row
 # add rownames
 rownames(le_car.chl_flower) <- c("le", "car.chl") # did not need perhaps 
 
-dir.create("../output/le_car.chl_flower")
 # write to nexus 
-write.nexus.data(le_car.chl_flower, file = "../output/le_car.chl_flower/le_car.chl_flower.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_car.chl_flower, file = "../output/le_car.chl_flower.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1193,9 +1176,8 @@ le_car.chl_seed <- le_car.chl_seed[-1,] # delete first row
 rownames(le_car.chl_seed) <- c("le", "car.chl") # did not need perhaps 
 
 
-dir.create("../output/le_car.chl_seed")
 # write to nexus 
-write.nexus.data(le_car.chl_seed, file = "../output/le_car.chl_seed/le_car.chl_seed.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(le_car.chl_seed, file = "../output/le_car.chl_seed.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1259,9 +1241,8 @@ phipsii_fvfm_seedling <- phipsii_fvfm_seedling[-1,] # delete first row
 # add rownames
 rownames(phipsii_fvfm_seedling) <- c("phipsii", "fvfm") # did not need perhaps 
 
-dir.create("../output/phipsii_fvfm_seedling")
 # write to nexus 
-write.nexus.data(phipsii_fvfm_seedling, file = "../output/phipsii_fvfm_seedling/phipsii_fvfm_seedling.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(phipsii_fvfm_seedling, file = "../output/phipsii_fvfm_seedling.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1325,9 +1306,8 @@ phipsii_fvfm_young <- phipsii_fvfm_young[-1,] # delete first row
 # add rownames
 rownames(phipsii_fvfm_young) <- c("phipsii", "fvfm") # did not need perhaps 
 
-dir.create("../output/phipsii_fvfm_young")
 # write to nexus 
-write.nexus.data(phipsii_fvfm_young, file = "../output/phipsii_fvfm_young/phipsii_fvfm_young.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(phipsii_fvfm_young, file = "../output/phipsii_fvfm_young.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1390,9 +1370,8 @@ phipsii_fvfm_old <- phipsii_fvfm_old[-1,] # delete first row
 # add rownames
 rownames(phipsii_fvfm_old) <- c("phipsii", "fvfm") # did not need perhaps 
 
-dir.create("../output/phipsii_fvfm_old")
 # write to nexus 
-write.nexus.data(phipsii_fvfm_old, file = "../output/phipsii_fvfm_old/phipsii_fvfm_old.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(phipsii_fvfm_old, file = "../output/phipsii_fvfm_old.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1454,9 +1433,8 @@ phipsii_fvfm_haustorium <- phipsii_fvfm_haustorium[-1,] # delete first row
 # add rownames
 rownames(phipsii_fvfm_haustorium) <- c("phipsii", "fvfm") # did not need perhaps 
 
-dir.create("../output/phipsii_fvfm_haustorium")
 # write to nexus 
-write.nexus.data(phipsii_fvfm_haustorium, file = "../output/phipsii_fvfm_haustorium/phipsii_fvfm_haustorium.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(phipsii_fvfm_haustorium, file = "../output/phipsii_fvfm_haustorium.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1518,9 +1496,8 @@ phipsii_fvfm_flower <- phipsii_fvfm_flower[-1,] # delete first row
 # add rownames
 rownames(phipsii_fvfm_flower) <- c("phipsii", "fvfm") # did not need perhaps 
 
-dir.create("../output/phipsii_fvfm_flower")
 # write to nexus 
-write.nexus.data(phipsii_fvfm_flower, file = "../output/phipsii_fvfm_flower/phipsii_fvfm_flower.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(phipsii_fvfm_flower, file = "../output/phipsii_fvfm_flower.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1582,7 +1559,6 @@ phipsii_fvfm_seed <- phipsii_fvfm_seed[-1,] # delete first row
 # add rownames
 rownames(phipsii_fvfm_seed) <- c("phipsii", "fvfm") # did not need perhaps 
 
-dir.create("../output/phipsii_fvfm_seed")
 # write to nexus 
-write.nexus.data(phipsii_fvfm_seed, file = "../output/phipsii_fvfm_seed/phipsii_fvfm_seed.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(phipsii_fvfm_seed, file = "../output/phipsii_fvfm_seed.nex", format = "continuous", datablock = TRUE)
 
