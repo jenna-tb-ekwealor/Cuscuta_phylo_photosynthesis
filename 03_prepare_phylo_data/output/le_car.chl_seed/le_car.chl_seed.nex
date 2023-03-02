@@ -1,0 +1,12 @@
+#NEXUS
+[Data written by write.nexus.data.R, Wed Mar  1 22:24:15 2023]
+BEGIN DATA;
+  DIMENSIONS NTAX=3 NCHAR=2;
+  FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=- INTERLEAVE=NO;
+  MATRIX
+    Cuscuta_australis        0.830744680956	2351.72256668004
+    Cuscuta_cephalanthi      0.775088308311746	254.467621586234
+    Cuscuta_polygonorum      0.84835352058579	664.075225917288
+  ;
+END;
+

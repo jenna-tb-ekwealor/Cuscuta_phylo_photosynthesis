@@ -1,0 +1,4 @@
+#NEXUS
+begin trees;
+	tree tree_1 = [&R] (((Cuscuta_lupuliformis:0.014299,Cuscuta_monogyna:0.011113):0.014712,(Cuscuta_epithymum:0.046108,(Cuscuta_africana:0.055956,(Cuscuta_purpurata:0.028052,((Cuscuta_gracillima:0.027316,Cuscuta_indecora:0.07136):0.022911,(Cuscuta_costaricensis:0.018293,(Cuscuta_sandwichiana:0.0253,(Cuscuta_tasmanica:0.030163,((Cuscuta_californica:0.032549,(Cuscuta_polygonorum:8.91E-4,Cuscuta_australis:0.001899):0.020817):0.003066,(Cuscuta_denticulata:0.032955,(Cuscuta_cephalanthi:0.005842,Cuscuta_compacta:0.012345):0.022633):0.004152):0.005321):0.009047):0.006533):0.012547):0.009708):0.042947):0.013745):0.015777):0.013163,Ipomoea_spp_AF146016_MG973745:0.013162);
+end;
