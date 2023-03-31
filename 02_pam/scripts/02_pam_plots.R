@@ -45,13 +45,13 @@ wilcox_list_Grammica <- readRDS("../output/stat_results/wilcox_list_Grammica.RDa
 #### FLUORESCENCE PLOTS ####
 
 #### Fv.Fm Ipomoea_nil ####
-data_ipomoea <-  dplyr::filter(data_no_outliers, Subgenus == "Ipomoea_nil")
+data_ipomoea <-  filter(data_no_outliers, Subgenus == "Ipomoea_nil")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
 data_ipomoea$Tissue.edit <- factor(data_ipomoea$Tissue.edit, levels = c("l", "y", "o", "f", "s"))
 
-data_ipomoea_Fv.Fm <- dplyr::filter(data_ipomoea, Metric == "Fv.Fm")
+data_ipomoea_Fv.Fm <- filter(data_ipomoea, Metric == "Fv.Fm")
 # calculate minimum Fv.Fm for apporpriate bottom limit of Fv.Fm y axes
-min_Fv.Fm <-as.numeric( data_no_outliers %>% dplyr::filter(., Metric == "Fv.Fm") %>% dplyr::summarize(., min(Value)))
+min_Fv.Fm <-as.numeric( data_no_outliers %>% filter(., Metric == "Fv.Fm") %>% dplyr::summarize(., min(Value)))
 min_Fv.Fm
 
 Fv.Fm_ipomoea_boxplot <- ggplot(data_ipomoea_Fv.Fm, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) +
@@ -74,7 +74,7 @@ Fv.Fm_ipomoea_boxplot <- ggplot(data_ipomoea_Fv.Fm, aes(x=Tissue.edit, y=Value, 
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "Fv.Fm" & Subgenus == "Ipomoea nil"),
+    data    = filter(dat_text_plot_kruskal, Metric == "Fv.Fm" & Subgenus == "Ipomoea nil"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.6, parse = TRUE) 
@@ -129,9 +129,9 @@ Fv.Fm_ipomoea_boxplot
 
 
 #### φPSII Ipomoea_nil ####
-data_ipomoea_φPSII <- dplyr::filter(data_ipomoea, Metric == "φPSII")
+data_ipomoea_φPSII <- filter(data_ipomoea, Metric == "φPSII")
 # calculate minimum φPSII for apporpriate bottom limit of φPSII y axes
-min_φPSII <-as.numeric( data_no_outliers %>% dplyr::filter(., Metric == "φPSII") %>% dplyr::summarize(., min(Value)))
+min_φPSII <-as.numeric( data_no_outliers %>% filter(., Metric == "φPSII") %>% dplyr::summarize(., min(Value)))
 min_φPSII
 
 φPSII_ipomoea_boxplot <- ggplot(data_ipomoea_φPSII, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
@@ -154,7 +154,7 @@ min_φPSII
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "φPSII" & Subgenus == "Ipomoea nil"),
+    data    = filter(dat_text_plot_kruskal, Metric == "φPSII" & Subgenus == "Ipomoea nil"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
@@ -206,14 +206,14 @@ cbd_φPSII_ipomoea$nudged <- max_φPSII_ipomoea$max* 1.05
 φPSII_ipomoea_boxplot
 
 
-#### NPQ Ipomoea_nil plot with x axis ####
-data_ipomoea_NPQ <- dplyr::filter(data_ipomoea, Metric == "NPQ")
-# calculate minimum NPQ for apporpriate bottom limit of NPQ y axes
-max_NPQ <-as.numeric( data_no_outliers %>% dplyr::filter(., Metric == "NPQ") %>% dplyr::summarize(., max(Value)))
-max_NPQ
+#### ΦNPQ Ipomoea_nil plot with x axis ####
+data_ipomoea_ΦNPQ <- filter(data_ipomoea, Metric == "ΦNPQ")
+# calculate minimum ΦNPQ for apporpriate bottom limit of ΦNPQ y axes
+max_ΦNPQ <-as.numeric( data_no_outliers %>% filter(., Metric == "ΦNPQ") %>% dplyr::summarize(., max(Value)))
+max_ΦNPQ
 
 
-NPQ_ipomoea_boxplot <- ggplot(data_ipomoea_NPQ, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
+ΦNPQ_ipomoea_boxplot <- ggplot(data_ipomoea_ΦNPQ, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
   scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c( "l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
@@ -229,11 +229,11 @@ NPQ_ipomoea_boxplot <- ggplot(data_ipomoea_NPQ, aes(x=Tissue.edit, y=Value, colo
         axis.title.y = element_blank(),
         legend.position = "none") +
   guides(colour = guide_legend(nrow = 1)) +
-  scale_y_continuous(position = "left", limits = c(0, 4))+ 
+  scale_y_continuous(position = "left", limits = c(0, 1))+ 
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "NPQ" & Subgenus == "Ipomoea nil"),
+    data    = filter(dat_text_plot_kruskal, Metric == "ΦNPQ" & Subgenus == "Ipomoea nil"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
@@ -241,54 +241,54 @@ NPQ_ipomoea_boxplot <- ggplot(data_ipomoea_NPQ, aes(x=Tissue.edit, y=Value, colo
 
 
 # use base R boxplot to get the coordinates of the boxes
-box.rslt_NPQ_ipomoea <- with(data_ipomoea_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_ipomoea)
-boxplot_positions_NPQ_ipomoea <- as.data.frame(box.rslt_NPQ_ipomoea$stats)
+box.rslt_ΦNPQ_ipomoea <- with(data_ipomoea_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_ipomoea)
+boxplot_positions_ΦNPQ_ipomoea <- as.data.frame(box.rslt_ΦNPQ_ipomoea$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_ipomoea <- levels(data_ipomoea_NPQ$Tissue.edit)
+tissues_ΦNPQ_ipomoea <- levels(data_ipomoea_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_ipomoea) <- tissues_NPQ_ipomoea
+colnames(boxplot_positions_ΦNPQ_ipomoea) <- tissues_ΦNPQ_ipomoea
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_ipomoea <- boxplot_positions_NPQ_ipomoea[5,]
+top_positions_ΦNPQ_ipomoea <- boxplot_positions_ΦNPQ_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_ipomoea)[1] <- "Letter"
+cbd_ΦNPQ_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_ipomoea, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_ipomoea, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_ipomoea %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_ipomoea
+top_positions_ΦNPQ_ipomoea %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_ipomoea
 # now join these positions to cbd
-left_join(cbd_NPQ_ipomoea, top_positions_NPQ_ipomoea, by = "Tissue.edit") -> cbd_NPQ_ipomoea
+left_join(cbd_ΦNPQ_ipomoea, top_positions_ΦNPQ_ipomoea, by = "Tissue.edit") -> cbd_ΦNPQ_ipomoea
 
 # calculate how much to nudge
-data_ipomoea_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_ipomoea
-cbd_NPQ_ipomoea$nudged <- max_NPQ_ipomoea$max * 1.05
+data_ipomoea_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_ipomoea
+cbd_ΦNPQ_ipomoea$nudged <- max_ΦNPQ_ipomoea$max * 1.05
 
 
 # add CLDs to plot
-NPQ_ipomoea_boxplot + 
+ΦNPQ_ipomoea_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_NPQ_ipomoea,
+    data    = cbd_ΦNPQ_ipomoea,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_ipomoea_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_ipomoea_boxplot
 
 
-NPQ_ipomoea_boxplot
+ΦNPQ_ipomoea_boxplot
 
 
 #### Fv.Fm loop through Monogynella, Cuscuta, and Grammica ####
 loop_subgenera <- c("Monogynella","Cuscuta", "Grammica")
 # filter for Fv.Fm
-data_Fv.Fm_plots_cuscutasub <- dplyr::filter(data_no_outliers, Metric == "Fv.Fm")
+data_Fv.Fm_plots_cuscutasub <- filter(data_no_outliers, Metric == "Fv.Fm")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
 data_Fv.Fm_plots_cuscutasub$Tissue.edit <- factor(data_Fv.Fm_plots_cuscutasub$Tissue.edit, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
@@ -297,7 +297,7 @@ plot_list_Cuscuta_Fv.Fm = list()
 
 for (sub in (loop_subgenera)) {
   
-  data_loop <- dplyr::filter(data_Fv.Fm_plots_cuscutasub, Subgenus == sub)
+  data_loop <- filter(data_Fv.Fm_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) +
     scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -325,13 +325,13 @@ plot_list_Cuscuta_Fv.Fm[["Monogynella"]] +
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "Fv.Fm" & Subgenus == "Monogynella"),
+    data    = filter(dat_text_plot_kruskal, Metric == "Fv.Fm" & Subgenus == "Monogynella"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_Monogynella_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_Monogynella_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_cuscutasub, Subgenus == "Monogynella")
+data_Monogynella_Fv.Fm <- filter(data_Fv.Fm_plots_cuscutasub, Subgenus == "Monogynella")
 
 box.rslt_Fv.Fm_Monogynella <- with(data_Monogynella_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_Monogynella)
@@ -382,7 +382,7 @@ plot_list_Cuscuta_Fv.Fm[["Cuscuta"]] +
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "Fv.Fm" & Subgenus == "Cuscuta"),
+    data    = filter(dat_text_plot_kruskal, Metric == "Fv.Fm" & Subgenus == "Cuscuta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_Cuscuta_boxplot
@@ -401,13 +401,13 @@ plot_list_Cuscuta_Fv.Fm[["Grammica"]]  +
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "Fv.Fm" & Subgenus == "Grammica"),
+    data    = filter(dat_text_plot_kruskal, Metric == "Fv.Fm" & Subgenus == "Grammica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_Grammica_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_Grammica_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_cuscutasub, Subgenus == "Grammica")
+data_Grammica_Fv.Fm <- filter(data_Fv.Fm_plots_cuscutasub, Subgenus == "Grammica")
 
 box.rslt_Fv.Fm_Grammica <- with(data_Grammica_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_Grammica)
@@ -454,7 +454,7 @@ Fv.Fm_Grammica_boxplot
 
 #### Fv.Fm C_purpurata alone ####
 
-data_C_purpurata_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_cuscutasub, Subgenus == "C_purpurata")
+data_C_purpurata_Fv.Fm <- filter(data_Fv.Fm_plots_cuscutasub, Subgenus == "C_purpurata")
 
 Fv.Fm_C_purpurata_boxplot <- ggplot(data_C_purpurata_Fv.Fm, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) +
   scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -482,7 +482,7 @@ Fv.Fm_C_purpurata_boxplot
 #### φPSII loop through Monogynella, Cuscuta, and Grammica ####
 loop_subgenera <- c("Monogynella","Cuscuta", "Grammica")
 # filter for φPSII
-data_φPSII_plots_cuscutasub <- dplyr::filter(data_no_outliers, Metric == "φPSII")
+data_φPSII_plots_cuscutasub <- filter(data_no_outliers, Metric == "φPSII")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
 data_φPSII_plots_cuscutasub$Tissue.edit <- factor(data_φPSII_plots_cuscutasub$Tissue.edit, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
@@ -491,7 +491,7 @@ plot_list_Cuscuta_φPSII = list()
 
 for (sub in (loop_subgenera)) {
   
-  data_loop <- dplyr::filter(data_φPSII_plots_cuscutasub, Subgenus == sub)
+  data_loop <- filter(data_φPSII_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
     scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -518,13 +518,13 @@ plot_list_Cuscuta_φPSII[["Monogynella"]] +
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "φPSII" & Subgenus == "Monogynella"),
+    data    = filter(dat_text_plot_kruskal, Metric == "φPSII" & Subgenus == "Monogynella"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_Monogynella_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_Monogynella_φPSII <- dplyr::filter(data_φPSII_plots_cuscutasub, Subgenus == "Monogynella")
+data_Monogynella_φPSII <- filter(data_φPSII_plots_cuscutasub, Subgenus == "Monogynella")
 
 box.rslt_φPSII_Monogynella <- with(data_Monogynella_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_Monogynella)
@@ -575,13 +575,13 @@ plot_list_Cuscuta_φPSII[["Cuscuta"]] +
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "φPSII" & Subgenus == "Cuscuta"),
+    data    = filter(dat_text_plot_kruskal, Metric == "φPSII" & Subgenus == "Cuscuta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_Cuscuta_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_Cuscuta_φPSII <- dplyr::filter(data_φPSII_plots_cuscutasub, Subgenus == "Cuscuta")
+data_Cuscuta_φPSII <- filter(data_φPSII_plots_cuscutasub, Subgenus == "Cuscuta")
 
 box.rslt_φPSII_Cuscuta <- with(data_Cuscuta_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_Cuscuta)
@@ -633,7 +633,7 @@ plot_list_Cuscuta_φPSII[["Grammica"]]  +
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "φPSII" & Subgenus == "Grammica"),
+    data    = filter(dat_text_plot_kruskal, Metric == "φPSII" & Subgenus == "Grammica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_Grammica_boxplot
@@ -641,7 +641,7 @@ plot_list_Cuscuta_φPSII[["Grammica"]]  +
 φPSII_Grammica_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_Grammica_φPSII <- dplyr::filter(data_φPSII_plots_cuscutasub, Subgenus == "Grammica")
+data_Grammica_φPSII <- filter(data_φPSII_plots_cuscutasub, Subgenus == "Grammica")
 
 box.rslt_φPSII_Grammica <- with(data_Grammica_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_Grammica)
@@ -690,7 +690,7 @@ cbd_φPSII_Grammica$nudged <- max_φPSII_Grammica$max * 1.05
 
 #### φPSII C. purpurata alone ####
 
-data_C_purpurata_φPSII <- dplyr::filter(data_φPSII_plots_cuscutasub, Subgenus == "C_purpurata")
+data_C_purpurata_φPSII <- filter(data_φPSII_plots_cuscutasub, Subgenus == "C_purpurata")
 
 φPSII_C_purpurata_boxplot <- ggplot(data_C_purpurata_φPSII, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
   scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -713,19 +713,19 @@ data_C_purpurata_φPSII <- dplyr::filter(data_φPSII_plots_cuscutasub, Subgenus 
 
 
 
-#### NPQ loop through Monogynella, Cuscuta, and Grammica ####
+#### ΦNPQ loop through Monogynella, Cuscuta, and Grammica ####
 loop_subgenera <- c("Monogynella","Cuscuta", "Grammica")
-# filter for NPQ
-data_NPQ_plots_cuscutasub <- dplyr::filter(data_no_outliers, Metric == "NPQ")
+# filter for ΦNPQ
+data_ΦNPQ_plots_cuscutasub <- filter(data_no_outliers, Metric == "ΦNPQ")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_NPQ_plots_cuscutasub$Tissue.edit <- factor(data_NPQ_plots_cuscutasub$Tissue.edit, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_ΦNPQ_plots_cuscutasub$Tissue.edit <- factor(data_ΦNPQ_plots_cuscutasub$Tissue.edit, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Cuscuta_NPQ = list()
+plot_list_Cuscuta_ΦNPQ = list()
 
 for (sub in (loop_subgenera)) {
   
-  data_loop <- dplyr::filter(data_NPQ_plots_cuscutasub, Subgenus == sub)
+  data_loop <- filter(data_ΦNPQ_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
     scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -742,186 +742,186 @@ for (sub in (loop_subgenera)) {
           axis.title.y = element_blank(),
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
-    scale_y_continuous(position = "right", limits = c(0, 4))
-  plot_list_Cuscuta_NPQ[[sub]] = p
+    scale_y_continuous(position = "right", limits = c(0, 1))
+  plot_list_Cuscuta_ΦNPQ[[sub]] = p
   
 }
 
-#### NPQ Monogynella ####
-plot_list_Cuscuta_NPQ[["Monogynella"]] + 
+#### ΦNPQ Monogynella ####
+plot_list_Cuscuta_ΦNPQ[["Monogynella"]] + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "NPQ" & Subgenus == "Monogynella"),
+    data    = filter(dat_text_plot_kruskal, Metric == "ΦNPQ" & Subgenus == "Monogynella"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_Monogynella_boxplot
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_Monogynella_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_Monogynella_NPQ <- dplyr::filter(data_NPQ_plots_cuscutasub, Subgenus == "Monogynella")
+data_Monogynella_ΦNPQ <- filter(data_ΦNPQ_plots_cuscutasub, Subgenus == "Monogynella")
 
-box.rslt_NPQ_Monogynella <- with(data_Monogynella_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_Monogynella)
-boxplot_positions_NPQ_Monogynella <- as.data.frame(box.rslt_NPQ_Monogynella$stats)
+box.rslt_ΦNPQ_Monogynella <- with(data_Monogynella_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_Monogynella)
+boxplot_positions_ΦNPQ_Monogynella <- as.data.frame(box.rslt_ΦNPQ_Monogynella$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_Monogynella <- levels(data_Monogynella_NPQ$Tissue.edit)
+tissues_ΦNPQ_Monogynella <- levels(data_Monogynella_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_Monogynella) <- tissues_NPQ_Monogynella
+colnames(boxplot_positions_ΦNPQ_Monogynella) <- tissues_ΦNPQ_Monogynella
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_Monogynella <- boxplot_positions_NPQ_Monogynella[5,]
+top_positions_ΦNPQ_Monogynella <- boxplot_positions_ΦNPQ_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_Monogynella)[1] <- "Letter"
+cbd_ΦNPQ_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_Monogynella, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_Monogynella, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_Monogynella %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_Monogynella
+top_positions_ΦNPQ_Monogynella %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_Monogynella
 # now join these positions to cbd
-left_join(cbd_NPQ_Monogynella, top_positions_NPQ_Monogynella, by = "Tissue.edit") -> cbd_NPQ_Monogynella
+left_join(cbd_ΦNPQ_Monogynella, top_positions_ΦNPQ_Monogynella, by = "Tissue.edit") -> cbd_ΦNPQ_Monogynella
 
 # calculate how much to nudge
-data_Monogynella_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_Monogynella
-cbd_NPQ_Monogynella$nudged <- (max_NPQ_Monogynella$max + 0.00) * 1.05
+data_Monogynella_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_Monogynella
+cbd_ΦNPQ_Monogynella$nudged <- (max_ΦNPQ_Monogynella$max + 0.00) * 1.05
 
 # add CLDs to plot
-NPQ_Monogynella_boxplot + 
+ΦNPQ_Monogynella_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_NPQ_Monogynella,
+    data    = cbd_ΦNPQ_Monogynella,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_Monogynella_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_Monogynella_boxplot
 
 
-NPQ_Monogynella_boxplot
+ΦNPQ_Monogynella_boxplot
 
 
 
-#### NPQ Cuscuta ####
-plot_list_Cuscuta_NPQ[["Cuscuta"]] + 
+#### ΦNPQ Cuscuta ####
+plot_list_Cuscuta_ΦNPQ[["Cuscuta"]] + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "NPQ" & Subgenus == "Cuscuta"),
+    data    = filter(dat_text_plot_kruskal, Metric == "ΦNPQ" & Subgenus == "Cuscuta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_Cuscuta_boxplot
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_Cuscuta_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_Cuscuta_NPQ <- dplyr::filter(data_NPQ_plots_cuscutasub, Subgenus == "Cuscuta")
+data_Cuscuta_ΦNPQ <- filter(data_ΦNPQ_plots_cuscutasub, Subgenus == "Cuscuta")
 
-box.rslt_NPQ_Cuscuta <- with(data_Cuscuta_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_Cuscuta)
-boxplot_positions_NPQ_Cuscuta <- as.data.frame(box.rslt_NPQ_Cuscuta$stats)
+box.rslt_ΦNPQ_Cuscuta <- with(data_Cuscuta_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_Cuscuta)
+boxplot_positions_ΦNPQ_Cuscuta <- as.data.frame(box.rslt_ΦNPQ_Cuscuta$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_Cuscuta <- levels(data_Cuscuta_NPQ$Tissue.edit)
+tissues_ΦNPQ_Cuscuta <- levels(data_Cuscuta_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_Cuscuta) <- tissues_NPQ_Cuscuta
+colnames(boxplot_positions_ΦNPQ_Cuscuta) <- tissues_ΦNPQ_Cuscuta
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_Cuscuta <- boxplot_positions_NPQ_Cuscuta[5,]
+top_positions_ΦNPQ_Cuscuta <- boxplot_positions_ΦNPQ_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_Cuscuta)[1] <- "Letter"
+cbd_ΦNPQ_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_Cuscuta, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_Cuscuta, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_Cuscuta %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_Cuscuta
+top_positions_ΦNPQ_Cuscuta %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_Cuscuta
 # now join these positions to cbd
-left_join(cbd_NPQ_Cuscuta, top_positions_NPQ_Cuscuta, by = "Tissue.edit") -> cbd_NPQ_Cuscuta
+left_join(cbd_ΦNPQ_Cuscuta, top_positions_ΦNPQ_Cuscuta, by = "Tissue.edit") -> cbd_ΦNPQ_Cuscuta
 
 # calculate how much to nudge
-data_Cuscuta_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_Cuscuta
-cbd_NPQ_Cuscuta$nudged <- (max_NPQ_Cuscuta$max + 0.00) * 1.05
+data_Cuscuta_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_Cuscuta
+cbd_ΦNPQ_Cuscuta$nudged <- (max_ΦNPQ_Cuscuta$max + 0.00) * 1.05
 
 # add CLDs to plot
-NPQ_Cuscuta_boxplot + 
+ΦNPQ_Cuscuta_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_NPQ_Cuscuta,
+    data    = cbd_ΦNPQ_Cuscuta,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_Cuscuta_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_Cuscuta_boxplot
 
 
-NPQ_Cuscuta_boxplot
+ΦNPQ_Cuscuta_boxplot
 
 
 
-#### NPQ Grammica ####
-plot_list_Cuscuta_NPQ[["Grammica"]]  + 
+#### ΦNPQ Grammica ####
+plot_list_Cuscuta_ΦNPQ[["Grammica"]]  + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Metric == "NPQ" & Subgenus == "Grammica"),
+    data    = filter(dat_text_plot_kruskal, Metric == "ΦNPQ" & Subgenus == "Grammica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_Grammica_boxplot 
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_Grammica_boxplot 
 
 # use base R boxplot to get the coordinates of the boxes
-data_Grammica_NPQ <- dplyr::filter(data_NPQ_plots_cuscutasub, Subgenus == "Grammica")
+data_Grammica_ΦNPQ <- filter(data_ΦNPQ_plots_cuscutasub, Subgenus == "Grammica")
 
-box.rslt_NPQ_Grammica <- with(data_Grammica_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_Grammica)
-boxplot_positions_NPQ_Grammica <- as.data.frame(box.rslt_NPQ_Grammica$stats)
+box.rslt_ΦNPQ_Grammica <- with(data_Grammica_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_Grammica)
+boxplot_positions_ΦNPQ_Grammica <- as.data.frame(box.rslt_ΦNPQ_Grammica$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_Grammica <- levels(data_Grammica_NPQ$Tissue.edit)
+tissues_ΦNPQ_Grammica <- levels(data_Grammica_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_Grammica) <- tissues_NPQ_Grammica
+colnames(boxplot_positions_ΦNPQ_Grammica) <- tissues_ΦNPQ_Grammica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_Grammica <- boxplot_positions_NPQ_Grammica[5,]
+top_positions_ΦNPQ_Grammica <- boxplot_positions_ΦNPQ_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_Grammica)[1] <- "Letter"
+cbd_ΦNPQ_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_Grammica, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_Grammica, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_Grammica %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_Grammica
+top_positions_ΦNPQ_Grammica %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_Grammica
 # now join these positions to cbd
-left_join(cbd_NPQ_Grammica, top_positions_NPQ_Grammica, by = "Tissue.edit") -> cbd_NPQ_Grammica
+left_join(cbd_ΦNPQ_Grammica, top_positions_ΦNPQ_Grammica, by = "Tissue.edit") -> cbd_ΦNPQ_Grammica
 
 # calculate how much to nudge
-data_Grammica_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_Grammica
-cbd_NPQ_Grammica$nudged <- (max_NPQ_Grammica$max + 0.00) * 1.05
+data_Grammica_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_Grammica
+cbd_ΦNPQ_Grammica$nudged <- (max_ΦNPQ_Grammica$max + 0.00) * 1.05
 
 # add CLDs to plot
-NPQ_Grammica_boxplot + 
+ΦNPQ_Grammica_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_NPQ_Grammica,
+    data    = cbd_ΦNPQ_Grammica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_Grammica_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_Grammica_boxplot
 
 
-NPQ_Grammica_boxplot
+ΦNPQ_Grammica_boxplot
 
 
 
-#### NPQ C_purpurata alone ####
-data_C_purpurata_NPQ <- dplyr::filter(data_NPQ_plots_cuscutasub, Subgenus == "C_purpurata")
+#### ΦNPQ C_purpurata alone ####
+data_C_purpurata_ΦNPQ <- filter(data_ΦNPQ_plots_cuscutasub, Subgenus == "C_purpurata")
 
-NPQ_C_purpurata_boxplot <- ggplot(data_C_purpurata_NPQ, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
+ΦNPQ_C_purpurata_boxplot <- ggplot(data_C_purpurata_ΦNPQ, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
   scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
@@ -937,7 +937,7 @@ NPQ_C_purpurata_boxplot <- ggplot(data_C_purpurata_NPQ, aes(x=Tissue.edit, y=Val
         axis.title.y = element_blank(),
         legend.position = "none") +
   guides(colour = guide_legend(nrow = 1)) +
-  scale_y_continuous(position = "right", limits = c(0, 4))
+  scale_y_continuous(position = "right", limits = c(0, 1))
 
 
 #### add "absent" to those with mean Value = 0 in loop ####
@@ -950,7 +950,7 @@ Subgenus_fluorescence_absent_list <- list()
 
 for (subgenus in Subgenus_list_Subgenus) {
   for (metric in Metric_list_Subgenus) {
-    data_loop <- data_no_outliers %>% dplyr::filter(Subgenus == subgenus & Metric == metric)
+    data_loop <- data_no_outliers %>% filter(Subgenus == subgenus & Metric == metric)
     if (nrow(data_loop) > 0) { if (mean(data_loop$Value) == 0) {
       print("absent") -> Subgenus_fluorescence_absent_list[[metric]][[subgenus]]
     }}}}
@@ -966,13 +966,13 @@ for (subgenus in Subgenus_list_Subgenus) {
 # [1] "absent"
 # 
 # 
-# $ΦNPQ
-# $ΦNPQ$C_purpurata
+# $ΦΦNPQ
+# $ΦΦNPQ$C_purpurata
 # [1] "absent"
 # 
 # 
-# $NPQ
-# $NPQ$C_purpurata
+# $ΦNPQ
+# $ΦNPQ$C_purpurata
 # [1] "absent"
 
 
@@ -993,12 +993,12 @@ wrap_elements(gridtext::richtext_grob('*F*<sub>v</sub>/*F*<sub>m</sub>', rot = 9
   φPSII_Cuscuta_boxplot + 
   φPSII_Grammica_boxplot + 
   φPSII_C_purpurata_boxplot + geom_text(size    = 2, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) + 
-  wrap_elements(gridtext::richtext_grob('NPQ', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
-  NPQ_ipomoea_boxplot + 
-  NPQ_Monogynella_boxplot +  
-  NPQ_Cuscuta_boxplot + 
-  NPQ_Grammica_boxplot + 
-  NPQ_C_purpurata_boxplot + geom_text(size    = 2, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) + plot_layout(nrow = 3, byrow = T) -> fluorescence_boxplot_new
+  wrap_elements(gridtext::richtext_grob('ΦNPQ', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
+  ΦNPQ_ipomoea_boxplot + 
+  ΦNPQ_Monogynella_boxplot +  
+  ΦNPQ_Cuscuta_boxplot + 
+  ΦNPQ_Grammica_boxplot + 
+  ΦNPQ_C_purpurata_boxplot + geom_text(size    = 2, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) + plot_layout(nrow = 3, byrow = T) -> fluorescence_boxplot_new
 
 fluorescence_boxplot_new 
 
@@ -1016,8 +1016,8 @@ dev.off()
 #### Grammica only FLUORESCENCE PLOTS  ####
 
 #### Fv.Fm C_australis ####
-data_C_australis <-  dplyr::filter(data_no_outliers_Grammica_plot, Species == "C_australis")
-data_C_australis_Fv.Fm <- dplyr::filter(data_C_australis, Metric == "Fv.Fm")
+data_C_australis <-  filter(data_no_outliers_Grammica_plot, Species == "C_australis")
+data_C_australis_Fv.Fm <- filter(data_C_australis, Metric == "Fv.Fm")
 
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
 data_C_australis$Tissue.edit <- factor(data_C_australis$Tissue.edit, levels = c("sdlg", "y", "o", "h", "f", "s"))
@@ -1043,7 +1043,7 @@ Fv.Fm_C_australis_boxplot <- ggplot(data_C_australis_Fv.Fm, aes(x=Tissue.edit, y
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_australis"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_australis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.6, parse = TRUE) 
@@ -1097,10 +1097,10 @@ Fv.Fm_C_australis_boxplot
 
 #### φPSII C_australis ####
 # calculate minimum φPSII for apporpriate bottom limit of φPSII y axes
-min_φPSII <-as.numeric( data_no_outliers %>% dplyr::filter(., Metric == "φPSII") %>% dplyr::summarize(., min(Value)))
+min_φPSII <-as.numeric( data_no_outliers %>% filter(., Metric == "φPSII") %>% dplyr::summarize(., min(Value)))
 min_φPSII
 
-data_C_australis_φPSII <- dplyr::filter(data_C_australis, Metric == "φPSII")
+data_C_australis_φPSII <- filter(data_C_australis, Metric == "φPSII")
 
 
 φPSII_C_australis_boxplot <- ggplot(data_C_australis_φPSII, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
@@ -1124,7 +1124,7 @@ data_C_australis_φPSII <- dplyr::filter(data_C_australis, Metric == "φPSII")
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_australis"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_australis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
@@ -1174,11 +1174,11 @@ cbd_φPSII_C_australis$nudged <- max_φPSII_C_australis$max * 1.05
 φPSII_C_australis_boxplot
 
 
-#### NPQ C_australis plot with x axis ####
-data_C_australis_NPQ <- dplyr::filter(data_C_australis, Metric == "NPQ")
+#### ΦNPQ C_australis plot with x axis ####
+data_C_australis_ΦNPQ <- filter(data_C_australis, Metric == "ΦNPQ")
 
 
-NPQ_C_australis_boxplot <- ggplot(data_C_australis_NPQ, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
+ΦNPQ_C_australis_boxplot <- ggplot(data_C_australis_ΦNPQ, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
   scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
@@ -1195,11 +1195,11 @@ NPQ_C_australis_boxplot <- ggplot(data_C_australis_NPQ, aes(x=Tissue.edit, y=Val
         legend.position = "none") +
   
   guides(colour = guide_legend(nrow = 1)) +
-  scale_y_continuous(position = "left", limits = c(0, 4)) + 
+  scale_y_continuous(position = "left", limits = c(0, 1)) + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_australis"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_australis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
@@ -1208,13 +1208,13 @@ NPQ_C_australis_boxplot <- ggplot(data_C_australis_NPQ, aes(x=Tissue.edit, y=Val
 
 # KW not sig so no post hoc
 
-NPQ_C_australis_boxplot
+ΦNPQ_C_australis_boxplot
 
 
 #### Fv.Fm loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
 loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
 # filter for Fv.Fm
-data_Fv.Fm_plots_grammicaspe <- dplyr::filter(data_no_outliers_Grammica_plot, Metric == "Fv.Fm")
+data_Fv.Fm_plots_grammicaspe <- filter(data_no_outliers_Grammica_plot, Metric == "Fv.Fm")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
 data_Fv.Fm_plots_grammicaspe$Tissue.edit <- factor(data_Fv.Fm_plots_grammicaspe$Tissue.edit, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
@@ -1223,7 +1223,7 @@ plot_list_Grammica_Fv.Fm = list()
 
 for (sub in (loop_species)) {
   
-  data_loop <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == sub)
+  data_loop <- filter(data_Fv.Fm_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) +
     scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -1251,13 +1251,13 @@ plot_list_Grammica_Fv.Fm[["C_polygonorum"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_polygonorum"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_polygonorum"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_C_polygonorum_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_polygonorum_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_cephalanthii")
+data_C_polygonorum_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_Fv.Fm_C_polygonorum <- with(data_C_polygonorum_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_C_polygonorum)
@@ -1309,14 +1309,14 @@ plot_list_Grammica_Fv.Fm[["C_sandwichiana"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_sandwichiana"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_sandwichiana"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_C_sandwichiana_boxplot
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_sandwichiana_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_sandwichiana")
+data_C_sandwichiana_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_sandwichiana")
 
 box.rslt_Fv.Fm_C_sandwichiana <- with(data_C_sandwichiana_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_C_sandwichiana)
@@ -1368,14 +1368,14 @@ plot_list_Grammica_Fv.Fm[["C_californica"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_californica"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_californica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_C_californica_boxplot
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_californica_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_californica")
+data_C_californica_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_californica")
 
 box.rslt_Fv.Fm_C_californica <- with(data_C_californica_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_C_californica)
@@ -1426,7 +1426,7 @@ plot_list_Grammica_Fv.Fm[["C_compacta"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_compacta"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_compacta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_C_compacta_boxplot
@@ -1434,7 +1434,7 @@ plot_list_Grammica_Fv.Fm[["C_compacta"]] +
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_compacta_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_compacta")
+data_C_compacta_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_compacta")
 
 box.rslt_Fv.Fm_C_compacta <- with(data_C_compacta_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_C_compacta)
@@ -1486,13 +1486,13 @@ plot_list_Grammica_Fv.Fm[["C_cephalanthii"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_cephalanthii"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_cephalanthii"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_C_cephalanthii_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_cephalanthii_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_cephalanthii")
+data_C_cephalanthii_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_Fv.Fm_C_cephalanthii <- with(data_C_cephalanthii_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_C_cephalanthii)
@@ -1543,14 +1543,14 @@ plot_list_Grammica_Fv.Fm[["C_denticulata"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_denticulata"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_denticulata"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_C_denticulata_boxplot
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_denticulata_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_denticulata")
+data_C_denticulata_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_denticulata")
 
 box.rslt_Fv.Fm_C_denticulata <- with(data_C_denticulata_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_C_denticulata)
@@ -1602,13 +1602,13 @@ plot_list_Grammica_Fv.Fm[["C_tasmanica"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_tasmanica"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_tasmanica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_C_tasmanica_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_tasmanica_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_tasmanica")
+data_C_tasmanica_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_tasmanica")
 
 box.rslt_Fv.Fm_C_tasmanica <- with(data_C_tasmanica_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_C_tasmanica)
@@ -1659,13 +1659,13 @@ plot_list_Grammica_Fv.Fm[["C_costaricensis"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_costaricensis"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_costaricensis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Fv.Fm_C_costaricensis_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_costaricensis_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_costaricensis")
+data_C_costaricensis_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_costaricensis")
 
 box.rslt_Fv.Fm_C_costaricensis <- with(data_C_costaricensis_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_C_costaricensis)
@@ -1713,7 +1713,7 @@ Fv.Fm_C_costaricensis_boxplot
 
 #### Fv.Fm C_indecora species alone ####
 
-data_Grammica_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_indecora")
+data_Grammica_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_indecora")
 
 Fv.Fm_C_indecora_boxplot <- ggplot(data_Grammica_Fv.Fm, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) +
   scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -1736,14 +1736,14 @@ Fv.Fm_C_indecora_boxplot <- ggplot(data_Grammica_Fv.Fm, aes(x=Tissue.edit, y=Val
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_indecora"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "Fv.Fm" & Species == "C_indecora"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_indecora_Fv.Fm <- dplyr::filter(data_Fv.Fm_plots_grammicaspe, Species == "C_indecora")
+data_C_indecora_Fv.Fm <- filter(data_Fv.Fm_plots_grammicaspe, Species == "C_indecora")
 
 box.rslt_Fv.Fm_C_indecora <- with(data_C_indecora_Fv.Fm, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_Fv.Fm_C_indecora)
@@ -1792,7 +1792,7 @@ Fv.Fm_C_indecora_boxplot
 #### φPSII loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
 loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
 # filter for φPSII
-data_φPSII_plots_grammicaspe <- dplyr::filter(data_no_outliers_Grammica_plot, Metric == "φPSII")
+data_φPSII_plots_grammicaspe <- filter(data_no_outliers_Grammica_plot, Metric == "φPSII")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
 data_φPSII_plots_grammicaspe$Tissue.edit <- factor(data_φPSII_plots_grammicaspe$Tissue.edit, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
@@ -1801,7 +1801,7 @@ plot_list_Grammica_φPSII = list()
 
 for (sub in (loop_species)) {
   
-  data_loop <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == sub)
+  data_loop <- filter(data_φPSII_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
     scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -1829,14 +1829,14 @@ plot_list_Grammica_φPSII[["C_polygonorum"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_polygonorum"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_polygonorum"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_C_polygonorum_boxplot
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_polygonorum_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == "C_polygonorum")
+data_C_polygonorum_φPSII <- filter(data_φPSII_plots_grammicaspe, Species == "C_polygonorum")
 
 box.rslt_φPSII_C_polygonorum <- with(data_C_polygonorum_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_C_polygonorum)
@@ -1888,14 +1888,14 @@ plot_list_Grammica_φPSII[["C_sandwichiana"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_sandwichiana"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_sandwichiana"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_C_sandwichiana_boxplot
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_sandwichiana_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == "C_sandwichiana")
+data_C_sandwichiana_φPSII <- filter(data_φPSII_plots_grammicaspe, Species == "C_sandwichiana")
 
 box.rslt_φPSII_C_sandwichiana <- with(data_C_sandwichiana_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_C_sandwichiana)
@@ -1946,14 +1946,14 @@ plot_list_Grammica_φPSII[["C_californica"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_californica"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_californica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_C_californica_boxplot
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_californica_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == "C_californica")
+data_C_californica_φPSII <- filter(data_φPSII_plots_grammicaspe, Species == "C_californica")
 
 box.rslt_φPSII_C_californica <- with(data_C_californica_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_C_californica)
@@ -2004,7 +2004,7 @@ plot_list_Grammica_φPSII[["C_compacta"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_compacta"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_compacta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_C_compacta_boxplot
@@ -2012,7 +2012,7 @@ plot_list_Grammica_φPSII[["C_compacta"]] +
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_compacta_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == "C_compacta")
+data_C_compacta_φPSII <- filter(data_φPSII_plots_grammicaspe, Species == "C_compacta")
 
 box.rslt_φPSII_C_compacta <- with(data_C_compacta_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_C_compacta)
@@ -2063,13 +2063,13 @@ plot_list_Grammica_φPSII[["C_cephalanthii"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_cephalanthii"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_cephalanthii"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_C_cephalanthii_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_cephalanthii_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == "C_cephalanthii")
+data_C_cephalanthii_φPSII <- filter(data_φPSII_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_φPSII_C_cephalanthii <- with(data_C_cephalanthii_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_C_cephalanthii)
@@ -2120,14 +2120,14 @@ plot_list_Grammica_φPSII[["C_denticulata"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_denticulata"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_denticulata"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_C_denticulata_boxplot
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_denticulata_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == "C_denticulata")
+data_C_denticulata_φPSII <- filter(data_φPSII_plots_grammicaspe, Species == "C_denticulata")
 
 box.rslt_φPSII_C_denticulata <- with(data_C_denticulata_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_C_denticulata)
@@ -2179,13 +2179,13 @@ plot_list_Grammica_φPSII[["C_tasmanica"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_tasmanica"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_tasmanica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_C_tasmanica_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_tasmanica_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == "C_tasmanica")
+data_C_tasmanica_φPSII <- filter(data_φPSII_plots_grammicaspe, Species == "C_tasmanica")
 
 box.rslt_φPSII_C_tasmanica <- with(data_C_tasmanica_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_C_tasmanica)
@@ -2236,7 +2236,7 @@ plot_list_Grammica_φPSII[["C_costaricensis"]] +
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_costaricensis"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_costaricensis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> φPSII_C_costaricensis_boxplot
@@ -2247,7 +2247,7 @@ plot_list_Grammica_φPSII[["C_costaricensis"]] +
 
 #### φPSII C_indecora species alone ####
 
-data_Grammica_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == "C_indecora")
+data_Grammica_φPSII <- filter(data_φPSII_plots_grammicaspe, Species == "C_indecora")
 
 φPSII_C_indecora_boxplot <- ggplot(data_Grammica_φPSII, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) +
   scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -2270,14 +2270,14 @@ data_Grammica_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_indecora"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "φPSII" & Species == "C_indecora"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_indecora_φPSII <- dplyr::filter(data_φPSII_plots_grammicaspe, Species == "C_indecora")
+data_C_indecora_φPSII <- filter(data_φPSII_plots_grammicaspe, Species == "C_indecora")
 
 box.rslt_φPSII_C_indecora <- with(data_C_indecora_φPSII, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
 str(box.rslt_φPSII_C_indecora)
@@ -2322,19 +2322,19 @@ cbd_φPSII_C_indecora$nudged <- (max_φPSII_C_indecora$max * 1.05)
 φPSII_C_indecora_boxplot
 
 
-#### NPQ loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
+#### ΦNPQ loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
 loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
-# filter for NPQ
-data_NPQ_plots_grammicaspe <- dplyr::filter(data_no_outliers_Grammica_plot, Metric == "NPQ")
+# filter for ΦNPQ
+data_ΦNPQ_plots_grammicaspe <- filter(data_no_outliers_Grammica_plot, Metric == "ΦNPQ")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_NPQ_plots_grammicaspe$Tissue.edit <- factor(data_NPQ_plots_grammicaspe$Tissue.edit, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_ΦNPQ_plots_grammicaspe$Tissue.edit <- factor(data_ΦNPQ_plots_grammicaspe$Tissue.edit, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Grammica_NPQ = list()
+plot_list_Grammica_ΦNPQ = list()
 
 for (sub in (loop_species)) {
   
-  data_loop <- dplyr::filter(data_NPQ_plots_grammicaspe, Species == sub)
+  data_loop <- filter(data_ΦNPQ_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) + 
     scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
@@ -2351,392 +2351,350 @@ for (sub in (loop_species)) {
           axis.title.y = element_blank(),
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
-    scale_y_continuous(position = "right", limits = c(0, 4))
-  plot_list_Grammica_NPQ[[sub]] = p
+    scale_y_continuous(position = "right", limits = c(0, 1))
+  plot_list_Grammica_ΦNPQ[[sub]] = p
   
 }
 
-#### NPQ C_polygonorum ####
-plot_list_Grammica_NPQ[["C_polygonorum"]] + 
+#### ΦNPQ C_polygonorum ####
+plot_list_Grammica_ΦNPQ[["C_polygonorum"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_polygonorum"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_polygonorum"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_C_polygonorum_boxplot
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_C_polygonorum_boxplot
 
 # KW not sig so no post hoc
-NPQ_C_polygonorum_boxplot
+ΦNPQ_C_polygonorum_boxplot
 
 
-#### NPQ C_sandwichiana ####
-plot_list_Grammica_NPQ[["C_sandwichiana"]] + 
+#### ΦNPQ C_sandwichiana ####
+plot_list_Grammica_ΦNPQ[["C_sandwichiana"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_sandwichiana"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_sandwichiana"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_C_sandwichiana_boxplot
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_C_sandwichiana_boxplot
 
 
 # KW not sig so no post hoc
-NPQ_C_sandwichiana_boxplot
+ΦNPQ_C_sandwichiana_boxplot
 
 
-#### NPQ C_californica ####
-plot_list_Grammica_NPQ[["C_californica"]] + 
+#### ΦNPQ C_californica ####
+plot_list_Grammica_ΦNPQ[["C_californica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_californica"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_californica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_C_californica_boxplot
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_C_californica_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_californica_NPQ <- dplyr::filter(data_NPQ_plots_grammicaspe, Species == "C_californica")
+data_C_californica_ΦNPQ <- filter(data_ΦNPQ_plots_grammicaspe, Species == "C_californica")
 
-box.rslt_NPQ_C_californica <- with(data_C_californica_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_C_californica)
-boxplot_positions_NPQ_C_californica <- as.data.frame(box.rslt_NPQ_C_californica$stats)
+box.rslt_ΦNPQ_C_californica <- with(data_C_californica_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_C_californica)
+boxplot_positions_ΦNPQ_C_californica <- as.data.frame(box.rslt_ΦNPQ_C_californica$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_C_californica <- levels(data_C_californica_NPQ$Tissue.edit)
+tissues_ΦNPQ_C_californica <- levels(data_C_californica_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_C_californica) <- tissues_NPQ_C_californica
+colnames(boxplot_positions_ΦNPQ_C_californica) <- tissues_ΦNPQ_C_californica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_C_californica <- boxplot_positions_NPQ_C_californica[5,]
+top_positions_ΦNPQ_C_californica <- boxplot_positions_ΦNPQ_C_californica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_C_californica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_californica__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_C_californica)[1] <- "Letter"
+cbd_ΦNPQ_C_californica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_californica__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_C_californica)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_C_californica, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_C_californica, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_C_californica %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_C_californica
+top_positions_ΦNPQ_C_californica %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_C_californica
 # now join these positions to cbd
-left_join(cbd_NPQ_C_californica, top_positions_NPQ_C_californica, by = "Tissue.edit") -> cbd_NPQ_C_californica
+left_join(cbd_ΦNPQ_C_californica, top_positions_ΦNPQ_C_californica, by = "Tissue.edit") -> cbd_ΦNPQ_C_californica
 
 # calculate how much to nudge
-data_C_californica_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_C_californica
-cbd_NPQ_C_californica$nudged <- max_NPQ_C_californica$max * 1.05
+data_C_californica_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_C_californica
+cbd_ΦNPQ_C_californica$nudged <- max_ΦNPQ_C_californica$max * 1.05
 
 
 # add CLDs to plot
-NPQ_C_californica_boxplot + 
+ΦNPQ_C_californica_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_NPQ_C_californica,
+    data    = cbd_ΦNPQ_C_californica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_C_californica_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_C_californica_boxplot
 
 
-NPQ_C_californica_boxplot
+ΦNPQ_C_californica_boxplot
 
 
 
-#### NPQ C_compacta ####
-plot_list_Grammica_NPQ[["C_compacta"]] + 
+#### ΦNPQ C_compacta ####
+plot_list_Grammica_ΦNPQ[["C_compacta"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_compacta"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_compacta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_C_compacta_boxplot
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_C_compacta_boxplot
 
+
+# not sig so no KW
+
+ΦNPQ_C_compacta_boxplot
+
+
+
+#### ΦNPQ C_cephalanthii ####
+plot_list_Grammica_ΦNPQ[["C_cephalanthii"]] + 
+  geom_text(
+    size    = 1.8,
+    color = "black",
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_cephalanthii"),
+    inherit.aes = T,
+    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_C_cephalanthii_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_compacta_NPQ <- dplyr::filter(data_NPQ_plots_grammicaspe, Species == "C_compacta")
+data_C_cephalanthii_ΦNPQ <- filter(data_ΦNPQ_plots_grammicaspe, Species == "C_cephalanthii")
 
-box.rslt_NPQ_C_compacta <- with(data_C_compacta_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_C_compacta)
-boxplot_positions_NPQ_C_compacta <- as.data.frame(box.rslt_NPQ_C_compacta$stats)
+box.rslt_ΦNPQ_C_cephalanthii <- with(data_C_cephalanthii_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_C_cephalanthii)
+boxplot_positions_ΦNPQ_C_cephalanthii <- as.data.frame(box.rslt_ΦNPQ_C_cephalanthii$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_C_compacta <- levels(data_C_compacta_NPQ$Tissue.edit)
+tissues_ΦNPQ_C_cephalanthii <- levels(data_C_cephalanthii_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_C_compacta) <- tissues_NPQ_C_compacta
+colnames(boxplot_positions_ΦNPQ_C_cephalanthii) <- tissues_ΦNPQ_C_cephalanthii
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_C_compacta <- boxplot_positions_NPQ_C_compacta[5,]
+top_positions_ΦNPQ_C_cephalanthii <- boxplot_positions_ΦNPQ_C_cephalanthii[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_compacta__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_C_compacta)[1] <- "Letter"
+cbd_ΦNPQ_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_C_compacta, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_C_cephalanthii, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_C_compacta %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_C_compacta
+top_positions_ΦNPQ_C_cephalanthii %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_C_cephalanthii
 # now join these positions to cbd
-left_join(cbd_NPQ_C_compacta, top_positions_NPQ_C_compacta, by = "Tissue.edit") -> cbd_NPQ_C_compacta
+left_join(cbd_ΦNPQ_C_cephalanthii, top_positions_ΦNPQ_C_cephalanthii, by = "Tissue.edit") -> cbd_ΦNPQ_C_cephalanthii
 
 # calculate how much to nudge
-data_C_compacta_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_C_compacta
-cbd_NPQ_C_compacta$nudged <- max_NPQ_C_compacta$max * 1.05
+data_C_cephalanthii_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_C_cephalanthii
+cbd_ΦNPQ_C_cephalanthii$nudged <- max_ΦNPQ_C_cephalanthii$max * 1.05
 
 
 # add CLDs to plot
-NPQ_C_compacta_boxplot + 
+ΦNPQ_C_cephalanthii_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_NPQ_C_compacta,
+    data    = cbd_ΦNPQ_C_cephalanthii,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_C_compacta_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_C_cephalanthii_boxplot
 
 
-NPQ_C_compacta_boxplot
+ΦNPQ_C_cephalanthii_boxplot
 
 
-
-#### NPQ C_cephalanthii ####
-plot_list_Grammica_NPQ[["C_cephalanthii"]] + 
+#### ΦNPQ C_denticulata ####
+plot_list_Grammica_ΦNPQ[["C_denticulata"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_cephalanthii"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_denticulata"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_C_cephalanthii_boxplot
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_C_denticulata_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_cephalanthii_NPQ <- dplyr::filter(data_NPQ_plots_grammicaspe, Species == "C_cephalanthii")
+data_C_denticulata_ΦNPQ <- filter(data_ΦNPQ_plots_grammicaspe, Species == "C_denticulata")
 
-box.rslt_NPQ_C_cephalanthii <- with(data_C_cephalanthii_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_C_cephalanthii)
-boxplot_positions_NPQ_C_cephalanthii <- as.data.frame(box.rslt_NPQ_C_cephalanthii$stats)
+box.rslt_ΦNPQ_C_denticulata <- with(data_C_denticulata_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_C_denticulata)
+boxplot_positions_ΦNPQ_C_denticulata <- as.data.frame(box.rslt_ΦNPQ_C_denticulata$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_C_cephalanthii <- levels(data_C_cephalanthii_NPQ$Tissue.edit)
+tissues_ΦNPQ_C_denticulata <- levels(data_C_denticulata_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_C_cephalanthii) <- tissues_NPQ_C_cephalanthii
+colnames(boxplot_positions_ΦNPQ_C_denticulata) <- tissues_ΦNPQ_C_denticulata
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_C_cephalanthii <- boxplot_positions_NPQ_C_cephalanthii[5,]
+top_positions_ΦNPQ_C_denticulata <- boxplot_positions_ΦNPQ_C_denticulata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_C_cephalanthii)[1] <- "Letter"
+cbd_ΦNPQ_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_denticulata__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_C_denticulata)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_C_cephalanthii, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_C_denticulata, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_C_cephalanthii %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_C_cephalanthii
+top_positions_ΦNPQ_C_denticulata %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_C_denticulata
 # now join these positions to cbd
-left_join(cbd_NPQ_C_cephalanthii, top_positions_NPQ_C_cephalanthii, by = "Tissue.edit") -> cbd_NPQ_C_cephalanthii
+left_join(cbd_ΦNPQ_C_denticulata, top_positions_ΦNPQ_C_denticulata, by = "Tissue.edit") -> cbd_ΦNPQ_C_denticulata
 
 # calculate how much to nudge
-data_C_cephalanthii_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_C_cephalanthii
-cbd_NPQ_C_cephalanthii$nudged <- max_NPQ_C_cephalanthii$max * 1.05
+data_C_denticulata_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_C_denticulata
+cbd_ΦNPQ_C_denticulata$nudged <- max_ΦNPQ_C_denticulata$max * 1.05
 
 
 # add CLDs to plot
-NPQ_C_cephalanthii_boxplot + 
+ΦNPQ_C_denticulata_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_NPQ_C_cephalanthii,
+    data    = cbd_ΦNPQ_C_denticulata,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_C_cephalanthii_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_C_denticulata_boxplot
 
 
-NPQ_C_cephalanthii_boxplot
+ΦNPQ_C_denticulata_boxplot
 
 
-#### NPQ C_denticulata ####
-plot_list_Grammica_NPQ[["C_denticulata"]] + 
+
+
+#### ΦNPQ C_tasmanica ####
+plot_list_Grammica_ΦNPQ[["C_tasmanica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_denticulata"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_tasmanica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_C_denticulata_boxplot
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_C_tasmanica_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_denticulata_NPQ <- dplyr::filter(data_NPQ_plots_grammicaspe, Species == "C_denticulata")
+data_C_tasmanica_ΦNPQ <- filter(data_ΦNPQ_plots_grammicaspe, Species == "C_tasmanica")
 
-box.rslt_NPQ_C_denticulata <- with(data_C_denticulata_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_C_denticulata)
-boxplot_positions_NPQ_C_denticulata <- as.data.frame(box.rslt_NPQ_C_denticulata$stats)
+box.rslt_ΦNPQ_C_tasmanica <- with(data_C_tasmanica_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_C_tasmanica)
+boxplot_positions_ΦNPQ_C_tasmanica <- as.data.frame(box.rslt_ΦNPQ_C_tasmanica$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_C_denticulata <- levels(data_C_denticulata_NPQ$Tissue.edit)
+tissues_ΦNPQ_C_tasmanica <- levels(data_C_tasmanica_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_C_denticulata) <- tissues_NPQ_C_denticulata
+colnames(boxplot_positions_ΦNPQ_C_tasmanica) <- tissues_ΦNPQ_C_tasmanica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_C_denticulata <- boxplot_positions_NPQ_C_denticulata[5,]
+top_positions_ΦNPQ_C_tasmanica <- boxplot_positions_ΦNPQ_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_denticulata__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_C_denticulata)[1] <- "Letter"
+cbd_ΦNPQ_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_C_denticulata, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_C_tasmanica, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_C_denticulata %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_C_denticulata
+top_positions_ΦNPQ_C_tasmanica %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_C_tasmanica
 # now join these positions to cbd
-left_join(cbd_NPQ_C_denticulata, top_positions_NPQ_C_denticulata, by = "Tissue.edit") -> cbd_NPQ_C_denticulata
+left_join(cbd_ΦNPQ_C_tasmanica, top_positions_ΦNPQ_C_tasmanica, by = "Tissue.edit") -> cbd_ΦNPQ_C_tasmanica
 
 # calculate how much to nudge
-data_C_denticulata_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_C_denticulata
-cbd_NPQ_C_denticulata$nudged <- max_NPQ_C_denticulata$max * 1.05
+data_C_tasmanica_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_C_tasmanica
+cbd_ΦNPQ_C_tasmanica$nudged <- max_ΦNPQ_C_tasmanica$max * 1.05
 
 
 # add CLDs to plot
-NPQ_C_denticulata_boxplot + 
+ΦNPQ_C_tasmanica_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_NPQ_C_denticulata,
+    data    = cbd_ΦNPQ_C_tasmanica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_C_denticulata_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_C_tasmanica_boxplot
 
 
-NPQ_C_denticulata_boxplot
+ΦNPQ_C_tasmanica_boxplot
 
 
-
-
-#### NPQ C_tasmanica ####
-plot_list_Grammica_NPQ[["C_tasmanica"]] + 
+#### ΦNPQ C_costaricensis ####
+plot_list_Grammica_ΦNPQ[["C_costaricensis"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_tasmanica"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_costaricensis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_C_tasmanica_boxplot
+    nudge_y = -.5, parse = TRUE) -> ΦNPQ_C_costaricensis_boxplot
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_tasmanica_NPQ <- dplyr::filter(data_NPQ_plots_grammicaspe, Species == "C_tasmanica")
+data_C_costaricensis_ΦNPQ <- filter(data_ΦNPQ_plots_grammicaspe, Species == "C_costaricensis")
 
-box.rslt_NPQ_C_tasmanica <- with(data_C_tasmanica_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_C_tasmanica)
-boxplot_positions_NPQ_C_tasmanica <- as.data.frame(box.rslt_NPQ_C_tasmanica$stats)
+box.rslt_ΦNPQ_C_costaricensis <- with(data_C_costaricensis_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_C_costaricensis)
+boxplot_positions_ΦNPQ_C_costaricensis <- as.data.frame(box.rslt_ΦNPQ_C_costaricensis$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_C_tasmanica <- levels(data_C_tasmanica_NPQ$Tissue.edit)
+tissues_ΦNPQ_C_costaricensis <- levels(data_C_costaricensis_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_C_tasmanica) <- tissues_NPQ_C_tasmanica
+colnames(boxplot_positions_ΦNPQ_C_costaricensis) <- tissues_ΦNPQ_C_costaricensis
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_C_tasmanica <- boxplot_positions_NPQ_C_tasmanica[5,]
+top_positions_ΦNPQ_C_costaricensis <- boxplot_positions_ΦNPQ_C_costaricensis[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_C_tasmanica)[1] <- "Letter"
+cbd_ΦNPQ_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_C_tasmanica, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_C_costaricensis, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_C_tasmanica %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_C_tasmanica
+top_positions_ΦNPQ_C_costaricensis %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_C_costaricensis
 # now join these positions to cbd
-left_join(cbd_NPQ_C_tasmanica, top_positions_NPQ_C_tasmanica, by = "Tissue.edit") -> cbd_NPQ_C_tasmanica
+left_join(cbd_ΦNPQ_C_costaricensis, top_positions_ΦNPQ_C_costaricensis, by = "Tissue.edit") -> cbd_ΦNPQ_C_costaricensis
 
 # calculate how much to nudge
-data_C_tasmanica_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_C_tasmanica
-cbd_NPQ_C_tasmanica$nudged <- max_NPQ_C_tasmanica$max * 1.05
+data_C_costaricensis_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_C_costaricensis
+cbd_ΦNPQ_C_costaricensis$nudged <- max_ΦNPQ_C_costaricensis$max * 1.05
 
 
 # add CLDs to plot
-NPQ_C_tasmanica_boxplot + 
+ΦNPQ_C_costaricensis_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_NPQ_C_tasmanica,
+    data    = cbd_ΦNPQ_C_costaricensis,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_C_tasmanica_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_C_costaricensis_boxplot
 
 
-NPQ_C_tasmanica_boxplot
+ΦNPQ_C_costaricensis_boxplot
 
 
-#### NPQ C_costaricensis ####
-plot_list_Grammica_NPQ[["C_costaricensis"]] + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_costaricensis"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> NPQ_C_costaricensis_boxplot
+#### ΦNPQ C_indecora species alone ####
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_costaricensis_NPQ <- dplyr::filter(data_NPQ_plots_grammicaspe, Species == "C_costaricensis")
+data_Grammica_ΦNPQ <- filter(data_ΦNPQ_plots_grammicaspe, Species == "C_indecora")
 
-box.rslt_NPQ_C_costaricensis <- with(data_C_costaricensis_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_C_costaricensis)
-boxplot_positions_NPQ_C_costaricensis <- as.data.frame(box.rslt_NPQ_C_costaricensis$stats)
-
-# what are these column tissue codes?
-tissues_NPQ_C_costaricensis <- levels(data_C_costaricensis_NPQ$Tissue.edit)
-# add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_C_costaricensis) <- tissues_NPQ_C_costaricensis
-
-# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_C_costaricensis <- boxplot_positions_NPQ_C_costaricensis[5,]
-
-
-#add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_C_costaricensis)[1] <- "Letter"
-# turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_C_costaricensis, keep.rownames = "Tissue.edit")
-
-
-# add a column y.position taken from top_positions based on mtaching up Tissue.edit
-# first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_C_costaricensis %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_C_costaricensis
-# now join these positions to cbd
-left_join(cbd_NPQ_C_costaricensis, top_positions_NPQ_C_costaricensis, by = "Tissue.edit") -> cbd_NPQ_C_costaricensis
-
-# calculate how much to nudge
-data_C_costaricensis_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_C_costaricensis
-cbd_NPQ_C_costaricensis$nudged <- max_NPQ_C_costaricensis$max * 1.05
-
-
-# add CLDs to plot
-NPQ_C_costaricensis_boxplot + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = cbd_NPQ_C_costaricensis,
-    inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_C_costaricensis_boxplot
-
-
-NPQ_C_costaricensis_boxplot
-
-
-#### NPQ C_indecora species alone ####
-
-data_Grammica_NPQ <- dplyr::filter(data_NPQ_plots_grammicaspe, Species == "C_indecora")
-
-NPQ_C_indecora_boxplot <- ggplot(data_Grammica_NPQ, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) +
+ΦNPQ_C_indecora_boxplot <- ggplot(data_Grammica_ΦNPQ, aes(x=Tissue.edit, y=Value, color=Tissue.edit)) +
   scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
@@ -2753,59 +2711,59 @@ NPQ_C_indecora_boxplot <- ggplot(data_Grammica_NPQ, aes(x=Tissue.edit, y=Value, 
         legend.position = "none") +
   
   guides(colour = guide_legend(nrow = 1)) +
-  scale_y_continuous(position = "right", limits = c(0, 4)) + 
+  scale_y_continuous(position = "right", limits = c(0, 1)) + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Metric == "NPQ" & Species == "C_indecora"),
+    data    = filter(dat_text_plot_kruskal_Grammica, Metric == "ΦNPQ" & Species == "C_indecora"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
 # use base R boxplot to get the coordinates of the boxes
-data_C_indecora_NPQ <- dplyr::filter(data_NPQ_plots_grammicaspe, Species == "C_indecora")
+data_C_indecora_ΦNPQ <- filter(data_ΦNPQ_plots_grammicaspe, Species == "C_indecora")
 
-box.rslt_NPQ_C_indecora <- with(data_C_indecora_NPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
-str(box.rslt_NPQ_C_indecora)
-boxplot_positions_NPQ_C_indecora <- as.data.frame(box.rslt_NPQ_C_indecora$stats)
+box.rslt_ΦNPQ_C_indecora <- with(data_C_indecora_ΦNPQ, graphics::boxplot(Value ~ Tissue.edit, plot = FALSE))
+str(box.rslt_ΦNPQ_C_indecora)
+boxplot_positions_ΦNPQ_C_indecora <- as.data.frame(box.rslt_ΦNPQ_C_indecora$stats)
 
 # what are these column tissue codes?
-tissues_NPQ_C_indecora <- levels(data_C_indecora_NPQ$Tissue.edit)
+tissues_ΦNPQ_C_indecora <- levels(data_C_indecora_ΦNPQ$Tissue.edit)
 # add appropriate tissues to position df
-colnames(boxplot_positions_NPQ_C_indecora) <- tissues_NPQ_C_indecora
+colnames(boxplot_positions_ΦNPQ_C_indecora) <- tissues_ΦNPQ_C_indecora
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_NPQ_C_indecora <- boxplot_positions_NPQ_C_indecora[5,]
+top_positions_ΦNPQ_C_indecora <- boxplot_positions_ΦNPQ_C_indecora[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NPQ_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__NPQ"]])[["Letters"]])
-colnames(cbd_NPQ_C_indecora)[1] <- "Letter"
+cbd_ΦNPQ_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__ΦNPQ"]])[["Letters"]])
+colnames(cbd_ΦNPQ_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.edit
-setDT(cbd_NPQ_C_indecora, keep.rownames = "Tissue.edit")
+setDT(cbd_ΦNPQ_C_indecora, keep.rownames = "Tissue.edit")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.edit
 # first reshape top_positions so that colnames are a column called Tissue.edit
-top_positions_NPQ_C_indecora %>% gather(., Tissue.edit, y.position) -> top_positions_NPQ_C_indecora
+top_positions_ΦNPQ_C_indecora %>% gather(., Tissue.edit, y.position) -> top_positions_ΦNPQ_C_indecora
 # now join these positions to cbd
-left_join(cbd_NPQ_C_indecora, top_positions_NPQ_C_indecora, by = "Tissue.edit") -> cbd_NPQ_C_indecora
+left_join(cbd_ΦNPQ_C_indecora, top_positions_ΦNPQ_C_indecora, by = "Tissue.edit") -> cbd_ΦNPQ_C_indecora
 
 # calculate how much to nudge
-data_C_indecora_NPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_NPQ_C_indecora
-cbd_NPQ_C_indecora$nudged <- (max_NPQ_C_indecora$max * 1.05)
+data_C_indecora_ΦNPQ %>% group_by(Tissue.edit) %>% dplyr::summarize(., max = max(Value)) -> max_ΦNPQ_C_indecora
+cbd_ΦNPQ_C_indecora$nudged <- (max_ΦNPQ_C_indecora$max * 1.05)
 
 # add CLDs to plot
-NPQ_C_indecora_boxplot + 
+ΦNPQ_C_indecora_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_NPQ_C_indecora,
+    data    = cbd_ΦNPQ_C_indecora,
     inherit.aes = T,
-    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> NPQ_C_indecora_boxplot
+    mapping = aes(x = Tissue.edit, y = nudged, label = Letter, vjust = 0)) -> ΦNPQ_C_indecora_boxplot
 
 
-NPQ_C_indecora_boxplot
+ΦNPQ_C_indecora_boxplot
 
 
 
@@ -2820,7 +2778,7 @@ Grammica_carotenoid_absent_list <- list()
 
 for (species in Species_list_Grammica) {
   for (metric in Metric_list_Grammica) {
-    data_loop <- data_no_outliers_Grammica_plot %>% dplyr::filter(Species == species & Metric == metric)
+    data_loop <- data_no_outliers_Grammica_plot %>% filter(Species == species & Metric == metric)
     if (mean(data_loop$Value) == 0) {
       print("absent") -> Grammica_carotenoid_absent_list[[metric]][[species]]
     }}}
@@ -2835,7 +2793,7 @@ for (species in Species_list_Grammica) {
 
 
 #### COMBINED (faceted) fluorescence plot: Grammica ONLY ####
-wrap_elements(gridtext::richtext_grob('*F*<sub>v</sub>/*F*<sub>m</sub>', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
+wrap_elements(gridtext::richtext_grob('*F*<sub>v</sub>/*F*<sub>m</sub>', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = grid::gpar(fontsize = 8, fontface = 'bold'))) + 
   Fv.Fm_C_australis_boxplot + ggtitle('C. australis') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
   Fv.Fm_C_polygonorum_boxplot + ggtitle('C. polygonorum') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
   Fv.Fm_C_sandwichiana_boxplot + ggtitle('C. sandwichiana') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
@@ -2857,17 +2815,17 @@ wrap_elements(gridtext::richtext_grob('*F*<sub>v</sub>/*F*<sub>m</sub>', rot = 9
   φPSII_C_tasmanica_boxplot +
   φPSII_C_costaricensis_boxplot +
   φPSII_C_indecora_boxplot +
-  wrap_elements(gridtext::richtext_grob('NPQ', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
-  NPQ_C_australis_boxplot +
-  NPQ_C_polygonorum_boxplot + 
-  NPQ_C_sandwichiana_boxplot +
-  NPQ_C_californica_boxplot + 
-  NPQ_C_compacta_boxplot +
-  NPQ_C_cephalanthii_boxplot +
-  NPQ_C_denticulata_boxplot +
-  NPQ_C_tasmanica_boxplot +
-  NPQ_C_costaricensis_boxplot +
-  NPQ_C_indecora_boxplot +
+  wrap_elements(gridtext::richtext_grob('ΦNPQ', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
+  ΦNPQ_C_australis_boxplot +
+  ΦNPQ_C_polygonorum_boxplot + 
+  ΦNPQ_C_sandwichiana_boxplot +
+  ΦNPQ_C_californica_boxplot + 
+  ΦNPQ_C_compacta_boxplot +
+  ΦNPQ_C_cephalanthii_boxplot +
+  ΦNPQ_C_denticulata_boxplot +
+  ΦNPQ_C_tasmanica_boxplot +
+  ΦNPQ_C_costaricensis_boxplot +
+  ΦNPQ_C_indecora_boxplot +
   plot_layout(nrow = 3, byrow = T) -> fluorescence_boxplot_Grammica_new
 
 fluorescence_boxplot_Grammica_new 
