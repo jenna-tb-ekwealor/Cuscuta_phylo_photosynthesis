@@ -6644,7 +6644,7 @@ Monogynella,C_monogyna,CUMO,A,2,old,2017-11-15,1:08:04 PM,,,o,987,ΦNPQ,0.160414
 Monogynella,C_monogyna,CUMO,D,2,young,2018-03-08,11:17:00 AM,,,y,988,ΦNPQ,0.181902888,Monogynella__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,D,1,young,2018-03-08,11:17:00 AM,,,y,989,ΦNPQ,0.177464278,Monogynella__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,B,1,young,2017-12-13,10:48:48 AM,,,y,994,ΦNPQ,0.141861062,Monogynella__ΦNPQ,Young,Monogynella__Young
-Monogynella,C_monogyna,CUMO,A,1,young,2017-11-15,12:58:46 PM,,,y,998,ΦNPQ,0.141310239,Monogynella__ΦNPQ,Young,Monogynella__Young
+Monogynella,C_monogyna,CUMO,A,1,young,2017-11-15,12:58:46 PM,,,y,998,ΦNPQ,0.141310239,Ipomoea_nil__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,D,3,young,2018-02-16,4:07:19 PM,,,y,1002,ΦNPQ,0.170842098,Monogynella__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,D,2,young,2018-02-16,4:07:19 PM,,,y,1003,ΦNPQ,0.157244123,Monogynella__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,D,1,young,2018-02-16,4:07:19 PM,,,y,1005,ΦNPQ,0.140712875,Monogynella__ΦNPQ,Young,Monogynella__Young
@@ -6662,7 +6662,7 @@ Ipomoea_nil,Ipomoea_nil,IPNI,B,2,seed,2018-06-26,5:15:03 PM,,,s,347,ΦNPQ,0.2265
 Ipomoea_nil,Ipomoea_nil,IPNI,E,4,flower,2018-06-23,5:22:41 PM,,,f,349,ΦNPQ,0.455999856,Ipomoea_nil__ΦNPQ,Flower,Ipomoea_nil__Flower
 Ipomoea_nil,Ipomoea_nil,IPNI,E,3,flower,2018-06-22,1:28:35 PM,,,f,351,ΦNPQ,0.368050433,Ipomoea_nil__ΦNPQ,Flower,Ipomoea_nil__Flower
 Ipomoea_nil,Ipomoea_nil,IPNI,B,1,flower,2018-06-12,5:26:04 PM,,,f,367,ΦNPQ,0.406589812,Ipomoea_nil__ΦNPQ,Flower,Ipomoea_nil__Flower
-Ipomoea_nil,Ipomoea_nil,IPNI,B,4,seed,2018-07-06,1:58:18 PM,,,s,384,ΦNPQ,0.17524628,Ipomoea_nil__ΦNPQ,Seed,Ipomoea_nil__Seed
+Ipomoea_nil,Ipomoea_nil,IPNI,B,4,seed,2018-07-06,1:58:18 PM,,,s,384,ΦNPQ,0.17524628,Ipomoenella__ΦNPQ,Seed,Ipomoea_nil__Seed
 Ipomoea_nil,Ipomoea_nil,IPNI,B,3,seed,2018-07-06,1:58:18 PM,,,s,402,ΦNPQ,0.160386674,Ipomoea_nil__ΦNPQ,Seed,Ipomoea_nil__Seed
 Ipomoea_nil,Ipomoea_nil,IPNI,A,1,seed,2018-06-26,4:57:58 PM,,,s,410,ΦNPQ,0.182579473,Ipomoea_nil__ΦNPQ,Seed,Ipomoea_nil__Seed
 Ipomoea_nil,Ipomoea_nil,IPNI,B,2,seed,2018-07-06,1:58:18 PM,,,s,420,ΦNPQ,0.164740566,Ipomoea_nil__ΦNPQ,Seed,Ipomoea_nil__Seed
@@ -7480,7 +7480,7 @@ Grammica,C_denticulata,ss13-46,1,7,seedling,2018-05-01,3:53:06 PM,,,sdlg,993,Φf
 Grammica,C_denticulata,ss13-46,B,3,young,2018-06-20,12:55:09 PM,,,y,995,Φf.D,0.355555556,Grammica__Φf.D,Young,Grammica__Young
 Grammica,C_denticulata,ss13-46,1,5,seedling,2018-05-01,3:53:06 PM,,,sdlg,996,Φf.D,0.287365813,Grammica__Φf.D,Seedling,Grammica__Seedling
 Grammica,C_indecora,ss16-17,C,1,young,2018-01-25,11:41:52 AM,,,y,997,Φf.D,0.367346939,Grammica__Φf.D,Young,Grammica__Young
-Grammica,C_indecora,ss16-17,C,2,young,2018-01-25,11:41:52 AM,,,y,999,Φf.D,0.317865429,Grammica__Φf.D,Young,Grammica__Young
+Grammica,C_indecora,ss16-17,C,2,young,2018-01-25,11:41:52 AM,,,y,999,Φf.D,0.317865429,C_purpurata__Φf.D,Young,Grammica__Young
 Grammica,C_denticulata,ss13-46,-,3,seedling,2018-04-17,1:38:52 PM,,,sdlg,1000,Φf.D,0.312603648,Grammica__Φf.D,Seedling,Grammica__Seedling
 Grammica,C_californica,ss17-105,D,3,young,2018-05-25,12:42:05 PM,,,y,1001,Φf.D,0.30802603,Grammica__Φf.D,Young,Grammica__Young
 Grammica,C_indecora,ss16-17,B,1,young,2018-01-25,12:01:11 PM,,,y,1004,Φf.D,0.32810271,Grammica__Φf.D,Young,Grammica__Young
@@ -7597,7 +7597,7 @@ Monogynella,C_monogyna,CUMO,D,1,young,2018-02-16,4:07:19 PM,,,y,1005,Φf.D,0.260
 Monogynella,C_monogyna,CUMO,B,3,young,2017-12-13,10:48:48 AM,,,y,1006,Φf.D,0.267990714,Monogynella__Φf.D,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,C,1,young,2018-01-15,10:30:17 AM,,,y,1007,Φf.D,0.305610043,Monogynella__Φf.D,Young,Monogynella__Young
 Ipomoea_nil,Ipomoea_nil,IPNI,E,1,flower,2018-06-20,12:30:52 PM,,,f,209,Φf.D,0.396212673,Ipomoea_nil__Φf.D,Flower,Ipomoea_nil__Flower
-Ipomoea_nil,Ipomoea_nil,IPNI,B,2,flower,2018-06-26,4:50:06 PM,,,f,242,Φf.D,0.464972102,Monogynella__Φf.D,Flower,Ipomoea_nil__Flower
+Ipomoea_nil,Ipomoea_nil,IPNI,B,2,flower,2018-06-26,4:50:06 PM,,,f,242,Φf.D,0.464972102,Ipomoea_nil__Φf.D,Flower,Ipomoea_nil__Flower
 Ipomoea_nil,Ipomoea_nil,IPNI,E,2,flower,2018-06-21,3:58:53 PM,,,f,273,Φf.D,0.37409201,Ipomoea_nil__Φf.D,Flower,Ipomoea_nil__Flower
 Ipomoea_nil,Ipomoea_nil,IPNI,B,1,flower,2018-06-26,4:41:49 PM,,,f,285,Φf.D,0.484811166,Ipomoea_nil__Φf.D,Flower,Ipomoea_nil__Flower
 Ipomoea_nil,Ipomoea_nil,IPNI,A,1,young,2018-04-19,11:04:19 AM,,,y,318,Φf.D,0.305789617,Ipomoea_nil__Φf.D,Young,Ipomoea_nil__Young
