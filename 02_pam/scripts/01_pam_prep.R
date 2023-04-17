@@ -156,14 +156,14 @@ for (sub in Subgenus.list) {
     outliers[[sub]][[met]] <- y
   }}}
 
-# how many outliers for Fv.Fm, PhiPSII, Φf.D, and NPQ?
-total_outliers_count <- length(outliers[["Cuscuta"]][["ΦNPQ"]]) + length(outliers[["Cuscuta"]][["Fv.Fm"]]) + length(outliers[["Cuscuta"]][["φPSII"]]) + length(outliers[["Cuscuta"]][["Φf.D"]]) +
-  length(outliers[["Grammica"]][["ΦNPQ"]]) + length(outliers[["Grammica"]][["Fv.Fm"]]) + length(outliers[["Grammica"]][["φPSII"]]) + length(outliers[["Grammica"]][["Φf.D"]]) +
-  length(outliers[["C_purpurata"]][["ΦNPQ"]]) + length(outliers[["C_purpurata"]][["Fv.Fm"]]) + length(outliers[["C_purpurata"]][["φPSII"]]) + length(outliers[["C_purpurata"]][["Φf.D"]]) +
-  length(outliers[["Monogynella"]][["ΦNPQ"]]) + length(outliers[["Monogynella"]][["Fv.Fm"]]) + length(outliers[["Monogynella"]][["φPSII"]]) + length(outliers[["Monogynella"]][["Φf.D"]]) +
-  length(outliers[["Ipomoea_nil"]][["ΦNPQ"]]) + length(outliers[["Ipomoea_nil"]][["Fv.Fm"]]) + length(outliers[["Ipomoea_nil"]][["φPSII"]]) + length(outliers[["Ipomoea_nil"]][["Φf.D"]]) 
+# how many outliers for Fv.Fm, PhiPSII, and NPQ?
+total_outliers_count <- length(outliers[["Cuscuta"]][["ΦNPQ"]]) + length(outliers[["Cuscuta"]][["Fv.Fm"]]) + length(outliers[["Cuscuta"]][["φPSII"]]) +
+  length(outliers[["Grammica"]][["ΦNPQ"]]) + length(outliers[["Grammica"]][["Fv.Fm"]]) + length(outliers[["Grammica"]][["φPSII"]]) +
+  length(outliers[["C_purpurata"]][["ΦNPQ"]]) + length(outliers[["C_purpurata"]][["Fv.Fm"]]) + length(outliers[["C_purpurata"]][["φPSII"]]) +
+  length(outliers[["Monogynella"]][["ΦNPQ"]]) + length(outliers[["Monogynella"]][["Fv.Fm"]]) + length(outliers[["Monogynella"]][["φPSII"]]) +
+  length(outliers[["Ipomoea_nil"]][["ΦNPQ"]]) + length(outliers[["Ipomoea_nil"]][["Fv.Fm"]]) + length(outliers[["Ipomoea_nil"]][["φPSII"]]) 
 total_outliers_count
-# [1] 280 NOW 344 with Φf.D!
+# [1] 280 
 
 # will remove outliers after data is long
 
@@ -175,9 +175,9 @@ data_long <- na.omit(data_long)
 data_long$Value <- as.numeric(data_long$Value)
   
 # how many total measurements? 
-total_measurement_count <- length((data_long %>% dplyr::filter(Metric == "Fv.Fm"|Metric == "φPSII"| Metric == "ΦNPQ" | Metric == "Φf.D"))$Value)
+total_measurement_count <- length((data_long %>% dplyr::filter(Metric == "Fv.Fm"|Metric == "φPSII"| Metric == "ΦNPQ"))$Value)
 total_measurement_count
-# [1] 3027 NOW 4036 with Φf.D!
+# [1] 3027 
 
 
 # loop through outliers results to remove from data_long to create data_no_outliers
@@ -301,7 +301,7 @@ for(met in metric_list) {
 }
 
 # export only plotted metrics
-plotted_mets <- c("Fv.Fm", "φPSII", "ΦNPQ", "Φf.D")
+plotted_mets <- c("Fv.Fm", "φPSII", "ΦNPQ")
 # format p-values, NAs, and column headers
 excel_list <- list()
 for(met in plotted_mets) {
@@ -328,7 +328,6 @@ for(met in plotted_mets) {
 write.xlsx(excel_list[["Fv.Fm"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="Fv.Fm", row.names=FALSE, col.names=FALSE)
 write.xlsx(excel_list[["φPSII"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="φPSII", append=TRUE, row.names=FALSE, col.names=FALSE)
 write.xlsx(excel_list[["ΦNPQ"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="ΦNPQ", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["Φf.D"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="Φf.D", append=TRUE, row.names=FALSE, col.names=FALSE)
 
 #### summary ####
 

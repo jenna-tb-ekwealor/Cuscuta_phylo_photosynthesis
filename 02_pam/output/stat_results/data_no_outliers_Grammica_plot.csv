@@ -3525,11 +3525,11 @@ Grammica,C_indecora,ss16-17,C,2,old,2018-01-25,11:51:38 AM,truly 0 signal,,o,22,
 Grammica,C_indecora,ss16-17,C,3,old,2018-01-25,11:51:38 AM,truly 0 signal,,o,23,φPSII,0,Grammica__φPSII,Old,Grammica__Old,ss16-17o,C_indecora__φPSII
 Grammica,C_indecora,ss16-17,C,4,old,2018-01-25,11:51:38 AM,truly 0 signal,,o,24,φPSII,0,Grammica__φPSII,Old,Grammica__Old,ss16-17o,C_indecora__φPSII
 Grammica,C_indecora,ss16-17,C,4,flower,2018-03-23,4:45:38 PM,0 YPSII,,f,25,φPSII,0,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
-Grammica,C_indecora,ss16-17,C,5,flower,2018-03-23,4:45:38 PM,,,f,26,φPSII,0,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
+Grammica,C_indecora,ss16-17,C,5,flower,2018-03-23,4:45:38 PM,,,f,26,φPSII,0,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,Grammica__φPSII
 Grammica,C_sandwichiana,155,A,9,flower,2018-01-15,11:13:48 AM,0 YPSII,,f,76,φPSII,0,Grammica__φPSII,Flower,Grammica__Flower,155f,C_sandwichiana__φPSII
 Grammica,C_sandwichiana,155,D,2,young,2018-01-25,1:05:39 PM,0 signal for this AOI; one AOI/sample did have a signal though,,y,77,φPSII,0,Grammica__φPSII,Young,Grammica__Young,155y,C_sandwichiana__φPSII
 Grammica,C_sandwichiana,155,D,3,young,2018-01-25,1:05:39 PM,0 signal for this AOI; one AOI/sample did have a signal though,,y,78,φPSII,0,Grammica__φPSII,Young,Grammica__Young,155y,C_sandwichiana__φPSII
-Grammica,C_polygonorum,1705,A,4,old,2018-01-25,9:58:34 AM,truly 0 signal,,o,79,φPSII,0,Grammica__φPSII,Old,Grammica__Old,1705o,C_polygonorum__φPSII
+Grammica,C_polygonorum,1705,A,4,old,2018-01-25,9:58:34 AM,truly 0 signal,,o,79,φPSII,0,Grammica__φPSII,Old,Grammica__Old,1705o,Grammica__φPSII
 Grammica,C_compacta,1566,E,1,young,2017-11-15,9:59:32 AM,0 PSII; others have some level of PSII though… just not this one,,y,82,φPSII,0,Grammica__φPSII,Young,Grammica__Young,1566y,C_compacta__φPSII
 Grammica,C_compacta,1566,B,1,haustorium,2017-12-21,11:32:37 AM,truly 0 signal,,h,83,φPSII,0,Grammica__φPSII,Haustorium,Grammica__Haustorium,1566h,C_compacta__φPSII
 Grammica,C_compacta,1566,B,2,haustorium,2017-12-21,11:32:37 AM,truly 0 signal,,h,84,φPSII,0,Grammica__φPSII,Haustorium,Grammica__Haustorium,1566h,C_compacta__φPSII
@@ -3555,38 +3555,38 @@ Grammica,C_australis,1382,B,1,haustorium,2017-12-13,3:30:14 PM,,,h,115,φPSII,0,
 Grammica,C_australis,1382,C,1,haustorium,2017-12-13,2:42:33 PM,,,h,116,φPSII,0,Grammica__φPSII,Haustorium,Grammica__Haustorium,1382h,C_australis__φPSII
 Grammica,C_australis,1382,C,2,haustorium,2017-12-13,2:42:33 PM,truly 0 signal,,h,117,φPSII,0,Grammica__φPSII,Haustorium,Grammica__Haustorium,1382h,C_australis__φPSII
 Grammica,C_australis,1382,C,3,haustorium,2017-12-13,2:42:33 PM,truly 0 signal,,h,118,φPSII,0,Grammica__φPSII,Haustorium,Grammica__Haustorium,1382h,C_australis__φPSII
-Grammica,C_costaricensis,CUCO,C,3,young,2018-05-25,2:39:54 PM,,,y,119,φPSII,0,C_compacta__φPSII,Young,Grammica__Young,CUCOy,C_costaricensis__φPSII
+Grammica,C_costaricensis,CUCO,C,3,young,2018-05-25,2:39:54 PM,,,y,119,φPSII,0,Grammica__φPSII,Young,Grammica__Young,CUCOy,C_costaricensis__φPSII
 Grammica,C_sandwichiana,155,C,3,seed,2018-01-15,9:59:00 AM,,,s,123,φPSII,0.005524862,Grammica__φPSII,Seed,Grammica__Seed,155s,C_sandwichiana__φPSII
 Grammica,C_sandwichiana,155,A,8,flower,2018-01-15,11:13:48 AM,,,f,124,φPSII,0.006142506,Grammica__φPSII,Flower,Grammica__Flower,155f,C_sandwichiana__φPSII
-Grammica,C_sandwichiana,155,A,3,seed,2018-01-15,11:13:48 AM,,,s,125,φPSII,0.00761035,Grammica__φPSII,Seed,Grammica__Seed,155s,C_sandwichiana__φPSII
+Grammica,C_sandwichiana,155,A,3,seed,2018-01-15,11:13:48 AM,,,s,125,φPSII,0.00761035,Grammica__φPSII,Seed,Grammica__Seed,155s,Grammica__φPSII
 Grammica,C_cephalanthii,1567,B,12,flower,2017-12-21,10:08:02 AM,,,f,126,φPSII,0.008025682,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
 Grammica,C_sandwichiana,155,A,10,flower,2018-01-15,11:13:48 AM,,,f,127,φPSII,0.009310987,Grammica__φPSII,Flower,Grammica__Flower,155f,C_sandwichiana__φPSII
 Grammica,C_sandwichiana,155,C,8,flower,2018-01-15,9:59:00 AM,,,f,128,φPSII,0.011256191,Grammica__φPSII,Flower,Grammica__Flower,155f,C_sandwichiana__φPSII
-Grammica,C_sandwichiana,155,A,4,seed,2018-01-15,11:13:48 AM,,,s,129,φPSII,0.013650546,Grammica__φPSII,Seed,Grammica__Seed,155s,Grammica__φPSII �PSII
+Grammica,C_sandwichiana,155,A,4,seed,2018-01-15,11:13:48 AM,,,s,129,φPSII,0.013650546,Grammica__φPSII,Seed,Grammica__Seed,155s,C_sandwichiana__φPSII
 Grammica,C_compacta,1566,D,6,flower,2018-03-08,11:00:04 AM,,,f,130,φPSII,0.017006803,Grammica__φPSII,Flower,Grammica__Flower,1566f,C_compacta__φPSII
 Grammica,C_compacta,1566,D,4,flower,2018-03-08,11:00:04 AM,,,f,131,φPSII,0.017301038,Grammica__φPSII,Flower,Grammica__Flower,1566f,C_compacta__φPSII
 Grammica,C_compacta,1566,D,3,flower,2018-03-08,11:00:04 AM,,,f,132,φPSII,0.017605634,Grammica__φPSII,Flower,Grammica__Flower,1566f,C_compacta__φPSII
-Grammica,C_indecora,ss16-17,B,7,flower,2018-01-25,12:25:31 PM,,,f,133,φPSII,0.019736842,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
-Grammica,C_cephalanthii,1567,B,3,seed,2017-12-21,10:08:02 AM,,,s,135,φPSII,0.022340426,C_costaricensis__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
+Grammica,C_indecora,ss16-17,B,7,flower,2018-01-25,12:25:31 PM,,,f,133,φPSII,0.019736842,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_sandwichiana__φ
+Grammica,C_cephalanthii,1567,B,3,seed,2017-12-21,10:08:02 AM,,,s,135,φPSII,0.022340426,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_indecora,ss16-17,C,3,flower,2018-03-23,4:45:38 PM,,,f,136,φPSII,0.024875622,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
 Grammica,C_polygonorum,1705,C,2,haustorium,2017-12-13,11:51:43 AM,,,h,137,φPSII,0.027027027,Grammica__φPSII,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__φPSII
-Grammica,C_polygonorum,1705,C,7,flower,2017-12-13,1:00:53 PM,,,f,138,φPSII,0.029591837,Grammica__φPSII,Flower,Grammica__Flower,1705f,C_polygonorum__φPSII
+Grammica,C_polygonorum,1705,C,7,flower,2017-12-13,1:00:53 PM,,,f,138,φPSII,0.029591837,C_compacta__φPSII,Flower,Grammica__Flower,1705f,C_polygonorum__φPSII
 Grammica,C_indecora,ss16-17,D,3,flower,2018-02-16,3:35:35 PM,,,f,139,φPSII,0.030396703,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
 Grammica,C_sandwichiana,155,C,9,flower,2018-01-15,9:59:00 AM,,,f,144,φPSII,0.037149356,Grammica__φPSII,Flower,Grammica__Flower,155f,C_sandwichiana__φPSII
-Grammica,C_cephalanthii,1567,B,7,old,2017-12-13,12:12:56 PM,,,o,146,φPSII,0.040650407,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
+Grammica,C_cephalanthii,1567,B,7,old,2017-12-13,12:12:56 PM,,,o,146,φPSII,0.040650407,Grammica__φPSII,Old,Grammica__Old,1567o,Grammica__φPSII
 Grammica,C_cephalanthii,1567,A,4,old,2017-12-21,10:20:01 AM,,,o,147,φPSII,0.040650407,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
-Grammica,C_polygonorum,1705,C,3,haustorium,2017-12-13,11:51:43 AM,,,h,148,φPSII,0.040816327,Grammica__φPSII,Haustorium,Grammica__Haustorium,1705h,C_indecora__φPSII II
+Grammica,C_polygonorum,1705,C,3,haustorium,2017-12-13,11:51:43 AM,,,h,148,φPSII,0.040816327,Grammica__φPSII,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__φPSII
 Grammica,C_sandwichiana,155,C,2,seed,2018-01-15,9:59:00 AM,,,s,149,φPSII,0.041365462,Grammica__φPSII,Seed,Grammica__Seed,155s,C_sandwichiana__φPSII
 Grammica,C_polygonorum,1705,A,2,old,2018-01-25,9:58:34 AM,,,o,150,φPSII,0.042372881,Grammica__φPSII,Old,Grammica__Old,1705o,C_polygonorum__φPSII
-Grammica,C_sandwichiana,155,A,7,old,2018-01-15,11:31:08 AM,,,o,153,φPSII,0.044247788,C_polygonorum__φPSII,Old,Grammica__Old,155o,C_sandwichiana__φPSII
-Grammica,C_polygonorum,1705,C,6,flower,2017-12-13,1:00:53 PM,,,f,154,φPSII,0.045595054,C_californica__φPSII,Flower,Grammica__Flower,1705f,C_polygonorum__φPSII
+Grammica,C_sandwichiana,155,A,7,old,2018-01-15,11:31:08 AM,,,o,153,φPSII,0.044247788,Grammica__φPSII,Old,Grammica__Old,155o,C_sandwichiana__φPSII
+Grammica,C_polygonorum,1705,C,6,flower,2017-12-13,1:00:53 PM,,,f,154,φPSII,0.045595054,Grammica__φPSII,Flower,Grammica__Flower,1705f,C_polygonorum__φPSII
 Grammica,C_cephalanthii,1567,F,8,seed (old),2018-05-29,12:23:38 PM,,,s,156,φPSII,0.046511628,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_indecora,ss16-17,D,9,haustorium,2018-03-23,3:04:55 PM,,,h,157,φPSII,0.048543689,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss16-17h,C_indecora__φPSII
 Grammica,C_tasmanica,17-15,C,3,young,2018-05-29,1:12:22 PM,,,y,160,φPSII,0.05,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
 Grammica,C_polygonorum,1705,A,3,old,2018-01-25,9:58:34 AM,,,o,162,φPSII,0.052356021,Grammica__φPSII,Old,Grammica__Old,1705o,C_polygonorum__φPSII
 Grammica,C_californica,ss17-105,D,8,flower,2018-07-06,2:13:32 PM,,,f,163,φPSII,0.053308824,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_sandwichiana,155,A,6,old,2018-01-15,11:31:08 AM,,,o,164,φPSII,0.053763441,Grammica__φPSII,Old,Grammica__Old,155o,C_sandwichiana__φPSII
-Grammica,C_sandwichiana,155,D,4,old,2018-01-25,1:13:25 PM,,,o,165,φPSII,0.053763441,Grammica__φPSII,Old,Grammica__Old,155o,Grammica__φPSII
+Grammica,C_sandwichiana,155,D,4,old,2018-01-25,1:13:25 PM,,,o,165,φPSII,0.053763441,Grammica__φPSII,Old,Grammica__Old,155o,C_sandwichiana__φPSII
 Grammica,C_indecora,ss16-17,B,3,seed,2018-01-25,12:25:31 PM,,,s,166,φPSII,0.054054054,Grammica__φPSII,Seed,Grammica__Seed,ss16-17s,C_indecora__φPSII
 Grammica,C_cephalanthii,1567,B,7,seed,2017-12-21,10:08:02 AM,,,s,167,φPSII,0.054187192,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_indecora,ss16-17,E,2,seed,2018-03-23,3:52:37 PM,,,s,168,φPSII,0.057142857,Grammica__φPSII,Seed,Grammica__Seed,ss16-17s,C_indecora__φPSII
@@ -3595,8 +3595,8 @@ Grammica,C_compacta,1566,D,5,flower,2018-03-08,11:00:04 AM,,,f,170,φPSII,0.0588
 Grammica,C_polygonorum,1705,A,2,seed,2018-01-25,10:20:42 AM,,,s,171,φPSII,0.059016393,Grammica__φPSII,Seed,Grammica__Seed,1705s,C_polygonorum__φPSII
 Grammica,C_tasmanica,17-15,A,3,flower,2018-04-17,3:16:54 PM,,,f,174,φPSII,0.063471503,Grammica__φPSII,Flower,Grammica__Flower,17-15f,C_tasmanica__φPSII
 Grammica,C_cephalanthii,1567,G,3,seed (old),2018-05-29,12:53:01 PM,,,s,176,φPSII,0.065634025,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
-Grammica,C_tasmanica,17-15,A,1,old,2018-04-17,3:00:16 PM,,,o,177,φPSII,0.065789474,Grammica__φPSII,Old,Grammica__Old,17-15o,Grammica__φPSII
-Grammica,C_cephalanthii,1567,G,4,haustorium,2018-03-04,5:38:33 PM,,,h,178,φPSII,0.066513761,Grammica__φPSII,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__φPSII
+Grammica,C_tasmanica,17-15,A,1,old,2018-04-17,3:00:16 PM,,,o,177,φPSII,0.065789474,Grammica__φPSII,Old,Grammica__Old,17-15o,C_tasmanica__φPSII
+Grammica,C_cephalanthii,1567,G,4,haustorium,2018-03-04,5:38:33 PM,,,h,178,φPSII,0.066513761,Grammica__φPSII,Haustorium,Grammica__Haustorium,1567h,Grammica__φPSII
 Grammica,C_tasmanica,17-15,C,5,flower,2018-06-22,1:42:52 PM,,,f,179,φPSII,0.066597294,Grammica__φPSII,Flower,Grammica__Flower,17-15f,C_tasmanica__φPSII
 Grammica,C_cephalanthii,1567,G,4,seed (old),2018-05-29,12:53:01 PM,,,s,181,φPSII,0.067835718,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_cephalanthii,1567,B,11,flower,2017-12-21,10:08:02 AM,,,f,182,φPSII,0.067980296,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
@@ -3605,7 +3605,7 @@ Grammica,C_australis,1382,B,2,haustorium,2017-12-13,3:30:14 PM,,,h,184,φPSII,0.
 Grammica,C_cephalanthii,1567,B,10,flower,2017-12-21,10:08:02 AM,,,f,185,φPSII,0.069620252999999993,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
 Grammica,C_denticulata,ss13-46,C,4,flower,2018-06-20,3:03:14 PM,,,f,188,φPSII,0.070499658,Grammica__φPSII,Flower,Grammica__Flower,ss13-46f,C_denticulata__φPSII
 Grammica,C_cephalanthii,1567,B,1,haustorium,2017-12-21,10:34:52 AM,,,h,189,φPSII,0.071048816,Grammica__φPSII,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__φPSII
-Grammica,C_indecora,ss16-17,E,5,flower,2018-03-23,3:52:37 PM,,,f,190,φPSII,0.07177814,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,Grammica__φPSII
+Grammica,C_indecora,ss16-17,E,5,flower,2018-03-23,3:52:37 PM,,,f,190,φPSII,0.07177814,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
 Grammica,C_cephalanthii,1567,D,2,old,2018-03-08,12:10:52 PM,,,o,191,φPSII,0.072463768,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
 Grammica,C_cephalanthii,1567,A,5,flower,2017-12-21,10:53:16 AM,,,f,193,φPSII,0.073842303,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
 Grammica,C_cephalanthii,1567,A,4,seed,2017-12-21,10:53:16 AM,,,s,194,φPSII,0.074260995,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
@@ -3620,7 +3620,7 @@ Grammica,C_sandwichiana,155,D,3,old,2018-01-25,1:13:25 PM,,,o,203,φPSII,0.07954
 Grammica,C_denticulata,ss13-46,C,5,flower,2018-06-20,3:03:14 PM,,,f,204,φPSII,0.080126516,Grammica__φPSII,Flower,Grammica__Flower,ss13-46f,C_denticulata__φPSII
 Grammica,C_tasmanica,17-15,C,1,flower,2018-06-22,1:42:52 PM,,,f,205,φPSII,0.080267559,Grammica__φPSII,Flower,Grammica__Flower,17-15f,C_tasmanica__φPSII
 Grammica,C_denticulata,ss13-46,-,5,seedling,2018-04-17,1:38:52 PM,,,sdlg,206,φPSII,0.080851064,Grammica__φPSII,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__φPSII
-Grammica,C_cephalanthii,1567,A,2,seedling ,8/24/18,13:52:40,,,sdlg,207,φPSII,0.081300813,C_cephalanthii__φPSII,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__φPSII
+Grammica,C_cephalanthii,1567,A,2,seedling ,8/24/18,13:52:40,,,sdlg,207,φPSII,0.081300813,Grammica__φPSII,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__φPSII
 Grammica,C_polygonorum,1705,C,1,haustorium,2017-12-13,11:51:43 AM,,,h,208,φPSII,0.081632653,Grammica__φPSII,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__φPSII
 Grammica,C_cephalanthii,1567,B,2,seed,2017-12-21,10:08:02 AM,,,s,210,φPSII,0.082856282,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_denticulata,ss13-46,D,3,haustorium,2018-05-29,4:58:54 PM,,,h,211,φPSII,0.083238312,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
@@ -3628,7 +3628,7 @@ Grammica,C_polygonorum,1705,A,4,seed,2018-01-25,10:20:42 AM,,,s,212,φPSII,0.085
 Grammica,C_tasmanica,17-15,B,3,flower,2018-05-25,12:21:17 PM,,,f,214,φPSII,0.085820896,Grammica__φPSII,Flower,Grammica__Flower,17-15f,C_tasmanica__φPSII
 Grammica,C_tasmanica,17-15,A,4,flower,2018-04-17,3:16:54 PM,,,f,215,φPSII,0.08625731,Grammica__φPSII,Flower,Grammica__Flower,17-15f,C_tasmanica__φPSII
 Grammica,C_sandwichiana,155,C,13,flower,2018-01-15,9:59:00 AM,,,f,216,φPSII,0.086270872,Grammica__φPSII,Flower,Grammica__Flower,155f,C_sandwichiana__φPSII
-Grammica,C_polygonorum,1705,A,6,seed,2018-01-25,10:20:42 AM,,,s,218,φPSII,0.087660148,Grammica__φPSII,Seed,Grammica__Seed,1705s,Grammica__φPSII
+Grammica,C_polygonorum,1705,A,6,seed,2018-01-25,10:20:42 AM,,,s,218,φPSII,0.087660148,Grammica__φPSII,Seed,Grammica__Seed,1705s,C_polygonorum__φPSII
 Grammica,C_polygonorum,1705,A,4,haustorium,2018-01-25,10:10:26 AM,,,h,219,φPSII,0.088447653,Grammica__φPSII,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__φPSII
 Grammica,C_californica,ss17-105,D,6,young,2018-05-25,12:42:05 PM,,,y,220,φPSII,0.088495575,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
 Grammica,C_denticulata,ss13-46,-,1,seedling,2018-04-17,1:38:52 PM,,,sdlg,221,φPSII,0.089005236,Grammica__φPSII,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__φPSII
@@ -3663,9 +3663,9 @@ Grammica,C_australis,1382,B,4,old,2017-12-13,3:17:31 PM,,,o,256,φPSII,0.1075268
 Grammica,C_australis,1382,A,3,old,2018-01-25,11:20:59 AM,,,o,257,φPSII,0.107526882,Grammica__φPSII,Old,Grammica__Old,1382o,C_australis__φPSII
 Grammica,C_cephalanthii,1567,B,13,flower,2017-12-21,10:08:02 AM,,,f,258,φPSII,0.107586207,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
 Grammica,C_cephalanthii,1567,G,1,haustorium,2018-03-04,5:38:33 PM,,,h,259,φPSII,0.108237548,Grammica__φPSII,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__φPSII
-Grammica,C_polygonorum,1705,A,3,seed,2018-01-25,10:20:42 AM,,,s,260,φPSII,0.108307045,Grammica__φPSII,Seed,Grammica__Seed,1705s,C_polygonorum__φPSII
+Grammica,C_polygonorum,1705,A,3,seed,2018-01-25,10:20:42 AM,,,s,260,φPSII,0.108307045,Grammica__φPSII,Seed,Grammica__Seed,1705s,Grammica__φPSII
 Grammica,C_cephalanthii,1567,B,4,seed,2017-12-21,10:08:02 AM,,,s,262,φPSII,0.108387988,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
-Grammica,C_sandwichiana,155,-,1,seedling,8/24/18,12:18:16,,,sdlg,263,φPSII,0.108433735,Grammica__φPSII,Seedling,Grammica__Seedling,155sdlg,Grammica__φPSII
+Grammica,C_sandwichiana,155,-,1,seedling,8/24/18,12:18:16,,,sdlg,263,φPSII,0.108433735,Grammica__φPSII,Seedling,Grammica__Seedling,155sdlg,C_sandwichiana__φPSII
 Grammica,C_cephalanthii,1567,B,9,flower,2017-12-21,10:08:02 AM,,,f,264,φPSII,0.108843537,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
 Grammica,C_denticulata,ss13-46,D,5,haustorium,2018-05-29,4:58:54 PM,,,h,265,φPSII,0.108879493,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_sandwichiana,155,D,2,haustorium,2018-01-25,1:21:03 PM,,,h,266,φPSII,0.108938547,Grammica__φPSII,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__φPSII
@@ -3692,7 +3692,7 @@ Grammica,C_polygonorum,1705,A,8,flower,2018-01-25,10:20:42 AM,,,f,293,φPSII,0.1
 Grammica,C_cephalanthii,1567,D,10,seed,2018-04-19,5:03:34 PM,,,s,294,φPSII,0.121742671,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_indecora,ss16-17,D,3,flower,2018-03-23,3:04:55 PM,,,f,296,φPSII,0.123346137,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
 Grammica,C_tasmanica,17-15,C,3,flower,2018-06-22,1:42:52 PM,,,f,297,φPSII,0.123425693,Grammica__φPSII,Flower,Grammica__Flower,17-15f,C_tasmanica__φPSII
-Grammica,C_compacta,1566,B,3,old,2017-12-21,11:24:24 AM,,,o,298,φPSII,0.12345679,Grammica__φPSII,Old,Grammica__Old,1566o,Grammica__φPSII
+Grammica,C_compacta,1566,B,3,old,2017-12-21,11:24:24 AM,,,o,298,φPSII,0.12345679,Grammica__φPSII,Old,Grammica__Old,1566o,C_compacta__φPSII
 Grammica,C_sandwichiana,155,S1,2,seedling,2017-11-09,6:04:24 PM,,,sdlg,299,φPSII,0.12364946,Grammica__φPSII,Seedling,Grammica__Seedling,155sdlg,C_sandwichiana__φPSII
 Grammica,C_cephalanthii,1567,B,5,seed,2017-12-21,10:08:02 AM,,,s,300,φPSII,0.124071647,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_sandwichiana,155,A,1,haustorium,2018-01-15,11:21:16 AM,,,h,301,φPSII,0.125128205,Grammica__φPSII,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__φPSII
@@ -3701,7 +3701,7 @@ Grammica,C_cephalanthii,1567,A,2,old,2017-12-21,10:20:01 AM,,,o,305,φPSII,0.128
 Grammica,C_australis,1382,C,4,old,2017-12-13,2:31:06 PM,,,o,306,φPSII,0.128888889,Grammica__φPSII,Old,Grammica__Old,1382o,C_australis__φPSII
 Grammica,C_denticulata,ss13-46,C,7,flower,2018-06-20,3:03:14 PM,,,f,307,φPSII,0.128947368,Grammica__φPSII,Flower,Grammica__Flower,ss13-46f,C_denticulata__φPSII
 Grammica,C_polygonorum,1705,A,1,haustorium,2018-01-25,10:10:26 AM,,,h,308,φPSII,0.129326047,Grammica__φPSII,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__φPSII
-Grammica,C_denticulata,ss13-46,D,1,haustorium,2018-06-22,4:57:03 PM,,,h,309,φPSII,0.129644922,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
+Grammica,C_denticulata,ss13-46,D,1,haustorium,2018-06-22,4:57:03 PM,,,h,309,φPSII,0.129644922,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,Grammica__φPSII PSII
 Grammica,C_compacta,1566,A,5,old,2017-11-15,10:28:34 AM,,,o,310,φPSII,0.130177515,Grammica__φPSII,Old,Grammica__Old,1566o,C_compacta__φPSII
 Grammica,C_compacta,1566,E,1,haustorium,2017-11-15,10:56:43 AM,,,h,311,φPSII,0.132481752,Grammica__φPSII,Haustorium,Grammica__Haustorium,1566h,C_compacta__φPSII
 Grammica,C_polygonorum,1705,C,7,old,2017-12-13,11:41:35 AM,,,o,312,φPSII,0.132653061,Grammica__φPSII,Old,Grammica__Old,1705o,C_polygonorum__φPSII
@@ -3722,10 +3722,10 @@ Grammica,C_compacta,1566,D,1,seed,2018-03-23,4:01:05 PM,,,s,331,φPSII,0.1388101
 Grammica,C_polygonorum,1705,A,2,haustorium,2018-01-25,10:10:26 AM,,,h,332,φPSII,0.139966273,Grammica__φPSII,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__φPSII
 Grammica,C_cephalanthii,1567,D,1,haustorium,2018-03-08,11:59:03 AM,,,h,333,φPSII,0.14025974,Grammica__φPSII,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__φPSII
 Grammica,C_cephalanthii,1567,D,3,haustorium,2018-03-08,11:59:03 AM,,,h,334,φPSII,0.140456182,Grammica__φPSII,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__φPSII
-Grammica,C_polygonorum,1705,C,1,seed,2017-12-13,1:00:53 PM,,,s,336,φPSII,0.140953717,Grammica__φPSII,Seed,Grammica__Seed,1705s,C_polygonorum__φPSII
+Grammica,C_polygonorum,1705,C,1,seed,2017-12-13,1:00:53 PM,,,s,336,φPSII,0.140953717,Grammica__φPSII,Seed,Grammica__Seed,1705s,C_sandwichiana__φPSII
 Grammica,C_indecora,ss16-17,D,2,flower,2018-03-23,3:04:55 PM,,,f,337,φPSII,0.141126392,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
 Grammica,C_cephalanthii,1567,D,3,flower,2018-04-19,5:03:34 PM,,,f,338,φPSII,0.141156463,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
-Grammica,C_denticulata,ss13-46,D,2,haustorium,2018-06-22,4:57:03 PM,,,h,341,φPSII,0.141583055,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,Grammica__φPSII PSII
+Grammica,C_denticulata,ss13-46,D,2,haustorium,2018-06-22,4:57:03 PM,,,h,341,φPSII,0.141583055,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_tasmanica,17-15,B,9,flower,2018-05-25,12:21:17 PM,,,f,343,φPSII,0.142554319,Grammica__φPSII,Flower,Grammica__Flower,17-15f,C_tasmanica__φPSII
 Grammica,C_cephalanthii,1567,D,3,old,2018-04-03,4:18:12 PM,,,o,344,φPSII,0.142857143,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
 Grammica,C_cephalanthii,1567,D,3,seed,2018-03-04,4:33:24 PM,,,s,345,φPSII,0.143650593,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
@@ -3754,7 +3754,7 @@ Grammica,C_cephalanthii,1567,D,13,flower,2018-04-03,4:33:24 PM,,,f,372,φPSII,0.
 Grammica,C_australis,1382,C,3,old,2017-12-13,2:31:06 PM,,,o,374,φPSII,0.152974504,Grammica__φPSII,Old,Grammica__Old,1382o,C_australis__φPSII
 Grammica,C_cephalanthii,1567,B,8,seed,2017-12-21,10:08:02 AM,,,s,376,φPSII,0.153301887,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_compacta,1566,D,2,seed,2018-03-23,3:29:35 PM,,,s,377,φPSII,0.153782895,Grammica__φPSII,Seed,Grammica__Seed,1566s,C_compacta__φPSII
-Grammica,C_californica,ss17-105,D,3,flower,2018-07-06,2:13:32 PM,,,f,378,φPSII,0.155754652,C_polygonorum__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
+Grammica,C_californica,ss17-105,D,3,flower,2018-07-06,2:13:32 PM,,,f,378,φPSII,0.155754652,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_sandwichiana,155,A,1,young,2018-01-15,10:49:39 AM,,,y,379,φPSII,0.155913978,Grammica__φPSII,Young,Grammica__Young,155y,C_sandwichiana__φPSII
 Grammica,C_denticulata,ss13-46,A,5,old,2018-05-29,3:19:24 PM,,,o,380,φPSII,0.15625,Grammica__φPSII,Old,Grammica__Old,ss13-46o,C_denticulata__φPSII
 Grammica,C_californica,ss17-105,E,8,flower,2018-07-06,2:26:42 PM,,,f,382,φPSII,0.159207921,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
@@ -3781,19 +3781,19 @@ Grammica,C_australis,1382,C,2,old,2017-12-13,2:31:06 PM,,,o,408,φPSII,0.1695238
 Grammica,C_australis,1382,B,3,haustorium,2017-12-13,3:30:14 PM,,,h,409,φPSII,0.17146433,Grammica__φPSII,Haustorium,Grammica__Haustorium,1382h,C_australis__φPSII
 Grammica,C_tasmanica,17-15,A,1,flower,2018-04-17,3:16:54 PM,,,f,411,φPSII,0.172815534,Grammica__φPSII,Flower,Grammica__Flower,17-15f,C_tasmanica__φPSII
 Grammica,C_cephalanthii,1567,D,2,flower,2018-04-19,5:03:34 PM,,,f,412,φPSII,0.173076923,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
-Grammica,C_costaricensis,CUCO,B,4,old,2018-05-25,2:16:35 PM,,,o,413,φPSII,0.173469388,Grammica__φPSII,Old,Grammica__Old,CUCOo,C_polygonorum__φPSII
+Grammica,C_costaricensis,CUCO,B,4,old,2018-05-25,2:16:35 PM,,,o,413,φPSII,0.173469388,Grammica__φPSII,Old,Grammica__Old,CUCOo,C_costaricensis__φPSII
 Grammica,C_indecora,ss16-17,A,1,haustorium,2017-12-13,1:34:11 PM,,,h,414,φPSII,0.174157303,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss16-17h,C_indecora__φPSII
 Grammica,C_cephalanthii,1567,F,5,old,2018-03-23,4:26:33 PM,,,o,415,φPSII,0.174174174,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
-Grammica,C_polygonorum,1705,B,3,old,2017-12-13,2:09:18 PM,,,o,417,φPSII,0.174556213,Grammica__φPSII,Old,Grammica__Old,1705o,C_polygonorum__φPSII
+Grammica,C_polygonorum,1705,B,3,old,2017-12-13,2:09:18 PM,,,o,417,φPSII,0.174556213,C_compacta__φPSII,Old,Grammica__Old,1705o,C_polygonorum__φPSII
 Grammica,C_sandwichiana,155,A,3,young,2018-01-15,10:49:39 AM,,,y,418,φPSII,0.175182482,Grammica__φPSII,Young,Grammica__Young,155y,C_sandwichiana__φPSII
 Grammica,C_polygonorum,1705,B,2,old,2017-12-13,2:09:18 PM,,,o,421,φPSII,0.176829268,Grammica__φPSII,Old,Grammica__Old,1705o,C_polygonorum__φPSII
 Grammica,C_tasmanica,17-15,D,2,flower,2018-05-29,10:52:34 AM,,,f,426,φPSII,0.179591837,Grammica__φPSII,Flower,Grammica__Flower,17-15f,C_tasmanica__φPSII
 Grammica,C_cephalanthii,1567,D,2,haustorium,2018-03-08,11:59:03 AM,,,h,427,φPSII,0.179591837,Grammica__φPSII,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__φPSII
 Grammica,C_australis,1382,A,2,haustorium,2018-01-25,11:30:18 AM,,,h,428,φPSII,0.179591837,Grammica__φPSII,Haustorium,Grammica__Haustorium,1382h,C_australis__φPSII
 Grammica,C_compacta,1566,A,1,haustorium,2017-11-15,12:14:15 PM,,,h,430,φPSII,0.180683668,Grammica__φPSII,Haustorium,Grammica__Haustorium,1566h,C_compacta__φPSII
-Grammica,C_cephalanthii,1567,D,14,flower,2018-04-03,4:33:24 PM,,,f,431,φPSII,0.180877279,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_sandwichiana__φPSII
+Grammica,C_cephalanthii,1567,D,14,flower,2018-04-03,4:33:24 PM,,,f,431,φPSII,0.180877279,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
 Grammica,C_sandwichiana,155,A,1,haustorium,2018-01-25,12:33:35 PM,,,h,432,φPSII,0.181750742,Grammica__φPSII,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__φPSII
-Grammica,C_cephalanthii,1567,B,8,old,2017-12-13,12:12:56 PM,,,o,433,φPSII,0.181818182,C_indecora__φPS,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
+Grammica,C_cephalanthii,1567,B,8,old,2017-12-13,12:12:56 PM,,,o,433,φPSII,0.181818182,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
 Grammica,C_cephalanthii,1567,G,3,old,2018-04-03,5:27:45 PM,,,o,434,φPSII,0.181818182,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
 Grammica,C_denticulata,ss13-46,D,2,haustorium,2018-05-29,4:58:54 PM,,,h,436,φPSII,0.182242991,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_cephalanthii,1567,B,1,haustorium,2017-12-13,12:25:12 PM,,,h,437,φPSII,0.182368194,Grammica__φPSII,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__φPSII
@@ -3806,7 +3806,7 @@ Grammica,C_sandwichiana,155,D,3,haustorium,2018-01-25,1:21:03 PM,,,h,444,φPSII,
 Grammica,C_cephalanthii,1567,F,7,seed (old),2018-05-29,12:23:38 PM,,,s,445,φPSII,0.184677671,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_sandwichiana,155,C,2,old,2017-12-13,3:46:17 PM,,,o,448,φPSII,0.18895966,Grammica__φPSII,Old,Grammica__Old,155o,C_sandwichiana__φPSII
 Grammica,C_tasmanica,17-15,D,2,haustorium,2018-05-03,1:52:11 PM,,,h,450,φPSII,0.189135802,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
-Grammica,C_polygonorum,1705,A,7,flower,2018-01-25,10:20:42 AM,,,f,452,φPSII,0.190414508,Grammica__φPSII,Flower,Grammica__Flower,1705f,C_californica__φPSII
+Grammica,C_polygonorum,1705,A,7,flower,2018-01-25,10:20:42 AM,,,f,452,φPSII,0.190414508,Grammica__φPSII,Flower,Grammica__Flower,1705f,C_polygonorum__φPSII
 Grammica,C_californica,ss17-105,D,2,flower,2018-07-06,2:13:32 PM,,,f,453,φPSII,0.190755686,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_cephalanthii,1567,D,8,seed,2018-04-19,5:03:34 PM,,,s,454,φPSII,0.190830946,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_compacta,1566,D,3,seed,2018-03-23,3:29:35 PM,,,s,455,φPSII,0.19097651400000001,Grammica__φPSII,Seed,Grammica__Seed,1566s,C_compacta__φPSII
@@ -3829,7 +3829,7 @@ Grammica,C_tasmanica,17-15,B,3,haustorium,2018-03-15,4:54:21 PM,,,h,482,φPSII,0
 Grammica,C_californica,ss17-105,C,4,flower,2018-05-25,1:42:20 PM,,,f,483,φPSII,0.202758621,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_tasmanica,17-15,B,2,haustorium,2018-03-15,4:54:21 PM,,,h,484,φPSII,0.203907204,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_indecora,ss16-17,A,2,haustorium,2017-12-13,1:34:11 PM,,,h,485,φPSII,0.203931204,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss16-17h,C_indecora__φPSII
-Grammica,C_californica,ss17-105,B,4,old,2018-05-29,3:42:33 PM,,,o,486,φPSII,0.204081633,C_tasmanica__φP,Old,Grammica__Old,ss17-105o,C_californica__φPSII
+Grammica,C_californica,ss17-105,B,4,old,2018-05-29,3:42:33 PM,,,o,486,φPSII,0.204081633,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
 Grammica,C_tasmanica,17-15,-,3,seedling,8/24/18,12:55:20,,,sdlg,488,φPSII,0.204081633,Grammica__φPSII,Seedling,Grammica__Seedling,17-15sdlg,C_tasmanica__φPSII
 Grammica,C_sandwichiana,155,B,2,haustorium,2018-01-25,12:57:24 PM,,,h,489,φPSII,0.204188482,Grammica__φPSII,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__φPSII
 Grammica,C_tasmanica,17-15,B,3,young,2018-04-17,1:55:52 PM,,,y,490,φPSII,0.204301075,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
@@ -3868,32 +3868,32 @@ Grammica,C_polygonorum,1705,D,1,haustorium,2018-07-06,12:10:49 PM,,,h,535,φPSII
 Grammica,C_sandwichiana,155,C,3,young,2017-12-13,3:38:43 PM,,,y,536,φPSII,0.223427332,Grammica__φPSII,Young,Grammica__Young,155y,C_sandwichiana__φPSII
 Grammica,C_denticulata,ss13-46,D,1,old,2018-06-22,4:47:32 PM,,,o,538,φPSII,0.224770642,Grammica__φPSII,Old,Grammica__Old,ss13-46o,C_denticulata__φPSII
 Grammica,C_californica,ss17-105,A,1,old,2018-05-03,3:45:01 PM,,,o,540,φPSII,0.225122349,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
-Grammica,C_cephalanthii,1567,D,1,flower,2018-04-19,5:03:34 PM,,,f,541,φPSII,0.225122349,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
+Grammica,C_cephalanthii,1567,D,1,flower,2018-04-19,5:03:34 PM,,,f,541,φPSII,0.225122349,Crammiclanthii__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
 Grammica,C_californica,ss17-105,B,2,haustorium,2018-05-29,4:03:02 PM,,,h,542,φPSII,0.226190476,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__φPSII
 Grammica,C_cephalanthii,1567,D,8,flower,2018-04-03,4:33:24 PM,,,f,544,φPSII,0.226945492,Grammica__φPSII,Flower,Grammica__Flower,1567f,C_cephalanthii__φPSII
 Grammica,C_tasmanica,17-15,D,3,haustorium,2018-05-03,1:52:11 PM,,,h,546,φPSII,0.227532097,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
-Grammica,C_cephalanthii,1567,F,5,seed (old),2018-05-29,12:23:38 PM,,,s,547,φPSII,0.227716908,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
+Grammica,C_cephalanthii,1567,F,5,seed (old),2018-05-29,12:23:38 PM,,,s,547,φPSII,0.227716908,Grammica__φPSII,Seed,Grammica__Seed,1567s,Crammiclanthii__φPSII
 Grammica,C_cephalanthii,1567,D,12,seed,2018-04-19,5:03:34 PM,,,s,548,φPSII,0.227801268,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_denticulata,ss13-46,B,3,old,2018-06-20,1:09:13 PM,,,o,549,φPSII,0.228346457,Grammica__φPSII,Old,Grammica__Old,ss13-46o,C_denticulata__φPSII
 Grammica,C_tasmanica,17-15,A,2,haustorium,2017-12-21,12:12:19 PM,,,h,550,φPSII,0.228346457,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_australis,1382,B,4,young,2017-12-13,3:07:51 PM,,,y,551,φPSII,0.228381375,Grammica__φPSII,Young,Grammica__Young,1382y,C_australis__φPSII
-Grammica,C_cephalanthii,1567,B,1,young,2017-12-13,12:04:21 PM,,,y,552,φPSII,0.228501229,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
+Grammica,C_cephalanthii,1567,B,1,young,2017-12-13,12:04:21 PM,,,y,552,φPSII,0.228501229,C_denticulata__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
 Grammica,C_denticulata,ss13-46,B,2,haustorium,2018-06-20,1:19:35 PM,,,h,554,φPSII,0.230769231,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_denticulata,ss13-46,A,1,young,2018-05-29,11:11:53 AM,,,y,555,φPSII,0.231292517,Grammica__φPSII,Young,Grammica__Young,ss13-46y,C_denticulata__φPSII
 Grammica,C_costaricensis,CUCO,A,3,young,2018-05-03,1:03:52 PM,,,y,557,φPSII,0.231481481,Grammica__φPSII,Young,Grammica__Young,CUCOy,C_costaricensis__φPSII
 Grammica,C_costaricensis,CUCO,B,6,old,2018-05-25,2:16:35 PM,,,o,558,φPSII,0.231481481,Grammica__φPSII,Old,Grammica__Old,CUCOo,C_costaricensis__φPSII
 Grammica,C_denticulata,ss13-46,B,5,haustorium,2018-06-20,1:19:35 PM,,,h,559,φPSII,0.231622746,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_tasmanica,17-15,B,3,old,2018-03-15,4:32:42 PM,,,o,560,φPSII,0.23255814,Grammica__φPSII,Old,Grammica__Old,17-15o,C_tasmanica__φPSII
-Grammica,C_polygonorum,1705,D,4,haustorium,2018-07-06,12:10:49 PM,,,h,565,φPSII,0.234665428,Grammica__φPSII,Haustorium,Grammica__Haustorium,1705h,C_cephalanthii__φPSI
+Grammica,C_polygonorum,1705,D,4,haustorium,2018-07-06,12:10:49 PM,,,h,565,φPSII,0.234665428,Grammica__φPSII,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__φPSII
 Grammica,C_denticulata,ss13-46,C,3,flower,2018-06-20,3:03:14 PM,,,f,566,φPSII,0.235709245,Grammica__φPSII,Flower,Grammica__Flower,ss13-46f,C_denticulata__φPSII
 Grammica,C_denticulata,ss13-46,A,4,haustorium,2018-05-29,11:30:47 AM,,,h,567,φPSII,0.235815603,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_cephalanthii,1567,D,7,seed,2018-04-19,5:03:34 PM,,,s,568,φPSII,0.236120401,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_tasmanica,17-15,C,5,young,2018-05-29,1:12:22 PM,,,y,569,φPSII,0.23655914,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
-Grammica,C_sandwichiana,155,C,5,seed,2018-01-15,9:59:00 AM,,,s,571,φPSII,0.236726547,Grammica__φPSII,Seed,Grammica__Seed,155s,C_denticulata__φPSII
-Grammica,C_cephalanthii,1567,D,1,young,2018-03-08,4:06:19 PM,,,y,572,φPSII,0.236760125,Grammica__φPSII,Young,Grammica__Young,1567y,Grammica__φPSII
+Grammica,C_sandwichiana,155,C,5,seed,2018-01-15,9:59:00 AM,,,s,571,φPSII,0.236726547,Grammica__φPSII,Seed,Grammica__Seed,155s,C_sandwichiana__φPSII
+Grammica,C_cephalanthii,1567,D,1,young,2018-03-08,4:06:19 PM,,,y,572,φPSII,0.236760125,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
 Grammica,C_cephalanthii,1567,F,3,old,2018-03-23,4:26:33 PM,,,o,573,φPSII,0.237037037,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
-Grammica,C_australis,1382,A,2,old,2018-01-25,11:20:59 AM,,,o,576,φPSII,0.237864078,Grammica__φPSII,Old,Grammica__Old,1382o,Grammica__φPSII
-Grammica,C_cephalanthii,1567,F,1,seed (old),2018-05-29,12:23:38 PM,,,s,577,φPSII,0.238217968,Grammica__φPSII,Seed,Grammica__Seed,1567s,Grammica__φPSII
+Grammica,C_australis,1382,A,2,old,2018-01-25,11:20:59 AM,,,o,576,φPSII,0.237864078,Grammica__φPSII,Old,Grammica__Old,1382o,C_australis__φPSII
+Grammica,C_cephalanthii,1567,F,1,seed (old),2018-05-29,12:23:38 PM,,,s,577,φPSII,0.238217968,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_compacta,1566,B,2,young,2017-12-21,11:12:51 AM,,,y,578,φPSII,0.23877551,Grammica__φPSII,Young,Grammica__Young,1566y,C_compacta__φPSII
 Grammica,C_cephalanthii,1567,G,4,old,2018-04-03,5:27:45 PM,,,o,579,φPSII,0.239482201,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
 Grammica,C_indecora,ss16-17,D,3,seed,2018-03-23,3:04:55 PM,,,s,580,φPSII,0.239583333,Grammica__φPSII,Seed,Grammica__Seed,ss16-17s,C_indecora__φPSII
@@ -3915,7 +3915,7 @@ Grammica,C_polygonorum,1705,C,4,old,2017-12-13,11:41:35 AM,,,o,596,φPSII,0.2461
 Grammica,C_sandwichiana,155,B,3,haustorium,2018-01-25,12:57:24 PM,,,h,597,φPSII,0.246300211,Grammica__φPSII,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__φPSII
 Grammica,C_californica,ss17-105,A,2,old,2018-05-03,3:45:01 PM,,,o,599,φPSII,0.247206704,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
 Grammica,C_cephalanthii,1567,B,2,young,2017-12-13,12:04:21 PM,,,y,600,φPSII,0.247206704,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
-Grammica,C_polygonorum,1705,S,2,seedling,2017-11-09,6:13:19 PM,,,sdlg,601,φPSII,0.248466258,Grammica__φPSII,Seedling,Grammica__Seedling,1705sdlg,C_polygonorum__φPSII
+Grammica,C_polygonorum,1705,S,2,seedling,2017-11-09,6:13:19 PM,,,sdlg,601,φPSII,0.248466258,C_californica__φPSII,Seedling,Grammica__Seedling,1705sdlg,C_polygonorum__φPSII
 Grammica,C_tasmanica,17-15,B,4,haustorium,2018-04-17,2:21:56 PM,,,h,602,φPSII,0.248895434,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_denticulata,ss13-46,A,3,young,2018-05-29,11:11:53 AM,,,y,603,φPSII,0.25,Grammica__φPSII,Young,Grammica__Young,ss13-46y,C_denticulata__φPSII
 Grammica,C_australis,1382,C,3,young,2017-12-13,2:21:20 PM,,,y,604,φPSII,0.250530786,Grammica__φPSII,Young,Grammica__Young,1382y,C_australis__φPSII
@@ -3931,12 +3931,12 @@ Grammica,C_tasmanica,17-15,C,1,haustorium,2018-05-29,1:36:57 PM,,,h,613,φPSII,0
 Grammica,C_tasmanica,17-15,-,2,seedling,8/24/18,12:55:20,,,sdlg,614,φPSII,0.254237288,Grammica__φPSII,Seedling,Grammica__Seedling,17-15sdlg,C_tasmanica__φPSII
 Grammica,C_cephalanthii,1567,F,6,seed (old),2018-05-29,12:23:38 PM,,,s,615,φPSII,0.254713029,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_cephalanthii,1567,G,6,old,2018-04-03,5:27:45 PM,,,o,616,φPSII,0.25566343,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
-Grammica,C_polygonorum,1705,D,4,old,2018-07-06,11:37:37 AM,,,o,617,φPSII,0.255924171,Grammica__φPSII,Old,Grammica__Old,1705o,C_cephalanthii__φPSII
+Grammica,C_polygonorum,1705,D,4,old,2018-07-06,11:37:37 AM,,,o,617,φPSII,0.255924171,Grammica__φPSII,Old,Grammica__Old,1705o,C_polygonorum__φPSII
 Grammica,C_polygonorum,1705,C,1,young,2017-12-13,11:29:05 AM,,,y,619,φPSII,0.255977496,Grammica__φPSII,Young,Grammica__Young,1705y,C_polygonorum__φPSII
 Grammica,C_denticulata,ss13-46,D,1,haustorium,2018-05-29,4:58:54 PM,,,h,620,φPSII,0.256215761,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_californica,ss17-105,C,3,young,2018-05-03,12:32:45 PM,,,y,621,φPSII,0.258064516,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
-Grammica,C_costaricensis,CUCO,B,1,old,2018-05-25,2:16:35 PM,,,o,622,φPSII,0.258064516,C_tasmanica__φPSII,Old,Grammica__Old,CUCOo,C_costaricensis__φPSII
-Grammica,C_costaricensis,CUCO,B,1,young,2018-05-25,2:04:09 PM,,,y,623,φPSII,0.258064516,Grammica__φPSII,Young,Grammica__Young,CUCOy,C_compacta__φPSII PSII
+Grammica,C_costaricensis,CUCO,B,1,old,2018-05-25,2:16:35 PM,,,o,622,φPSII,0.258064516,Grammica__φPSII,Old,Grammica__Old,CUCOo,C_costaricensis__φPSII
+Grammica,C_costaricensis,CUCO,B,1,young,2018-05-25,2:04:09 PM,,,y,623,φPSII,0.258064516,Grammica__φPSII,Young,Grammica__Young,CUCOy,C_costaricensis__φPSII
 Grammica,C_cephalanthii,1567,D,3,young,2018-03-08,4:06:19 PM,,,y,625,φPSII,0.258212376,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
 Grammica,C_denticulata,ss13-46,D,3,old,2018-06-22,4:47:32 PM,,,o,626,φPSII,0.258252427,Grammica__φPSII,Old,Grammica__Old,ss13-46o,C_denticulata__φPSII
 Grammica,C_indecora,ss16-17,D,2,seed,2018-03-23,3:04:55 PM,,,s,627,φPSII,0.258474576,Grammica__φPSII,Seed,Grammica__Seed,ss16-17s,C_indecora__φPSII
@@ -3944,14 +3944,14 @@ Grammica,C_cephalanthii,1567,A,1,seedling,8/24/18,14:03:55,,,sdlg,629,φPSII,0.2
 Grammica,C_australis,1382,C,1,young,2017-12-13,2:21:20 PM,,,y,630,φPSII,0.259361997,Grammica__φPSII,Young,Grammica__Young,1382y,C_australis__φPSII
 Grammica,C_sandwichiana,155,B,1,old,2018-01-25,12:49:08 PM,,,o,631,φPSII,0.259818731,Grammica__φPSII,Old,Grammica__Old,155o,C_sandwichiana__φPSII
 Grammica,C_polygonorum,1705,S,1,seedling,2017-11-09,6:22:52 PM,,,sdlg,632,φPSII,0.260719225,Grammica__φPSII,Seedling,Grammica__Seedling,1705sdlg,C_polygonorum__φPSII
-Grammica,C_tasmanica,17-15,B,7,haustorium,2018-04-17,2:21:56 PM,,,h,634,φPSII,0.262385321,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
+Grammica,C_tasmanica,17-15,B,7,haustorium,2018-04-17,2:21:56 PM,,,h,634,φPSII,0.262385321,C_sandwichiana__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_cephalanthii,1567,G,2,young,2018-04-03,5:15:39 PM,,,y,635,φPSII,0.262658228,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
 Grammica,C_tasmanica,17-15,B,8,young,2018-04-17,1:55:52 PM,,,y,636,φPSII,0.26344086,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
 Grammica,C_compacta,1566,E,1,young,2017-11-15,9:48:07 AM,,,y,637,φPSII,0.264473684,Grammica__φPSII,Young,Grammica__Young,1566y,C_compacta__φPSII
-Grammica,C_sandwichiana,155,B,2,young,2018-01-25,12:41:23 PM,,,y,638,φPSII,0.264573991,Grammica__φPSII,Young,Grammica__Young,155y,C_cephalanthii__φPSII
+Grammica,C_sandwichiana,155,B,2,young,2018-01-25,12:41:23 PM,,,y,638,φPSII,0.264573991,Grammica__φPSII,Young,Grammica__Young,155y,C_sandwichiana__φPSII
 Grammica,C_compacta,1566,E,1,young,2017-11-15,10:09:26 AM,,,y,639,φPSII,0.264864865,Grammica__φPSII,Young,Grammica__Young,1566y,C_compacta__φPSII
 Grammica,C_tasmanica,17-15,C,2,old,2018-05-29,1:24:33 PM,,,o,640,φPSII,0.265306122,Grammica__φPSII,Old,Grammica__Old,17-15o,C_tasmanica__φPSII
-Grammica,C_californica,ss17-105,E,5,young,2018-05-25,5:35:48 PM,,,y,641,φPSII,0.265486726,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_tasmanica__φPSII I
+Grammica,C_californica,ss17-105,E,5,young,2018-05-25,5:35:48 PM,,,y,641,φPSII,0.265486726,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
 Grammica,C_indecora,ss16-17,-,1,seedling,2017-11-15,11:18:49 AM,,,sdlg,642,φPSII,0.266009852,Grammica__φPSII,Seedling,Grammica__Seedling,ss16-17sdlg,C_indecora__φPSII
 Grammica,C_compacta,1566,A,3,old,2017-11-15,11:57:44 AM,,,o,644,φPSII,0.266666667,Grammica__φPSII,Old,Grammica__Old,1566o,C_compacta__φPSII
 Grammica,C_indecora,ss16-17,-,1,seedling,2017-11-15,11:10:01 AM,,,sdlg,646,φPSII,0.266996292,Grammica__φPSII,Seedling,Grammica__Seedling,ss16-17sdlg,C_indecora__φPSII
@@ -3965,7 +3965,7 @@ Grammica,C_sandwichiana,155,A,2,seed,2018-01-15,11:13:48 AM,,,s,655,φPSII,0.271
 Grammica,C_australis,1382,C,3,seed,2018-01-25,10:33:13 AM,,,s,658,φPSII,0.272329247,Grammica__φPSII,Seed,Grammica__Seed,1382s,C_australis__φPSII
 Grammica,C_indecora,ss16-17,E,6,flower,2018-03-23,3:52:37 PM,,,f,659,φPSII,0.272380952,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
 Grammica,C_cephalanthii,1567,D,2,old,2018-04-03,4:18:12 PM,,,o,661,φPSII,0.27613941,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
-Grammica,C_cephalanthii,1567,F,4,seed (old),2018-05-29,12:23:38 PM,,,s,662,φPSII,0.276457055,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
+Grammica,C_cephalanthii,1567,F,4,seed (old),2018-05-29,12:23:38 PM,,,s,662,φPSII,0.276457055,Grammica__φPSII,Seed,Grammica__Seed,1567s,Grammica__φPSII
 Grammica,C_denticulata,ss13-46,A,4,old,2018-05-29,3:19:24 PM,,,o,663,φPSII,0.277777778,Grammica__φPSII,Old,Grammica__Old,ss13-46o,C_denticulata__φPSII
 Grammica,C_indecora,ss16-17,E,4,flower,2018-03-23,3:52:37 PM,,,f,664,φPSII,0.278368794,Grammica__φPSII,Flower,Grammica__Flower,ss16-17f,C_indecora__φPSII
 Grammica,C_australis,1382,B,3,young,2017-12-13,3:07:51 PM,,,y,665,φPSII,0.278458844,Grammica__φPSII,Young,Grammica__Young,1382y,C_australis__φPSII
@@ -3975,14 +3975,14 @@ Grammica,C_sandwichiana,155,C,2,young,2017-12-13,3:38:43 PM,,,y,668,φPSII,0.282
 Grammica,C_tasmanica,17-15,B,5,haustorium,2018-04-17,2:21:56 PM,,,h,669,φPSII,0.282426778,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_costaricensis,CUCO,B,3,haustorium,2018-05-25,2:25:32 PM,,,h,670,φPSII,0.282608696,Grammica__φPSII,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__φPSII
 Grammica,C_costaricensis,CUCO,C,1,haustorium,2018-05-25,3:09:23 PM,,,h,672,φPSII,0.282967033,Grammica__φPSII,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__φPSII
-Grammica,C_polygonorum,1705,B,2,young,2017-12-13,1:59:42 PM,,,y,673,φPSII,0.284109149,Grammica__φPSII,Young,Grammica__Young,1705y,C_polygonorum__φPSII
+Grammica,C_polygonorum,1705,B,2,young,2017-12-13,1:59:42 PM,,,y,673,φPSII,0.284109149,Grammica__φPSII,Young,Grammica__Young,1705y,C_sandwichiana__φPSI
 Grammica,C_polygonorum,1705,C,2,young,2017-12-13,11:29:05 AM,,,y,674,φPSII,0.284109149,Grammica__φPSII,Young,Grammica__Young,1705y,C_polygonorum__φPSII
 Grammica,C_cephalanthii,1567,D,9,seed,2018-04-19,5:03:34 PM,,,s,675,φPSII,0.284180387,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
 Grammica,C_tasmanica,17-15,D,2,young,2018-05-03,1:32:11 PM,,,y,676,φPSII,0.284552846,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
 Grammica,C_costaricensis,CUCO,B,2,old,2018-05-25,2:16:35 PM,,,o,677,φPSII,0.284671533,Grammica__φPSII,Old,Grammica__Old,CUCOo,C_costaricensis__φPSII
 Grammica,C_tasmanica,17-15,C,3,haustorium,2018-05-29,1:36:57 PM,,,h,678,φPSII,0.284699806,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_cephalanthii,1567,G,3,young,2018-04-03,5:15:39 PM,,,y,679,φPSII,0.286092715,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
-Grammica,C_costaricensis,CUCO,B,2,haustorium,2018-05-25,2:25:32 PM,,,h,680,φPSII,0.286557377,C_polygonorum__φPSII,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__φPSII
+Grammica,C_costaricensis,CUCO,B,2,haustorium,2018-05-25,2:25:32 PM,,,h,680,φPSII,0.286557377,Grammica__φPSII,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__φPSII
 Grammica,C_tasmanica,17-15,B,6,haustorium,2018-04-17,2:21:56 PM,,,h,681,φPSII,0.286868687,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_californica,ss17-105,C,1,old,2018-05-03,12:43:03 PM,,,o,682,φPSII,0.287215412,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
 Grammica,C_californica,ss17-105,D,1,flower,2018-07-06,2:13:32 PM,,,f,683,φPSII,0.287562189,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
@@ -4018,7 +4018,7 @@ Grammica,C_californica,ss17-105,A,2,haustorium,2018-05-03,3:52:11 PM,,,h,718,φP
 Grammica,C_costaricensis,CUCO,C,1,old,2018-05-25,2:54:09 PM,,,o,719,φPSII,0.312101911,Grammica__φPSII,Old,Grammica__Old,CUCOo,C_costaricensis__φPSII
 Grammica,C_californica,ss17-105,E,4,flower,2018-07-06,2:26:42 PM,,,f,722,φPSII,0.31237911,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_compacta,1566,A,1,young,2017-11-15,11:37:17 AM,,,y,723,φPSII,0.312433581,Grammica__φPSII,Young,Grammica__Young,1566y,C_compacta__φPSII
-Grammica,C_californica,ss17-105,E,2,flower,2018-07-06,2:26:42 PM,,,f,724,φPSII,0.314,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
+Grammica,C_californica,ss17-105,E,2,flower,2018-07-06,2:26:42 PM,,,f,724,φPSII,0.314,C_costaricensis__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_costaricensis,CUCO,C,5,haustorium,2018-05-25,3:09:23 PM,,,h,725,φPSII,0.314639476,Grammica__φPSII,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__φPSII
 Grammica,C_californica,ss17-105,B,2,young,2018-05-29,3:33:16 PM,,,y,726,φPSII,0.314814815,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
 Grammica,C_californica,ss17-105,D,5,haustorium,2018-05-25,1:08:20 PM,,,h,727,φPSII,0.314855876,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__φPSII
@@ -4028,9 +4028,9 @@ Grammica,C_costaricensis,CUCO,B,1,haustorium,2018-05-25,2:25:32 PM,,,h,730,φPSI
 Grammica,C_costaricensis,CUCO,A,2,young,2018-05-03,1:03:52 PM,,,y,732,φPSII,0.319444444,Grammica__φPSII,Young,Grammica__Young,CUCOy,C_costaricensis__φPSII
 Grammica,C_polygonorum,1705,C,3,seed,2017-12-13,1:00:53 PM,,,s,733,φPSII,0.320578231,Grammica__φPSII,Seed,Grammica__Seed,1705s,C_polygonorum__φPSII
 Grammica,C_cephalanthii,1567,F,9,seed (old),2018-05-29,12:23:38 PM,,,s,734,φPSII,0.321245421,Grammica__φPSII,Seed,Grammica__Seed,1567s,C_cephalanthii__φPSII
-Grammica,C_australis,1382,A,2,young,2018-01-25,11:09:17 AM,,,y,735,φPSII,0.322368421,Grammica__φPSII,Young,Grammica__Young,1382y,C_australis__φPSII
+Grammica,C_australis,1382,A,2,young,2018-01-25,11:09:17 AM,,,y,735,φPSII,0.322368421,Grammica__φPSII,Young,Grammica__Young,1382y,Grammica__φPSII II
 Grammica,C_cephalanthii,1567,A,1,young,2017-11-15,1:24:27 PM,,,y,736,φPSII,0.323054332,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
-Grammica,C_tasmanica,17-15,A,6,haustorium,2018-04-17,3:29:24 PM,,,h,738,φPSII,0.323529412,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
+Grammica,C_tasmanica,17-15,A,6,haustorium,2018-04-17,3:29:24 PM,,,h,738,φPSII,0.323529412,C_californica__�,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_denticulata,ss13-46,A,6,flower,2018-07-06,11:02:42 AM,,,f,739,φPSII,0.324324324,Grammica__φPSII,Flower,Grammica__Flower,ss13-46f,C_denticulata__φPSII
 Grammica,C_indecora,ss16-17,-,2,seedling,8/24/18,13:19:55,,,sdlg,740,φPSII,0.325,Grammica__φPSII,Seedling,Grammica__Seedling,ss16-17sdlg,C_indecora__φPSII
 Grammica,C_tasmanica,17-15,B,5,old,2018-04-17,2:09:31 PM,,,o,741,φPSII,0.325068871,Grammica__φPSII,Old,Grammica__Old,17-15o,C_tasmanica__φPSII
@@ -4040,7 +4040,7 @@ Grammica,C_californica,ss17-105,D,6,flower,2018-07-06,2:13:32 PM,,,f,744,φPSII,
 Grammica,C_polygonorum,1705,C,5,seed,2017-12-13,1:00:53 PM,,,s,745,φPSII,0.326829268,Grammica__φPSII,Seed,Grammica__Seed,1705s,C_polygonorum__φPSII
 Grammica,C_californica,ss17-105,A,4,old,2018-05-03,3:45:01 PM,,,o,746,φPSII,0.32745098,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
 Grammica,C_polygonorum,1705,A,2,young,2018-01-25,9:48:59 AM,,,y,747,φPSII,0.328358209,Grammica__φPSII,Young,Grammica__Young,1705y,C_polygonorum__φPSII
-Grammica,C_denticulata,ss13-46,D,1,young,2018-05-29,4:47:59 PM,,,y,748,φPSII,0.32837407,Grammica__φPSII,Young,Grammica__Young,ss13-46y,C_polygonorum__φPSII
+Grammica,C_denticulata,ss13-46,D,1,young,2018-05-29,4:47:59 PM,,,y,748,φPSII,0.32837407,Grammica__φPSII,Young,Grammica__Young,ss13-46y,C_denticulata__φPSII
 Grammica,C_tasmanica,17-15,A,3,haustorium,2018-04-17,3:29:24 PM,,,h,749,φPSII,0.328869048,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_denticulata,ss13-46,D,4,haustorium,2018-06-22,4:57:03 PM,,,h,750,φPSII,0.32919708,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_cephalanthii,1567,A,1,seedling,8/24/18,13:52:40,,,sdlg,751,φPSII,0.332493703,Grammica__φPSII,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__φPSII
@@ -4056,11 +4056,11 @@ Grammica,C_polygonorum,1705,B,1,young,2017-12-13,1:59:42 PM,,,y,762,φPSII,0.339
 Grammica,C_cephalanthii,1567,D,1,young,2018-03-08,12:22:11 PM,,,y,763,φPSII,0.340086831,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
 Grammica,C_costaricensis,CUCO,A,2,old,2018-05-03,1:13:39 PM,,,o,765,φPSII,0.340807175,Grammica__φPSII,Old,Grammica__Old,CUCOo,C_costaricensis__φPSII
 Grammica,C_californica,ss17-105,D,5,flower,2018-07-06,2:13:32 PM,,,f,766,φPSII,0.341568206,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
-Grammica,C_denticulata,ss13-46,C,2,haustorium,2018-05-29,12:02:27 PM,,,h,767,φPSII,0.341772152,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_polygonorum__φPSII
-Grammica,C_tasmanica,17-15,B,1,young,2018-04-17,1:55:52 PM,,,y,768,φPSII,0.343283582,Grammica__φPSII,Young,Grammica__Young,17-15y,Grammica__φPSII
+Grammica,C_denticulata,ss13-46,C,2,haustorium,2018-05-29,12:02:27 PM,,,h,767,φPSII,0.341772152,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
+Grammica,C_tasmanica,17-15,B,1,young,2018-04-17,1:55:52 PM,,,y,768,φPSII,0.343283582,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
 Grammica,C_tasmanica,17-15,A,1,haustorium,2017-12-21,12:12:19 PM,,,h,769,φPSII,0.345070423,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_denticulata,ss13-46,A,2,young,2018-05-29,11:11:53 AM,,,y,770,φPSII,0.346666667,Grammica__φPSII,Young,Grammica__Young,ss13-46y,C_denticulata__φPSII
-Grammica,C_californica,ss17-105,A,3,flower,2018-05-29,4:21:52 PM,,,f,771,φPSII,0.347633136,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,Grammica__φPSII
+Grammica,C_californica,ss17-105,A,3,flower,2018-05-29,4:21:52 PM,,,f,771,φPSII,0.347633136,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_californica,ss17-105,E,6,haustorium,2018-05-25,6:16:41 PM,,,h,773,φPSII,0.348314607,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__φPSII
 Grammica,C_polygonorum,1705,C,3,young,2017-12-13,11:29:05 AM,,,y,774,φPSII,0.34914611,Grammica__φPSII,Young,Grammica__Young,1705y,C_polygonorum__φPSII
 Grammica,C_indecora,ss16-17,-,1,seedling,8/24/18,13:36:39,,,sdlg,775,φPSII,0.350340136,Grammica__φPSII,Seedling,Grammica__Seedling,ss16-17sdlg,C_indecora__φPSII
@@ -4074,14 +4074,14 @@ Grammica,C_tasmanica,17-15,A,5,young,2018-04-17,2:43:56 PM,,,y,784,φPSII,0.3542
 Grammica,C_costaricensis,CUCO,C,3,old,2018-05-25,2:54:09 PM,,,o,786,φPSII,0.357664234,Grammica__φPSII,Old,Grammica__Old,CUCOo,C_costaricensis__φPSII
 Grammica,C_californica,ss17-105,B,4,haustorium,2018-05-29,4:03:02 PM,,,h,787,φPSII,0.359183673,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__φPSII
 Grammica,C_cephalanthii,1567,A,3,seedling,8/24/18,14:03:55,,,sdlg,788,φPSII,0.359201774,Grammica__φPSII,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__φPSII
-Grammica,C_tasmanica,17-15,B,6,young,2018-04-17,1:55:52 PM,,,y,789,φPSII,0.359223301,Grammica__φPSII,Young,Grammica__Young,17-15y,Grammica__φPSII II
-Grammica,C_tasmanica,17-15,A,2,haustorium,2018-04-17,3:29:24 PM,,,h,790,φPSII,0.360197368,Grammica__φPSII,Haustorium,Grammica__Haustorium,17-15h,Grammica__φPSII II
+Grammica,C_tasmanica,17-15,B,6,young,2018-04-17,1:55:52 PM,,,y,789,φPSII,0.359223301,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
+Grammica,C_tasmanica,17-15,A,2,haustorium,2018-04-17,3:29:24 PM,,,h,790,φPSII,0.360197368,C_denticulata__�,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__φPSII
 Grammica,C_australis,1382,-,2,seedling,2017-11-02,3:16:57 PM,,,sdlg,791,φPSII,0.360711262,Grammica__φPSII,Seedling,Grammica__Seedling,1382sdlg,C_australis__φPSII
 Grammica,C_cephalanthii,1567,D,3,young,2018-03-08,12:22:11 PM,,,y,792,φPSII,0.361111111,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
 Grammica,C_polygonorum,1705,C,2,seed,2017-12-13,1:00:53 PM,,,s,793,φPSII,0.361184211,Grammica__φPSII,Seed,Grammica__Seed,1705s,C_polygonorum__φPSII
 Grammica,C_californica,ss17-105,B,3,old,2018-05-29,3:42:33 PM,,,o,794,φPSII,0.362318841,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
 Grammica,C_denticulata,ss13-46,C,4,old,2018-05-29,11:52:58 AM,,,o,796,φPSII,0.362426036,Grammica__φPSII,Old,Grammica__Old,ss13-46o,C_denticulata__φPSII
-Grammica,C_californica,ss17-105,E,9,haustorium,2018-05-25,6:16:41 PM,,,h,797,φPSII,0.363501484,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__φPSII
+Grammica,C_californica,ss17-105,E,9,haustorium,2018-05-25,6:16:41 PM,,,h,797,φPSII,0.363501484,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss17-105h,Grammica__φPSII
 Grammica,C_cephalanthii,1567,A,2,old,2017-11-15,1:40:51 PM,,,o,799,φPSII,0.364705882,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
 Grammica,C_californica,ss17-105,D,5,young,2018-05-25,12:42:05 PM,,,y,800,φPSII,0.364705882,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
 Grammica,C_californica,ss17-105,A,1,young,2018-05-03,3:35:43 PM,,,y,802,φPSII,0.365671642,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
@@ -4101,17 +4101,17 @@ Grammica,C_californica,ss17-105,B,6,flower,2018-05-29,3:51:20 PM,,,f,817,φPSII,
 Grammica,C_tasmanica,17-15,D,3,young,2018-05-03,1:32:11 PM,,,y,818,φPSII,0.372093023,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
 Grammica,C_costaricensis,CUCO,A,1,old,2018-05-03,1:13:39 PM,,,o,820,φPSII,0.373101952,Grammica__φPSII,Old,Grammica__Old,CUCOo,C_costaricensis__φPSII
 Grammica,C_californica,ss17-105,B,3,flower,2018-05-29,3:51:20 PM,,,f,821,φPSII,0.373295455,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
-Grammica,C_cephalanthii,1567,A,3,old,2017-11-15,1:53:59 PM,,,o,824,φPSII,0.374407583,Grammica__φPSII,Old,Grammica__Old,1567o,Crammiclanthii__φPSII
+Grammica,C_cephalanthii,1567,A,3,old,2017-11-15,1:53:59 PM,,,o,824,φPSII,0.374407583,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__φPSII
 Grammica,C_denticulata,ss13-46,B,4,haustorium,2018-06-20,1:19:35 PM,,,h,825,φPSII,0.374449339,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_costaricensis,CUCO,C,1,young,2018-05-25,2:39:54 PM,,,y,826,φPSII,0.374545455,Grammica__φPSII,Young,Grammica__Young,CUCOy,C_costaricensis__φPSII
-Grammica,C_denticulata,ss13-46,C,1,flower,2018-06-07,12:39:09 PM,,,f,827,φPSII,0.374792703,C_californica__�,Flower,Grammica__Flower,ss13-46f,C_denticulata__φPSII
-Grammica,C_denticulata,ss13-46,C,1,young,2018-05-29,11:43:17 AM,,,y,829,φPSII,0.375757576,Crammiclanthii__φPSII,Young,Grammica__Young,ss13-46y,C_denticulata__φPSII
+Grammica,C_denticulata,ss13-46,C,1,flower,2018-06-07,12:39:09 PM,,,f,827,φPSII,0.374792703,C_costaricensis__φPSII,Flower,Grammica__Flower,ss13-46f,C_denticulata__φPSII
+Grammica,C_denticulata,ss13-46,C,1,young,2018-05-29,11:43:17 AM,,,y,829,φPSII,0.375757576,Grammica__φPSII,Young,Grammica__Young,ss13-46y,C_denticulata__φPSII
 Grammica,C_tasmanica,17-15,D,2,young,2018-05-29,10:36:38 AM,,,y,830,φPSII,0.375796178,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
 Grammica,C_denticulata,ss13-46,B,1,old,2018-06-20,1:09:13 PM,,,o,831,φPSII,0.376417234,Grammica__φPSII,Old,Grammica__Old,ss13-46o,C_denticulata__φPSII
 Grammica,C_denticulata,ss13-46,C,6,flower,2018-06-20,3:03:14 PM,,,f,832,φPSII,0.376923077,Grammica__φPSII,Flower,Grammica__Flower,ss13-46f,C_denticulata__φPSII
 Grammica,C_costaricensis,CUCO,B,6,young,2018-05-25,2:04:09 PM,,,y,833,φPSII,0.378109453,Grammica__φPSII,Young,Grammica__Young,CUCOy,C_costaricensis__φPSII
 Grammica,C_californica,ss17-105,D,4,young,2018-05-25,12:42:05 PM,,,y,834,φPSII,0.379962193,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
-Grammica,C_californica,ss17-105,E,2,old,2018-05-25,6:05:05 PM,,,o,835,φPSII,0.380165289,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
+Grammica,C_californica,ss17-105,E,2,old,2018-05-25,6:05:05 PM,,,o,835,φPSII,0.380165289,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_cephalanthii__φPSI
 Grammica,C_californica,ss17-105,C,3,old,2018-05-03,12:43:03 PM,,,o,836,φPSII,0.380237154,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
 Grammica,C_californica,ss17-105,E,7,flower,2018-07-06,2:26:42 PM,,,f,837,φPSII,0.380323054,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_californica,ss17-105,A,5,flower,2018-05-29,4:21:52 PM,,,f,838,φPSII,0.381208054,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
@@ -4126,11 +4126,11 @@ Grammica,C_tasmanica,17-15,A,1,young,2017-12-21,11:50:46 AM,,,y,846,φPSII,0.388
 Grammica,C_californica,ss17-105,E,4,old,2018-05-25,6:05:05 PM,,,o,847,φPSII,0.388586957,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
 Grammica,C_cephalanthii,1567,D,2,young,2018-03-08,12:22:11 PM,,,y,848,φPSII,0.389215686,Grammica__φPSII,Young,Grammica__Young,1567y,C_cephalanthii__φPSII
 Grammica,C_californica,ss17-105,E,1,flower,2018-07-06,2:26:42 PM,,,f,849,φPSII,0.389289392,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
-Grammica,C_denticulata,ss13-46,A,4,young,2018-05-29,11:11:53 AM,,,y,851,φPSII,0.390532544,Grammica__φPSII,Young,Grammica__Young,ss13-46y,C_denticulata__φPSII
+Grammica,C_denticulata,ss13-46,A,4,young,2018-05-29,11:11:53 AM,,,y,851,φPSII,0.390532544,Grammica__φPSII,Young,Grammica__Young,ss13-46y,Grammica__φPSII
 Grammica,C_denticulata,ss13-46,2,2,seedling,2018-05-01,2:22:18 PM,,,sdlg,852,φPSII,0.390547264,Grammica__φPSII,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__φPSII
 Grammica,C_indecora,ss16-17,-,2,seedling,8/24/18,13:36:39,,,sdlg,853,φPSII,0.392,Grammica__φPSII,Seedling,Grammica__Seedling,ss16-17sdlg,C_indecora__φPSII
 Grammica,C_tasmanica,17-15,B,5,young,2018-04-17,1:55:52 PM,,,y,856,φPSII,0.398058252,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
-Grammica,C_californica,ss17-105,D,3,old,2018-05-25,12:53:49 PM,,,o,857,φPSII,0.398373984,Grammica__φPSII,Old,Grammica__Old,ss17-105o,Grammica__φPSII
+Grammica,C_californica,ss17-105,D,3,old,2018-05-25,12:53:49 PM,,,o,857,φPSII,0.398373984,Grammica__φPSII,Old,Grammica__Old,ss17-105o,C_californica__φPSII
 Grammica,C_californica,ss17-105,A,6,flower,2018-05-29,4:21:52 PM,,,f,858,φPSII,0.399209486,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_californica,ss17-105,A,2,flower,2018-05-29,4:21:52 PM,,,f,862,φPSII,0.403181189,Grammica__φPSII,Flower,Grammica__Flower,ss17-105f,C_californica__φPSII
 Grammica,C_californica,ss17-105,B,5,young,2018-05-29,3:33:16 PM,,,y,863,φPSII,0.403921569,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
@@ -4202,7 +4202,7 @@ Grammica,C_denticulata,ss13-46,B,1,young,2018-06-20,12:55:09 PM,,,y,949,φPSII,0
 Grammica,C_californica,ss17-105,A,3,young,2018-05-03,3:35:43 PM,,,y,951,φPSII,0.487294469,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
 Grammica,C_denticulata,ss13-46,C,3,haustorium,2018-05-29,12:02:27 PM,,,h,954,φPSII,0.488448845,Grammica__φPSII,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__φPSII
 Grammica,C_polygonorum,1705,D,1,young,2018-07-06,11:29:21 AM,,,y,958,φPSII,0.490974729,Grammica__φPSII,Young,Grammica__Young,1705y,C_polygonorum__φPSII
-Grammica,C_tasmanica,17-15,A,2,young,2018-04-17,2:43:56 PM,,,y,960,φPSII,0.496389892,Grammica__φPSII,Young,Grammica__Young,17-15y,C_californica__φPS
+Grammica,C_tasmanica,17-15,A,2,young,2018-04-17,2:43:56 PM,,,y,960,φPSII,0.496389892,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
 Grammica,C_tasmanica,17-15,A,3,young,2018-04-17,2:43:56 PM,,,y,963,φPSII,0.504694836,Grammica__φPSII,Young,Grammica__Young,17-15y,C_tasmanica__φPSII
 Grammica,C_denticulata,ss13-46,D,4,young,2018-06-22,4:36:43 PM,,,y,967,φPSII,0.513822688,Grammica__φPSII,Young,Grammica__Young,ss13-46y,C_denticulata__φPSII
 Grammica,C_indecora,ss16-17,B,3,young,2018-01-25,12:01:11 PM,,,y,971,φPSII,0.523148148,Grammica__φPSII,Young,Grammica__Young,ss16-17y,C_indecora__φPSII
@@ -4212,15 +4212,15 @@ Grammica,C_indecora,ss16-17,B,2,young,2018-01-25,12:01:11 PM,,,y,984,φPSII,0.53
 Grammica,C_denticulata,ss13-46,B,3,young,2018-06-20,12:55:09 PM,,,y,995,φPSII,0.562189055,Grammica__φPSII,Young,Grammica__Young,ss13-46y,C_denticulata__φPSII
 Grammica,C_indecora,ss16-17,C,1,young,2018-01-25,11:41:52 AM,,,y,997,φPSII,0.565683646,Grammica__φPSII,Young,Grammica__Young,ss16-17y,C_indecora__φPSII
 Grammica,C_indecora,ss16-17,C,2,young,2018-01-25,11:41:52 AM,,,y,999,φPSII,0.577160494,Grammica__φPSII,Young,Grammica__Young,ss16-17y,C_indecora__φPSII
-Grammica,C_californica,ss17-105,D,3,young,2018-05-25,12:42:05 PM,,,y,1001,φPSII,0.577380952,Grammica__φPSII,Young,Grammica__Young,ss17-105y,Grammica__ΦNPQ
-Grammica,C_indecora,ss16-17,B,1,young,2018-01-25,12:01:11 PM,,,y,1004,φPSII,0.595782074,Grammica__φPSII,Young,Grammica__Young,ss16-17y,C_indecora__φPSII
+Grammica,C_californica,ss17-105,D,3,young,2018-05-25,12:42:05 PM,,,y,1001,φPSII,0.577380952,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
+Grammica,C_indecora,ss16-17,B,1,young,2018-01-25,12:01:11 PM,,,y,1004,φPSII,0.595782074,Grammica__ΦNPQ,Young,Grammica__Young,ss16-17y,C_indecora__φPSII
 Grammica,C_californica,ss17-105,D,1,young,2018-05-25,12:42:05 PM,,,y,1008,φPSII,0.624701195,Grammica__φPSII,Young,Grammica__Young,ss17-105y,C_californica__φPSII
 Grammica,C_cephalanthii,1567,A,2,seed,2017-12-21,10:53:16 AM,ok to 0,,s,2,ΦNPQ,0.348223037,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_indecora,ss16-17,A,7,seed,2018-01-15,10:19:56 AM,other aoi had signal,,s,4,ΦNPQ,0.217099494,Grammica__ΦNPQ,Seed,Grammica__Seed,ss16-17s,C_indecora__ΦNPQ
 Grammica,C_californica,ss17-105,B,2,old,2018-05-29,3:42:33 PM,,,o,6,ΦNPQ,0.37037037,Grammica__ΦNPQ,Old,Grammica__Old,ss17-105o,C_californica__ΦNPQ
-Grammica,C_cephalanthii,1567,B,4,old,2017-12-13,12:12:56 PM,,,o,7,ΦNPQ,0.284552846,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
+Grammica,C_cephalanthii,1567,B,4,old,2017-12-13,12:12:56 PM,,,o,7,φPSII,0.284552846,Grammica__φPSII,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,A,6,flower,2017-12-21,10:53:16 AM,,,f,8,ΦNPQ,0.36637931,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
-Grammica,C_cephalanthii,1567,A,8,flower,2017-12-21,10:53:16 AM,,,f,9,ΦNPQ,0.38195302800000003,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,Grammica__φPSII
+Grammica,C_cephalanthii,1567,A,8,flower,2017-12-21,10:53:16 AM,,,f,9,ΦNPQ,0.38195302800000003,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,A,6,old,2017-12-21,10:20:01 AM,,,o,10,ΦNPQ,0.234645526,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,D,4,old,2018-03-08,12:10:52 PM,,,o,11,ΦNPQ,0.289156627,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,E,2,old,2018-03-08,1:10:13 PM,truly 0 signal,,o,12,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
@@ -4230,15 +4230,15 @@ Grammica,C_cephalanthii,1567,E,6,old,2018-03-08,1:10:13 PM,truly 0 signal,,o,15,
 Grammica,C_indecora,ss16-17,A,1,young,2017-12-13,1:12:06 PM,,,y,16,ΦNPQ,0,Grammica__ΦNPQ,Young,Grammica__Young,ss16-17y,C_indecora__ΦNPQ
 Grammica,C_indecora,ss16-17,A,2,young,2017-12-13,1:12:06 PM,truly 0 signal,,y,17,ΦNPQ,0,Grammica__ΦNPQ,Young,Grammica__Young,ss16-17y,C_indecora__ΦNPQ
 Grammica,C_indecora,ss16-17,A,3,young,2017-12-13,1:12:06 PM,truly 0 signal,,y,18,ΦNPQ,0,Grammica__ΦNPQ,Young,Grammica__Young,ss16-17y,C_indecora__ΦNPQ
-Grammica,C_indecora,ss16-17,A,3,flower,2018-01-15,10:19:56 AM,flowers themselves have 0 signal; their stems have a little,,f,19,ΦNPQ,0,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,Grammica__ΦNPQ
+Grammica,C_indecora,ss16-17,A,3,flower,2018-01-15,10:19:56 AM,flowers themselves have 0 signal; their stems have a little,,f,19,ΦNPQ,0,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
 Grammica,C_indecora,ss16-17,A,4,flower,2018-01-15,10:19:56 AM,flowers themselves have 0 signal; their stems have a little,,f,20,ΦNPQ,0,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
 Grammica,C_indecora,ss16-17,A,5,flower,2018-01-15,10:19:56 AM,flowers themselves have 0 signal; their stems have a little,,f,21,ΦNPQ,0,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
 Grammica,C_indecora,ss16-17,C,2,old,2018-01-25,11:51:38 AM,truly 0 signal,,o,22,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,ss16-17o,C_indecora__ΦNPQ
 Grammica,C_indecora,ss16-17,C,3,old,2018-01-25,11:51:38 AM,truly 0 signal,,o,23,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,ss16-17o,C_indecora__ΦNPQ
 Grammica,C_indecora,ss16-17,C,4,old,2018-01-25,11:51:38 AM,truly 0 signal,,o,24,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,ss16-17o,C_indecora__ΦNPQ
 Grammica,C_indecora,ss16-17,C,4,flower,2018-03-23,4:45:38 PM,0 YPSII,,f,25,ΦNPQ,0.151045066,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
-Grammica,C_indecora,ss16-17,C,5,flower,2018-03-23,4:45:38 PM,,,f,26,ΦNPQ,0.075471698,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,Grammica__ΦNPQ
-Grammica,C_sandwichiana,155,-,1,seedling,8/24/18,12:33:37,,,sdlg,75,ΦNPQ,0.362318841,Grammica__ΦNPQ,Seedling,Grammica__Seedling,155sdlg,C_compacta__ΦNPQ NPQ
+Grammica,C_indecora,ss16-17,C,5,flower,2018-03-23,4:45:38 PM,,,f,26,ΦNPQ,0.075471698,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
+Grammica,C_sandwichiana,155,-,1,seedling,8/24/18,12:33:37,,,sdlg,75,ΦNPQ,0.362318841,Grammica__ΦNPQ,Seedling,Grammica__Seedling,155sdlg,C_sandwichiana__ΦNPQ
 Grammica,C_sandwichiana,155,A,9,flower,2018-01-15,11:13:48 AM,0 YPSII,,f,76,ΦNPQ,0.1074603,Grammica__ΦNPQ,Flower,Grammica__Flower,155f,C_sandwichiana__ΦNPQ
 Grammica,C_sandwichiana,155,D,2,young,2018-01-25,1:05:39 PM,0 signal for this AOI; one AOI/sample did have a signal though,,y,77,ΦNPQ,0,Grammica__ΦNPQ,Young,Grammica__Young,155y,C_sandwichiana__ΦNPQ
 Grammica,C_sandwichiana,155,D,3,young,2018-01-25,1:05:39 PM,0 signal for this AOI; one AOI/sample did have a signal though,,y,78,ΦNPQ,0,Grammica__ΦNPQ,Young,Grammica__Young,155y,C_sandwichiana__ΦNPQ
@@ -4259,13 +4259,13 @@ Grammica,C_tasmanica,17-15,A,2,old,2018-04-17,3:00:16 PM,truly 0 signal,,o,104,�
 Grammica,C_tasmanica,17-15,A,3,old,2018-04-17,3:00:16 PM,,,o,105,ΦNPQ,0.169491525,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
 Grammica,C_tasmanica,17-15,A,4,old,2018-04-17,3:00:16 PM,truly 0 signal,,o,106,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
 Grammica,C_tasmanica,17-15,A,5,old,2018-04-17,3:00:16 PM,truly 0 signal,,o,107,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
-Grammica,C_tasmanica,17-15,B,3,old,2017-12-21,12:02:39 PM,truly 0 signal,,o,108,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_sandwichiana__Φ
-Grammica,C_tasmanica,17-15,B,4,old,2017-12-21,12:02:39 PM,,,o,109,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_taphalanthii__Φ
+Grammica,C_tasmanica,17-15,B,3,old,2017-12-21,12:02:39 PM,truly 0 signal,,o,108,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
+Grammica,C_tasmanica,17-15,B,4,old,2017-12-21,12:02:39 PM,,,o,109,ΦNPQ,0,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
 Grammica,C_tasmanica,17-15,B,4,flower,2018-05-25,12:21:17 PM,,,f,110,ΦNPQ,0.222680412,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
-Grammica,C_tasmanica,17-15,D,5,flower,2018-05-29,10:52:34 AM,,,f,111,ΦNPQ,0.127118644,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
+Grammica,C_tasmanica,17-15,D,5,flower,2018-05-29,10:52:34 AM,,,f,111,ΦNPQ,0.127118644,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tandwichiana__Φ
 Grammica,C_tasmanica,17-15,D,2,old,2018-05-03,1:42:52 PM,,,o,112,ΦNPQ,0.070866142,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
 Grammica,C_tasmanica,17-15,D,3,old,2018-05-03,1:42:52 PM,,,o,113,ΦNPQ,0.067567568,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
-Grammica,C_tasmanica,17-15,D,4,old,2018-05-03,1:42:52 PM,,,o,114,ΦNPQ,0.169491525,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
+Grammica,C_tasmanica,17-15,D,4,old,2018-05-03,1:42:52 PM,,,o,114,ΦNPQ,0.169491525,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_cephalanthii__Φ
 Grammica,C_australis,1382,C,2,haustorium,2017-12-13,2:42:33 PM,truly 0 signal,,h,117,ΦNPQ,0,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1382h,C_australis__ΦNPQ
 Grammica,C_australis,1382,C,3,haustorium,2017-12-13,2:42:33 PM,truly 0 signal,,h,118,ΦNPQ,0,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1382h,C_australis__ΦNPQ
 Grammica,C_sandwichiana,155,C,3,seed,2018-01-15,9:59:00 AM,,,s,123,ΦNPQ,0.182357832,Grammica__ΦNPQ,Seed,Grammica__Seed,155s,C_sandwichiana__ΦNPQ
@@ -4293,10 +4293,10 @@ Grammica,C_polygonorum,1705,C,3,haustorium,2017-12-13,11:51:43 AM,,,h,148,ΦNPQ,
 Grammica,C_sandwichiana,155,C,2,seed,2018-01-15,9:59:00 AM,,,s,149,ΦNPQ,0.198927345,Grammica__ΦNPQ,Seed,Grammica__Seed,155s,C_sandwichiana__ΦNPQ
 Grammica,C_polygonorum,1705,A,2,old,2018-01-25,9:58:34 AM,,,o,150,ΦNPQ,0.188919636,Grammica__ΦNPQ,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
 Grammica,C_sandwichiana,155,A,7,old,2018-01-15,11:31:08 AM,,,o,153,ΦNPQ,0.195188832,Grammica__ΦNPQ,Old,Grammica__Old,155o,C_sandwichiana__ΦNPQ
-Grammica,C_polygonorum,1705,C,6,flower,2017-12-13,1:00:53 PM,,,f,154,ΦNPQ,0.394568137,Grammica__ΦNPQ,Flower,Grammica__Flower,1705f,C_polygonorum__ΦNPQ
+Grammica,C_polygonorum,1705,C,6,flower,2017-12-13,1:00:53 PM,,,f,154,ΦNPQ,0.394568137,C_polygonorum__ΦNPQ,Flower,Grammica__Flower,1705f,C_polygonorum__ΦNPQ
 Grammica,C_cephalanthii,1567,F,8,seed (old),2018-05-29,12:23:38 PM,,,s,156,ΦNPQ,0.340612544,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_indecora,ss16-17,D,9,haustorium,2018-03-23,3:04:55 PM,,,h,157,ΦNPQ,0.261315466,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss16-17h,C_indecora__ΦNPQ
-Grammica,C_tasmanica,17-15,C,3,young,2018-05-29,1:12:22 PM,,,y,160,ΦNPQ,0.247337278,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
+Grammica,C_tasmanica,17-15,C,3,young,2018-05-29,1:12:22 PM,,,y,160,ΦNPQ,0.247337278,C_polygonorum__Φ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_polygonorum,1705,A,3,old,2018-01-25,9:58:34 AM,,,o,162,ΦNPQ,0.237840057,Grammica__ΦNPQ,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
 Grammica,C_californica,ss17-105,D,8,flower,2018-07-06,2:13:32 PM,,,f,163,ΦNPQ,0.293966208,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_sandwichiana,155,A,6,old,2018-01-15,11:31:08 AM,,,o,164,ΦNPQ,0.253323173,Grammica__ΦNPQ,Old,Grammica__Old,155o,C_sandwichiana__ΦNPQ
@@ -4306,46 +4306,46 @@ Grammica,C_cephalanthii,1567,B,7,seed,2017-12-21,10:08:02 AM,,,s,167,ΦNPQ,0.395
 Grammica,C_indecora,ss16-17,E,2,seed,2018-03-23,3:52:37 PM,,,s,168,ΦNPQ,0.334749035,Grammica__ΦNPQ,Seed,Grammica__Seed,ss16-17s,C_indecora__ΦNPQ
 Grammica,C_californica,ss17-105,E,9,flower,2018-07-06,2:26:42 PM,,,f,169,ΦNPQ,0,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_compacta,1566,D,5,flower,2018-03-08,11:00:04 AM,,,f,170,ΦNPQ,0.164477441,Grammica__ΦNPQ,Flower,Grammica__Flower,1566f,C_compacta__ΦNPQ
-Grammica,C_polygonorum,1705,A,2,seed,2018-01-25,10:20:42 AM,,,s,171,ΦNPQ,0.16947823,Grammica__ΦNPQ,Seed,Grammica__Seed,1705s,C_polyca__ΦNPQ �NPQ
-Grammica,C_tasmanica,17-15,A,3,flower,2018-04-17,3:16:54 PM,,,f,174,ΦNPQ,0.232536287,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,Grammica__ΦNPQ
+Grammica,C_polygonorum,1705,A,2,seed,2018-01-25,10:20:42 AM,,,s,171,ΦNPQ,0.16947823,Grammica__ΦNPQ,Seed,Grammica__Seed,1705s,C_polygonorum__ΦNPQ
+Grammica,C_tasmanica,17-15,A,3,flower,2018-04-17,3:16:54 PM,,,f,174,ΦNPQ,0.232536287,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,G,3,seed (old),2018-05-29,12:53:01 PM,,,s,176,ΦNPQ,0.23086726,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_tasmanica,17-15,A,1,old,2018-04-17,3:00:16 PM,,,o,177,ΦNPQ,0.108629131,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,G,4,haustorium,2018-03-04,5:38:33 PM,,,h,178,ΦNPQ,0.484754155,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
-Grammica,C_tasmanica,17-15,C,5,flower,2018-06-22,1:42:52 PM,,,f,179,ΦNPQ,0.250754304,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
+Grammica,C_tasmanica,17-15,C,5,flower,2018-06-22,1:42:52 PM,,,f,179,ΦNPQ,0.250754304,C_compacta__ΦNP,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,G,4,seed (old),2018-05-29,12:53:01 PM,,,s,181,ΦNPQ,0.181513967,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,B,11,flower,2017-12-21,10:08:02 AM,,,f,182,ΦNPQ,0.372587416,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
 Grammica,C_sandwichiana,155,A,5,old,2018-01-15,11:31:08 AM,,,o,183,ΦNPQ,0.250380749,Grammica__ΦNPQ,Old,Grammica__Old,155o,C_sandwichiana__ΦNPQ
-Grammica,C_australis,1382,B,2,haustorium,2017-12-13,3:30:14 PM,,,h,184,ΦNPQ,0.26681435,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1382h,C_australis__ΦNPQ
+Grammica,C_australis,1382,B,2,haustorium,2017-12-13,3:30:14 PM,,,h,184,ΦNPQ,0.26681435,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1382h,C_indecora__ΦNPQ 
 Grammica,C_cephalanthii,1567,B,10,flower,2017-12-21,10:08:02 AM,,,f,185,ΦNPQ,0.375138954,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
-Grammica,C_denticulata,ss13-46,C,4,flower,2018-06-20,3:03:14 PM,,,f,188,ΦNPQ,0.248798588,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,Grammica__ΦNPQ �NPQ
+Grammica,C_denticulata,ss13-46,C,4,flower,2018-06-20,3:03:14 PM,,,f,188,ΦNPQ,0.248798588,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
 Grammica,C_cephalanthii,1567,B,1,haustorium,2017-12-21,10:34:52 AM,,,h,189,ΦNPQ,0.416417851,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
 Grammica,C_indecora,ss16-17,E,5,flower,2018-03-23,3:52:37 PM,,,f,190,ΦNPQ,0.19779824,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
 Grammica,C_cephalanthii,1567,D,2,old,2018-03-08,12:10:52 PM,,,o,191,ΦNPQ,0.239364189,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,A,5,flower,2017-12-21,10:53:16 AM,,,f,193,ΦNPQ,0.446883086,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,A,4,seed,2017-12-21,10:53:16 AM,,,s,194,ΦNPQ,0.254190888,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,4,haustorium,2018-05-29,4:58:54 PM,,,h,195,ΦNPQ,0.235892244,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
-Grammica,C_compacta,1566,D,2,flower,2018-03-08,11:00:04 AM,,,f,196,ΦNPQ,0.382672727,Grammica__ΦNPQ,Flower,Grammica__Flower,1566f,C_tasmanica__ΦNPQ
+Grammica,C_compacta,1566,D,2,flower,2018-03-08,11:00:04 AM,,,f,196,ΦNPQ,0.382672727,Grammica__ΦNPQ,Flower,Grammica__Flower,1566f,C_compacta__ΦNPQ
 Grammica,C_tasmanica,17-15,D,1,flower,2018-05-29,10:52:34 AM,,,f,197,ΦNPQ,0.136512866,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_polygonorum,1705,A,5,seed,2018-01-25,10:20:42 AM,,,s,198,ΦNPQ,0.162087321,Grammica__ΦNPQ,Seed,Grammica__Seed,1705s,C_polygonorum__ΦNPQ
 Grammica,C_tasmanica,17-15,D,1,young,2018-05-03,1:32:11 PM,,,y,199,ΦNPQ,0.165464744,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,D,14,seed,2018-04-19,5:03:34 PM,,,s,201,ΦNPQ,0.404382186,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
-Grammica,C_cephalanthii,1567,B,4,haustorium,2017-12-21,10:34:52 AM,,,h,202,ΦNPQ,0.394805319,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
+Grammica,C_cephalanthii,1567,B,4,haustorium,2017-12-21,10:34:52 AM,,,h,202,ΦNPQ,0.394805319,C_tasmanica__Φ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
 Grammica,C_sandwichiana,155,D,3,old,2018-01-25,1:13:25 PM,,,o,203,ΦNPQ,0.187422871,Grammica__ΦNPQ,Old,Grammica__Old,155o,C_sandwichiana__ΦNPQ
 Grammica,C_denticulata,ss13-46,C,5,flower,2018-06-20,3:03:14 PM,,,f,204,ΦNPQ,0.160847821,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
 Grammica,C_tasmanica,17-15,C,1,flower,2018-06-22,1:42:52 PM,,,f,205,ΦNPQ,0.218201829,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,A,2,seedling ,8/24/18,13:52:40,,,sdlg,207,ΦNPQ,0.500180668,Grammica__ΦNPQ,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__ΦNPQ
-Grammica,C_polygonorum,1705,C,1,haustorium,2017-12-13,11:51:43 AM,,,h,208,ΦNPQ,0.252686874,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1705h,C_sandwichiana__ΦNP
+Grammica,C_polygonorum,1705,C,1,haustorium,2017-12-13,11:51:43 AM,,,h,208,ΦNPQ,0.252686874,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__ΦNPQ
 Grammica,C_cephalanthii,1567,B,2,seed,2017-12-21,10:08:02 AM,,,s,210,ΦNPQ,0.354169795,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
-Grammica,C_denticulata,ss13-46,D,3,haustorium,2018-05-29,4:58:54 PM,,,h,211,ΦNPQ,0.039989605,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_cephalanthii__ΦNPQ
+Grammica,C_denticulata,ss13-46,D,3,haustorium,2018-05-29,4:58:54 PM,,,h,211,ΦNPQ,0.039989605,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_tasmanica,17-15,B,3,flower,2018-05-25,12:21:17 PM,,,f,214,ΦNPQ,0.289179104,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_tasmanica,17-15,A,4,flower,2018-04-17,3:16:54 PM,,,f,215,ΦNPQ,0.133954792,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
-Grammica,C_sandwichiana,155,C,13,flower,2018-01-15,9:59:00 AM,,,f,216,ΦNPQ,0.271617003,Grammica__ΦNPQ,Flower,Grammica__Flower,155f,C_sandwichiana__ΦNPQ
+Grammica,C_sandwichiana,155,C,13,flower,2018-01-15,9:59:00 AM,,,f,216,ΦNPQ,0.271617003,Grammica__ΦNPQ,Flower,Grammica__Flower,155f,Grammica__ΦNPQ
 Grammica,C_polygonorum,1705,A,6,seed,2018-01-25,10:20:42 AM,,,s,218,ΦNPQ,0.252822425,Grammica__ΦNPQ,Seed,Grammica__Seed,1705s,C_polygonorum__ΦNPQ
 Grammica,C_polygonorum,1705,A,4,haustorium,2018-01-25,10:10:26 AM,,,h,219,ΦNPQ,0.279512297,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__ΦNPQ
 Grammica,C_californica,ss17-105,D,6,young,2018-05-25,12:42:05 PM,,,y,220,ΦNPQ,0.233872846,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_tasmanica,17-15,A,6,flower,2018-04-17,3:16:54 PM,,,f,222,ΦNPQ,0.180941119,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_tasmanica,17-15,B,7,flower,2018-05-25,12:21:17 PM,,,f,224,ΦNPQ,0.227670932,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
-Grammica,C_cephalanthii,1567,G,3,haustorium,2018-03-04,5:38:33 PM,,,h,225,ΦNPQ,0.446722097,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
+Grammica,C_cephalanthii,1567,G,3,haustorium,2018-03-04,5:38:33 PM,,,h,225,ΦNPQ,0.446722097,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,Grammica__ΦNPQ
 Grammica,C_denticulata,ss13-46,C,10,flower,2018-06-20,3:03:14 PM,,,f,226,ΦNPQ,0.183027918,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
 Grammica,C_cephalanthii,1567,B,3,haustorium,2017-12-21,10:34:52 AM,,,h,227,ΦNPQ,0.387187656,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
 Grammica,C_tasmanica,17-15,B,3,old,2018-04-17,2:09:31 PM,,,o,228,ΦNPQ,0.076898933,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
@@ -4356,13 +4356,13 @@ Grammica,C_australis,1382,B,4,haustorium,2017-12-13,3:30:14 PM,,,h,232,ΦNPQ,0.3
 Grammica,C_tasmanica,17-15,C,4,flower,2018-06-22,1:42:52 PM,,,f,233,ΦNPQ,0.149789264,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_tasmanica,17-15,C,6,flower,2018-06-22,1:42:52 PM,,,f,234,ΦNPQ,0.196137196,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_costaricensis,CUCO,B,7,young,2018-05-25,2:04:09 PM,,,y,236,ΦNPQ,0.114777028,Grammica__ΦNPQ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
-Grammica,C_cephalanthii,1567,D,13,seed,2018-04-19,5:03:34 PM,,,s,238,ΦNPQ,0.480043196,C_polygonorum__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
-Grammica,C_polygonorum,1705,D,5,haustorium,2018-07-06,12:10:49 PM,,,h,239,ΦNPQ,0.252096009,Grammticulata__ΦNPQ,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__ΦNPQ
+Grammica,C_cephalanthii,1567,D,13,seed,2018-04-19,5:03:34 PM,,,s,238,ΦNPQ,0.480043196,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
+Grammica,C_polygonorum,1705,D,5,haustorium,2018-07-06,12:10:49 PM,,,h,239,ΦNPQ,0.252096009,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__ΦNPQ
 Grammica,C_tasmanica,17-15,B,2,flower,2018-05-25,12:21:17 PM,,,f,240,ΦNPQ,0.243735802,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_sandwichiana,155,D,2,old,2018-01-25,1:13:25 PM,,,o,241,ΦNPQ,0.183856894,Grammica__ΦNPQ,Old,Grammica__Old,155o,C_sandwichiana__ΦNPQ
 Grammica,C_indecora,ss16-17,B,2,flower,2018-03-23,3:39:17 PM,,,f,245,ΦNPQ,0.293653663,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
 Grammica,C_polygonorum,1705,C,5,old,2017-12-13,11:41:35 AM,,,o,246,ΦNPQ,0.387489092,Grammica__ΦNPQ,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
-Grammica,C_denticulata,ss13-46,B,3,haustorium,2018-06-20,1:19:35 PM,,,h,249,ΦNPQ,0.186559219,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,Grammticulata__ΦNPQ
+Grammica,C_denticulata,ss13-46,B,3,haustorium,2018-06-20,1:19:35 PM,,,h,249,ΦNPQ,0.186559219,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_tasmanica,17-15,C,2,flower,2018-06-22,1:42:52 PM,,,f,251,ΦNPQ,0.238948384,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,A,5,old,2017-12-21,10:20:01 AM,,,o,253,ΦNPQ,0.242005692,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,A,3,seed,2017-12-21,10:53:16 AM,,,s,254,ΦNPQ,0.493399445,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
@@ -4374,14 +4374,14 @@ Grammica,C_cephalanthii,1567,B,4,seed,2017-12-21,10:08:02 AM,,,s,262,ΦNPQ,0.399
 Grammica,C_sandwichiana,155,-,1,seedling,8/24/18,12:18:16,,,sdlg,263,ΦNPQ,0.448452493,Grammica__ΦNPQ,Seedling,Grammica__Seedling,155sdlg,C_sandwichiana__ΦNPQ
 Grammica,C_cephalanthii,1567,B,9,flower,2017-12-21,10:08:02 AM,,,f,264,ΦNPQ,0.361098659,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,5,haustorium,2018-05-29,4:58:54 PM,,,h,265,ΦNPQ,0.299956412,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
-Grammica,C_sandwichiana,155,D,2,haustorium,2018-01-25,1:21:03 PM,,,h,266,ΦNPQ,0.236702478,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__ΦNPQ
+Grammica,C_sandwichiana,155,D,2,haustorium,2018-01-25,1:21:03 PM,,,h,266,ΦNPQ,0.236702478,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,155h,C_smmica__ΦNPQ ΦNPQ
 Grammica,C_cephalanthii,1567,D,11,seed,2018-04-19,5:03:34 PM,,,s,267,ΦNPQ,0.45157744,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,A,9,seed,2017-12-21,10:53:16 AM,,,s,268,ΦNPQ,0.28657705,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,G,2,haustorium,2018-03-04,5:38:33 PM,,,h,270,ΦNPQ,0.45724862,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
 Grammica,C_polygonorum,1705,A,9,flower,2018-01-25,10:20:42 AM,,,f,271,ΦNPQ,0.158311878,Grammica__ΦNPQ,Flower,Grammica__Flower,1705f,C_polygonorum__ΦNPQ
 Grammica,C_polygonorum,1705,A,11,flower,2018-01-25,10:20:42 AM,,,f,272,ΦNPQ,0.184065218,Grammica__ΦNPQ,Flower,Grammica__Flower,1705f,C_polygonorum__ΦNPQ
 Grammica,C_cephalanthii,1567,D,10,flower,2018-04-03,4:33:24 PM,,,f,274,ΦNPQ,0.444063097,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
-Grammica,C_denticulata,ss13-46,D,5,haustorium,2018-06-22,4:57:03 PM,,,h,275,ΦNPQ,0.19971721,Grammianica__Φ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
+Grammica,C_denticulata,ss13-46,D,5,haustorium,2018-06-22,4:57:03 PM,,,h,275,ΦNPQ,0.19971721,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_compacta,1566,E,1,haustorium,2017-11-15,10:46:02 AM,,,h,276,ΦNPQ,0.443562813,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1566h,C_compacta__ΦNPQ
 Grammica,C_cephalanthii,1567,G,7,seed (old),2018-05-29,12:53:01 PM,,,s,278,ΦNPQ,0.300089804,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_tasmanica,17-15,B,1,young,2018-03-15,4:44:24 PM,,,y,279,ΦNPQ,0.142679901,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
@@ -4398,7 +4398,7 @@ Grammica,C_polygonorum,1705,A,8,flower,2018-01-25,10:20:42 AM,,,f,293,ΦNPQ,0.11
 Grammica,C_indecora,ss16-17,D,3,flower,2018-03-23,3:04:55 PM,,,f,296,ΦNPQ,0.275541776,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
 Grammica,C_tasmanica,17-15,C,3,flower,2018-06-22,1:42:52 PM,,,f,297,ΦNPQ,0.282717652,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_compacta,1566,B,3,old,2017-12-21,11:24:24 AM,,,o,298,ΦNPQ,0.234009273,Grammica__ΦNPQ,Old,Grammica__Old,1566o,C_compacta__ΦNPQ
-Grammica,C_sandwichiana,155,S1,2,seedling,2017-11-09,6:04:24 PM,,,sdlg,299,ΦNPQ,0.177116824,Grammica__ΦNPQ,Seedling,Grammica__Seedling,155sdlg,C_sandwichiana__ΦNPQ
+Grammica,C_sandwichiana,155,S1,2,seedling,2017-11-09,6:04:24 PM,,,sdlg,299,ΦNPQ,0.177116824,Grammica__ΦNPQ,Seedling,Grammica__Seedling,155sdlg,Grammica__ΦNPQ ΦNPQ
 Grammica,C_cephalanthii,1567,B,5,seed,2017-12-21,10:08:02 AM,,,s,300,ΦNPQ,0.445393674,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_sandwichiana,155,A,1,haustorium,2018-01-15,11:21:16 AM,,,h,301,ΦNPQ,0.215675504,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__ΦNPQ
 Grammica,C_cephalanthii,1567,D,1,seed,2018-03-04,4:33:24 PM,,,s,304,ΦNPQ,0.402367765,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
@@ -4407,7 +4407,7 @@ Grammica,C_australis,1382,C,4,old,2017-12-13,2:31:06 PM,,,o,306,ΦNPQ,0.31587031
 Grammica,C_denticulata,ss13-46,C,7,flower,2018-06-20,3:03:14 PM,,,f,307,ΦNPQ,0.156535632,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
 Grammica,C_polygonorum,1705,A,1,haustorium,2018-01-25,10:10:26 AM,,,h,308,ΦNPQ,0.284889639,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,1,haustorium,2018-06-22,4:57:03 PM,,,h,309,ΦNPQ,0.19837548,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
-Grammica,C_compacta,1566,A,5,old,2017-11-15,10:28:34 AM,,,o,310,ΦNPQ,0.21062966,C_compacta__ΦNPQ,Old,Grammica__Old,1566o,C_compacta__ΦNPQ
+Grammica,C_compacta,1566,A,5,old,2017-11-15,10:28:34 AM,,,o,310,ΦNPQ,0.21062966,Grammica__ΦNPQ,Old,Grammica__Old,1566o,C_compacta__ΦNPQ
 Grammica,C_compacta,1566,E,1,haustorium,2017-11-15,10:56:43 AM,,,h,311,ΦNPQ,0.509644114,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1566h,C_compacta__ΦNPQ
 Grammica,C_polygonorum,1705,C,7,old,2017-12-13,11:41:35 AM,,,o,312,ΦNPQ,0.314201603,Grammica__ΦNPQ,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
 Grammica,C_sandwichiana,155,A,2,haustorium,2018-01-15,11:21:16 AM,,,h,313,ΦNPQ,0.190745282,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__ΦNPQ
@@ -4433,11 +4433,11 @@ Grammica,C_denticulata,ss13-46,D,2,haustorium,2018-06-22,4:57:03 PM,,,h,341,ΦNP
 Grammica,C_tasmanica,17-15,B,9,flower,2018-05-25,12:21:17 PM,,,f,343,ΦNPQ,0.171270957,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,D,3,old,2018-04-03,4:18:12 PM,,,o,344,ΦNPQ,0.352854692,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,D,3,seed,2018-03-04,4:33:24 PM,,,s,345,ΦNPQ,0.369762117,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
-Grammica,C_tasmanica,17-15,B,1,flower,2018-05-25,12:21:17 PM,,,f,346,ΦNPQ,0.245072514,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,Grammica__ΦNPQ
+Grammica,C_tasmanica,17-15,B,1,flower,2018-05-25,12:21:17 PM,,,f,346,ΦNPQ,0.245072514,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,D,3,old,2018-03-08,12:10:52 PM,,,o,348,ΦNPQ,0.220663862,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_tasmanica,17-15,A,2,flower,2018-04-17,3:16:54 PM,,,f,350,ΦNPQ,0.205824491,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
-Grammica,C_indecora,ss16-17,B,3,old,2018-01-25,12:10:09 PM,,,o,352,ΦNPQ,0.212033166,C_sandwichiana_,Old,Grammica__Old,ss16-17o,C_indecora__ΦNPQ
-Grammica,C_tasmanica,17-15,B,2,young,2018-03-15,4:44:24 PM,,,y,353,ΦNPQ,0.234650622,C_australis__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
+Grammica,C_indecora,ss16-17,B,3,old,2018-01-25,12:10:09 PM,,,o,352,ΦNPQ,0.212033166,Grammica__ΦNPQ,Old,Grammica__Old,ss16-17o,C_indecora__ΦNPQ
+Grammica,C_tasmanica,17-15,B,2,young,2018-03-15,4:44:24 PM,,,y,353,ΦNPQ,0.234650622,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,Grammica__ΦNPQ
 Grammica,C_sandwichiana,155,C,1,old,2017-12-13,3:46:17 PM,,,o,355,ΦNPQ,0.278462069,Grammica__ΦNPQ,Old,Grammica__Old,155o,C_sandwichiana__ΦNPQ
 Grammica,C_cephalanthii,1567,G,2,seed (old),2018-05-29,12:53:01 PM,,,s,356,ΦNPQ,0.372103537,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_australis,1382,A,1,haustorium,2018-01-25,11:30:18 AM,,,h,357,ΦNPQ,0.262668241,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1382h,C_australis__ΦNPQ
@@ -4462,7 +4462,7 @@ Grammica,C_sandwichiana,155,A,1,young,2018-01-15,10:49:39 AM,,,y,379,ΦNPQ,0.100
 Grammica,C_denticulata,ss13-46,A,5,old,2018-05-29,3:19:24 PM,,,o,380,ΦNPQ,0.230113636,Grammica__ΦNPQ,Old,Grammica__Old,ss13-46o,C_denticulata__ΦNPQ
 Grammica,C_californica,ss17-105,E,8,flower,2018-07-06,2:26:42 PM,,,f,382,ΦNPQ,0.30616604,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_polygonorum,1705,D,3,haustorium,2018-07-06,12:10:49 PM,,,h,383,ΦNPQ,0.259739765,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__ΦNPQ
-Grammica,C_tasmanica,17-15,B,2,old,2018-04-17,2:09:31 PM,,,o,385,ΦNPQ,0.116487455,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,Grammica__ΦNPQ
+Grammica,C_tasmanica,17-15,B,2,old,2018-04-17,2:09:31 PM,,,o,385,ΦNPQ,0.116487455,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
 Grammica,C_indecora,ss16-17,E,3,seed,2018-03-23,3:52:37 PM,,,s,387,ΦNPQ,0.208587571,Grammica__ΦNPQ,Seed,Grammica__Seed,ss16-17s,C_indecora__ΦNPQ
 Grammica,C_cephalanthii,1567,G,5,seed (old),2018-05-29,12:53:01 PM,,,s,388,ΦNPQ,0.396767696,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,A,3,old,2017-12-21,10:20:01 AM,,,o,389,ΦNPQ,0.268094901,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
@@ -4488,7 +4488,7 @@ Grammica,C_costaricensis,CUCO,B,4,old,2018-05-25,2:16:35 PM,,,o,413,ΦNPQ,0.1912
 Grammica,C_indecora,ss16-17,A,1,haustorium,2017-12-13,1:34:11 PM,,,h,414,ΦNPQ,0.403428904,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss16-17h,C_indecora__ΦNPQ
 Grammica,C_cephalanthii,1567,F,5,old,2018-03-23,4:26:33 PM,,,o,415,ΦNPQ,0.333875915,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_polygonorum,1705,B,3,old,2017-12-13,2:09:18 PM,,,o,417,ΦNPQ,0.317247066,Grammica__ΦNPQ,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
-Grammica,C_sandwichiana,155,A,3,young,2018-01-15,10:49:39 AM,,,y,418,ΦNPQ,0.127286654,C_cephalanthii__ΦNPQ,Young,Grammica__Young,155y,C_sandwichiana__ΦNPQ
+Grammica,C_sandwichiana,155,A,3,young,2018-01-15,10:49:39 AM,,,y,418,ΦNPQ,0.127286654,Grammica__ΦNPQ,Young,Grammica__Young,155y,C_sandwichiana__ΦNPQ
 Grammica,C_polygonorum,1705,B,2,old,2017-12-13,2:09:18 PM,,,o,421,ΦNPQ,0.352787456,Grammica__ΦNPQ,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
 Grammica,C_tasmanica,17-15,D,2,flower,2018-05-29,10:52:34 AM,,,f,426,ΦNPQ,0.175143316,Grammica__ΦNPQ,Flower,Grammica__Flower,17-15f,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,D,2,haustorium,2018-03-08,11:59:03 AM,,,h,427,ΦNPQ,0.440685241,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
@@ -4496,14 +4496,14 @@ Grammica,C_australis,1382,A,2,haustorium,2018-01-25,11:30:18 AM,,,h,428,ΦNPQ,0.
 Grammica,C_compacta,1566,A,1,haustorium,2017-11-15,12:14:15 PM,,,h,430,ΦNPQ,0.478150494,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1566h,C_compacta__ΦNPQ
 Grammica,C_cephalanthii,1567,D,14,flower,2018-04-03,4:33:24 PM,,,f,431,ΦNPQ,0.3894433,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
 Grammica,C_sandwichiana,155,A,1,haustorium,2018-01-25,12:33:35 PM,,,h,432,ΦNPQ,0.333414093,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__ΦNPQ
-Grammica,C_cephalanthii,1567,B,8,old,2017-12-13,12:12:56 PM,,,o,433,ΦNPQ,0.278613473,Grammica__ΦNPQ,Old,Grammica__Old,1567o,Grammica__ΦNPQ
+Grammica,C_cephalanthii,1567,B,8,old,2017-12-13,12:12:56 PM,,,o,433,ΦNPQ,0.278613473,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,G,3,old,2018-04-03,5:27:45 PM,,,o,434,ΦNPQ,0.293909974,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,2,haustorium,2018-05-29,4:58:54 PM,,,h,436,ΦNPQ,0.307552928,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_cephalanthii,1567,B,1,haustorium,2017-12-13,12:25:12 PM,,,h,437,ΦNPQ,0.439231806,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,3,haustorium,2018-06-22,4:57:03 PM,,,h,438,ΦNPQ,0.177104146,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_cephalanthii,1567,D,2,haustorium,2018-03-04,4:43:17 PM,,,h,439,ΦNPQ,0.49124406,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,D,2,haustorium,2018-03-04,4:43:17 PM,,,h,440,ΦNPQ,0.49124406,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__ΦNPQ
-Grammica,C_polygonorum,1705,C,6,old,2017-12-13,11:41:35 AM,,,o,442,ΦNPQ,0.240786962,C_cephalanthii_,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
+Grammica,C_polygonorum,1705,C,6,old,2017-12-13,11:41:35 AM,,,o,442,ΦNPQ,0.240786962,Grammica__ΦNPQ,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
 Grammica,C_costaricensis,CUCO,B,6,haustorium,2018-05-25,2:25:32 PM,,,h,443,ΦNPQ,0.343420127,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__ΦNPQ
 Grammica,C_sandwichiana,155,D,3,haustorium,2018-01-25,1:21:03 PM,,,h,444,ΦNPQ,0.297615862,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__ΦNPQ
 Grammica,C_cephalanthii,1567,F,7,seed (old),2018-05-29,12:23:38 PM,,,s,445,ΦNPQ,0.39476008,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
@@ -4520,7 +4520,7 @@ Grammica,C_sandwichiana,155,C,2,haustorium,2017-12-13,3:55:12 PM,,,h,460,ΦNPQ,0
 Grammica,C_tasmanica,17-15,C,3,old,2018-05-29,1:24:33 PM,,,o,465,ΦNPQ,0.2213182,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
 Grammica,C_australis,1382,C,2,seed,2018-01-25,10:33:13 AM,,,s,466,ΦNPQ,0.268849528,Grammica__ΦNPQ,Seed,Grammica__Seed,1382s,C_australis__ΦNPQ
 Grammica,C_cephalanthii,1567,D,7,flower,2018-04-03,4:33:24 PM,,,f,468,ΦNPQ,0.360879052,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
-Grammica,C_sandwichiana,155,B,3,old,2018-01-25,12:49:08 PM,,,o,470,ΦNPQ,0.227714174,Grammica__ΦNPQ,Old,Grammica__Old,155o,C_compacta__ΦNPQ
+Grammica,C_sandwichiana,155,B,3,old,2018-01-25,12:49:08 PM,,,o,470,ΦNPQ,0.227714174,Grammica__ΦNPQ,Old,Grammica__Old,155o,C_sandwichiana__ΦNPQ
 Grammica,C_australis,1382,B,2,old,2017-12-13,3:17:31 PM,,,o,475,ΦNPQ,0.387862513,Grammica__ΦNPQ,Old,Grammica__Old,1382o,C_australis__ΦNPQ
 Grammica,C_costaricensis,CUCO,C,4,haustorium,2018-05-25,3:09:23 PM,,,h,476,ΦNPQ,0.285527681,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__ΦNPQ
 Grammica,C_tasmanica,17-15,A,5,haustorium,2018-04-17,3:29:24 PM,,,h,477,ΦNPQ,0.2406143,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__ΦNPQ
@@ -4563,18 +4563,18 @@ Grammica,C_tasmanica,17-15,C,1,young,2018-05-29,1:12:22 PM,,,y,527,ΦNPQ,0.30445
 Grammica,C_tasmanica,17-15,B,2,haustorium,2018-04-17,2:21:56 PM,,,h,528,ΦNPQ,0.257557601,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__ΦNPQ
 Grammica,C_polygonorum,1705,D,2,old,2018-07-06,11:37:37 AM,,,o,529,ΦNPQ,0.241757627,Grammica__ΦNPQ,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,2,old,2018-06-22,4:47:32 PM,,,o,530,ΦNPQ,0.141414141,Grammica__ΦNPQ,Old,Grammica__Old,ss13-46o,C_denticulata__ΦNPQ
-Grammica,C_polygonorum,1705,B,4,old,2017-12-13,2:09:18 PM,,,o,533,ΦNPQ,0.3025768,C_denticulata__,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
+Grammica,C_polygonorum,1705,B,4,old,2017-12-13,2:09:18 PM,,,o,533,ΦNPQ,0.3025768,Grammica__ΦNPQ,Old,Grammica__Old,1705o,C_polygonorum__ΦNPQ
 Grammica,C_compacta,1566,A,2,old,2017-11-15,11:48:47 AM,,,o,534,ΦNPQ,0.115753927,Grammica__ΦNPQ,Old,Grammica__Old,1566o,C_compacta__ΦNPQ
 Grammica,C_polygonorum,1705,D,1,haustorium,2018-07-06,12:10:49 PM,,,h,535,ΦNPQ,0.27038292,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__ΦNPQ
 Grammica,C_sandwichiana,155,C,3,young,2017-12-13,3:38:43 PM,,,y,536,ΦNPQ,0.302400483,Grammica__ΦNPQ,Young,Grammica__Young,155y,C_sandwichiana__ΦNPQ
-Grammica,C_denticulata,ss13-46,D,1,old,2018-06-22,4:47:32 PM,,,o,538,ΦNPQ,0.136287959,Grammica__ΦNPQ,Old,Grammica__Old,ss13-46o,C_denticulata__ΦNPQ
+Grammica,C_denticulata,ss13-46,D,1,old,2018-06-22,4:47:32 PM,,,o,538,ΦNPQ,0.136287959,C_tasmanica__ΦNPQ,Old,Grammica__Old,ss13-46o,C_denticulata__ΦNPQ
 Grammica,C_cephalanthii,1567,D,1,flower,2018-04-19,5:03:34 PM,,,f,541,ΦNPQ,0.388698789,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
 Grammica,C_californica,ss17-105,B,2,haustorium,2018-05-29,4:03:02 PM,,,h,542,ΦNPQ,0.298054721,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
 Grammica,C_cephalanthii,1567,D,8,flower,2018-04-03,4:33:24 PM,,,f,544,ΦNPQ,0.34393938,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
 Grammica,C_tasmanica,17-15,D,3,haustorium,2018-05-03,1:52:11 PM,,,h,546,ΦNPQ,0.180017137,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__ΦNPQ
 Grammica,C_cephalanthii,1567,F,5,seed (old),2018-05-29,12:23:38 PM,,,s,547,ΦNPQ,0.352044613,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,D,12,seed,2018-04-19,5:03:34 PM,,,s,548,ΦNPQ,0.521941794,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
-Grammica,C_denticulata,ss13-46,B,3,old,2018-06-20,1:09:13 PM,,,o,549,ΦNPQ,0.166715272,C_denticulata__,Old,Grammica__Old,ss13-46o,C_denticulata__ΦNPQ
+Grammica,C_denticulata,ss13-46,B,3,old,2018-06-20,1:09:13 PM,,,o,549,ΦNPQ,0.166715272,Grammica__ΦNPQ,Old,Grammica__Old,ss13-46o,C_denticulata__ΦNPQ
 Grammica,C_tasmanica,17-15,A,2,haustorium,2017-12-21,12:12:19 PM,,,h,550,ΦNPQ,0.166715272,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__ΦNPQ
 Grammica,C_australis,1382,B,4,young,2017-12-13,3:07:51 PM,,,y,551,ΦNPQ,0.271618625,Grammica__ΦNPQ,Young,Grammica__Young,1382y,C_australis__ΦNPQ
 Grammica,C_cephalanthii,1567,B,1,young,2017-12-13,12:04:21 PM,,,y,552,ΦNPQ,0.385749386,Grammica__ΦNPQ,Young,Grammica__Young,1567y,C_cephalanthii__ΦNPQ
@@ -4585,7 +4585,7 @@ Grammica,C_costaricensis,CUCO,B,6,old,2018-05-25,2:16:35 PM,,,o,558,ΦNPQ,0.0937
 Grammica,C_denticulata,ss13-46,B,5,haustorium,2018-06-20,1:19:35 PM,,,h,559,ΦNPQ,0.170105116,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_tasmanica,17-15,B,3,old,2018-03-15,4:32:42 PM,,,o,560,ΦNPQ,0.126665161,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
 Grammica,C_polygonorum,1705,D,4,haustorium,2018-07-06,12:10:49 PM,,,h,565,ΦNPQ,0.249195431,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__ΦNPQ
-Grammica,C_denticulata,ss13-46,C,3,flower,2018-06-20,3:03:14 PM,,,f,566,ΦNPQ,0.148949846,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,Grammica__ΦNPQ
+Grammica,C_denticulata,ss13-46,C,3,flower,2018-06-20,3:03:14 PM,,,f,566,ΦNPQ,0.148949846,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
 Grammica,C_denticulata,ss13-46,A,4,haustorium,2018-05-29,11:30:47 AM,,,h,567,ΦNPQ,0.177789839,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_cephalanthii,1567,D,7,seed,2018-04-19,5:03:34 PM,,,s,568,ΦNPQ,0.439907967,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_tasmanica,17-15,C,5,young,2018-05-29,1:12:22 PM,,,y,569,ΦNPQ,0.171774194,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
@@ -4596,11 +4596,11 @@ Grammica,C_australis,1382,A,2,old,2018-01-25,11:20:59 AM,,,o,576,ΦNPQ,0.1912268
 Grammica,C_cephalanthii,1567,F,1,seed (old),2018-05-29,12:23:38 PM,,,s,577,ΦNPQ,0.368809573,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_compacta,1566,B,2,young,2017-12-21,11:12:51 AM,,,y,578,ΦNPQ,0.029851941,Grammica__ΦNPQ,Young,Grammica__Young,1566y,C_compacta__ΦNPQ
 Grammica,C_cephalanthii,1567,G,4,old,2018-04-03,5:27:45 PM,,,o,579,ΦNPQ,0.21527418,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
-Grammica,C_indecora,ss16-17,D,3,seed,2018-03-23,3:04:55 PM,,,s,580,ΦNPQ,0.423193229,Grammica__ΦNPQ,Seed,Grammica__Seed,ss16-17s,C_cephalanthii__ΦNPQ
-Grammica,C_indecora,ss16-17,D,1,flower,2018-02-16,3:35:35 PM,,,f,581,ΦNPQ,0.288904127,Grammica__ΦNPQ,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
+Grammica,C_indecora,ss16-17,D,3,seed,2018-03-23,3:04:55 PM,,,s,580,ΦNPQ,0.423193229,Grammica__ΦNPQ,Seed,Grammica__Seed,ss16-17s,C_indecora__ΦNPQ
+Grammica,C_indecora,ss16-17,D,1,flower,2018-02-16,3:35:35 PM,,,f,581,ΦNPQ,0.288904127,C_cephalanthii_,Flower,Grammica__Flower,ss16-17f,C_indecora__ΦNPQ
 Grammica,C_cephalanthii,1567,D,2,seed,2018-03-04,4:33:24 PM,,,s,583,ΦNPQ,0.333188333,Grammica__ΦNPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,A,7,flower,2017-12-21,10:53:16 AM,,,f,584,ΦNPQ,0.330579899,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
-Grammica,C_cephalanthii,1567,B,3,young,2017-12-13,12:04:21 PM,,,y,585,ΦNPQ,0.368446612,C_indecora__ΦNPQ,Young,Grammica__Young,1567y,C_cephalanthii__ΦNPQ
+Grammica,C_cephalanthii,1567,B,3,young,2017-12-13,12:04:21 PM,,,y,585,ΦNPQ,0.368446612,Grammica__ΦNPQ,Young,Grammica__Young,1567y,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,F,2,old,2018-03-23,4:26:33 PM,,,o,586,ΦNPQ,0.250326822,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_cephalanthii,1567,D,9,flower,2018-04-03,4:33:24 PM,,,f,587,ΦNPQ,0.365853712,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
 Grammica,C_sandwichiana,155,S1,1,seedling,2017-11-09,5:54:52 PM,,,sdlg,589,ΦNPQ,0.223457934,Grammica__ΦNPQ,Seedling,Grammica__Seedling,155sdlg,C_sandwichiana__ΦNPQ
@@ -4615,7 +4615,7 @@ Grammica,C_sandwichiana,155,B,3,haustorium,2018-01-25,12:57:24 PM,,,h,597,ΦNPQ,
 Grammica,C_cephalanthii,1567,B,2,young,2017-12-13,12:04:21 PM,,,y,600,ΦNPQ,0.339449738,Grammica__ΦNPQ,Young,Grammica__Young,1567y,C_cephalanthii__ΦNPQ
 Grammica,C_tasmanica,17-15,B,4,haustorium,2018-04-17,2:21:56 PM,,,h,602,ΦNPQ,0.191894039,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__ΦNPQ
 Grammica,C_denticulata,ss13-46,A,3,young,2018-05-29,11:11:53 AM,,,y,603,ΦNPQ,0.274271845,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
-Grammica,C_australis,1382,C,3,young,2017-12-13,2:21:20 PM,,,y,604,ΦNPQ,0.168877109,Grammica__ΦNPQ,Young,Grammica__Young,1382y,Grammica__ΦNPQ
+Grammica,C_australis,1382,C,3,young,2017-12-13,2:21:20 PM,,,y,604,ΦNPQ,0.168877109,Grammica__ΦNPQ,Young,Grammica__Young,1382y,C_australis__ΦNPQ
 Grammica,C_australis,1382,B,2,young,2017-12-13,3:07:51 PM,,,y,605,ΦNPQ,0.358308784,Grammica__ΦNPQ,Young,Grammica__Young,1382y,C_australis__ΦNPQ
 Grammica,C_cephalanthii,1567,D,12,flower,2018-04-03,4:33:24 PM,,,f,606,ΦNPQ,0.376596838,Grammica__ΦNPQ,Flower,Grammica__Flower,1567f,C_cephalanthii__ΦNPQ
 Grammica,C_compacta,1566,A,1,young,2017-11-15,11:28:29 AM,,,y,607,ΦNPQ,0.233704974,Grammica__ΦNPQ,Young,Grammica__Young,1566y,C_compacta__ΦNPQ
@@ -4634,7 +4634,7 @@ Grammica,C_denticulata,ss13-46,D,1,haustorium,2018-05-29,4:58:54 PM,,,h,620,ΦNP
 Grammica,C_californica,ss17-105,C,3,young,2018-05-03,12:32:45 PM,,,y,621,ΦNPQ,0.238285849,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_costaricensis,CUCO,B,1,old,2018-05-25,2:16:35 PM,,,o,622,ΦNPQ,0.131316015,Grammica__ΦNPQ,Old,Grammica__Old,CUCOo,C_costaricensis__ΦNPQ
 Grammica,C_costaricensis,CUCO,B,1,young,2018-05-25,2:04:09 PM,,,y,623,ΦNPQ,0.180959874,Grammica__ΦNPQ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
-Grammica,C_cephalanthii,1567,D,3,young,2018-03-08,4:06:19 PM,,,y,625,ΦNPQ,0.436057146,Grammica__ΦNPQ,Young,Grammica__Young,1567y,C_cephalanthii__ΦNPQ
+Grammica,C_cephalanthii,1567,D,3,young,2018-03-08,4:06:19 PM,,,y,625,ΦNPQ,0.436057146,Grammica__ΦNPQ,Young,Grammica__Young,1567y,Grammica__ΦNPQ ΦNPQ
 Grammica,C_denticulata,ss13-46,D,3,old,2018-06-22,4:47:32 PM,,,o,626,ΦNPQ,0.20822802,Grammica__ΦNPQ,Old,Grammica__Old,ss13-46o,C_denticulata__ΦNPQ
 Grammica,C_indecora,ss16-17,D,2,seed,2018-03-23,3:04:55 PM,,,s,627,ΦNPQ,0.372993534,Grammica__ΦNPQ,Seed,Grammica__Seed,ss16-17s,C_indecora__ΦNPQ
 Grammica,C_cephalanthii,1567,A,1,seedling,8/24/18,14:03:55,,,sdlg,629,ΦNPQ,0.307527744,Grammica__ΦNPQ,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__ΦNPQ
@@ -4647,7 +4647,7 @@ Grammica,C_tasmanica,17-15,B,8,young,2018-04-17,1:55:52 PM,,,y,636,ΦNPQ,0.17737
 Grammica,C_compacta,1566,E,1,young,2017-11-15,9:48:07 AM,,,y,637,ΦNPQ,0.13509667,Grammica__ΦNPQ,Young,Grammica__Young,1566y,C_compacta__ΦNPQ
 Grammica,C_sandwichiana,155,B,2,young,2018-01-25,12:41:23 PM,,,y,638,ΦNPQ,0.17760288,Grammica__ΦNPQ,Young,Grammica__Young,155y,C_sandwichiana__ΦNPQ
 Grammica,C_compacta,1566,E,1,young,2017-11-15,10:09:26 AM,,,y,639,ΦNPQ,0.206466525,Grammica__ΦNPQ,Young,Grammica__Young,1566y,C_compacta__ΦNPQ
-Grammica,C_tasmanica,17-15,C,2,old,2018-05-29,1:24:33 PM,,,o,640,ΦNPQ,0.121057514,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_sandwichiana__ΦNPQ
+Grammica,C_tasmanica,17-15,C,2,old,2018-05-29,1:24:33 PM,,,o,640,ΦNPQ,0.121057514,Grammica__ΦNPQ,Old,Grammica__Old,17-15o,C_tasmanica__ΦNPQ
 Grammica,C_californica,ss17-105,E,5,young,2018-05-25,5:35:48 PM,,,y,641,ΦNPQ,0.105725396,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_indecora,ss16-17,-,1,seedling,2017-11-15,11:18:49 AM,,,sdlg,642,ΦNPQ,0.233990148,Grammica__ΦNPQ,Seedling,Grammica__Seedling,ss16-17sdlg,C_indecora__ΦNPQ
 Grammica,C_compacta,1566,A,3,old,2017-11-15,11:57:44 AM,,,o,644,ΦNPQ,0.033333333,Grammica__ΦNPQ,Old,Grammica__Old,1566o,C_compacta__ΦNPQ
@@ -4670,7 +4670,7 @@ Grammica,C_compacta,1566,A,4,old,2017-11-15,10:19:29 AM,,,o,666,ΦNPQ,0.22300074
 Grammica,C_denticulata,ss13-46,B,6,haustorium,2018-06-20,1:19:35 PM,,,h,667,ΦNPQ,0.196172249,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_sandwichiana,155,C,2,young,2017-12-13,3:38:43 PM,,,y,668,ΦNPQ,0.360328212,Grammica__ΦNPQ,Young,Grammica__Young,155y,C_sandwichiana__ΦNPQ
 Grammica,C_tasmanica,17-15,B,5,haustorium,2018-04-17,2:21:56 PM,,,h,669,ΦNPQ,0.181216693,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__ΦNPQ
-Grammica,C_costaricensis,CUCO,B,3,haustorium,2018-05-25,2:25:32 PM,,,h,670,ΦNPQ,0.31495228,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__ΦNPQ
+Grammica,C_costaricensis,CUCO,B,3,haustorium,2018-05-25,2:25:32 PM,,,h,670,ΦNPQ,0.31495228,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,CUCOh,Grammica__ΦNPQ _ΦNPQ
 Grammica,C_costaricensis,CUCO,C,1,haustorium,2018-05-25,3:09:23 PM,,,h,672,ΦNPQ,0.311438561,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__ΦNPQ
 Grammica,C_polygonorum,1705,B,2,young,2017-12-13,1:59:42 PM,,,y,673,ΦNPQ,0.267649645,Grammica__ΦNPQ,Young,Grammica__Young,1705y,C_polygonorum__ΦNPQ
 Grammica,C_polygonorum,1705,C,2,young,2017-12-13,11:29:05 AM,,,y,674,ΦNPQ,0.300620832,Grammica__ΦNPQ,Young,Grammica__Young,1705y,C_polygonorum__ΦNPQ
@@ -4700,7 +4700,7 @@ Grammica,C_tasmanica,17-15,C,4,haustorium,2018-05-29,1:36:57 PM,,,h,701,ΦNPQ,0.
 Grammica,C_costaricensis,CUCO,C,3,haustorium,2018-05-25,3:09:23 PM,,,h,702,ΦNPQ,0.247681783,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__ΦNPQ
 Grammica,C_denticulata,ss13-46,C,5,haustorium,2018-05-29,12:02:27 PM,,,h,704,ΦNPQ,0.193931026,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_tasmanica,17-15,B,4,young,2018-04-17,1:55:52 PM,,,y,705,ΦNPQ,0.108682464,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
-Grammica,C_australis,1382,B,1,young,2017-12-13,3:07:51 PM,,,y,706,ΦNPQ,0.490213148,C_denticulata__ΦNPQ,Young,Grammica__Young,1382y,C_australis__ΦNPQ
+Grammica,C_australis,1382,B,1,young,2017-12-13,3:07:51 PM,,,y,706,ΦNPQ,0.490213148,Grammica__ΦNPQ,Young,Grammica__Young,1382y,C_australis__ΦNPQ
 Grammica,C_polygonorum,1705,B,3,young,2017-12-13,1:59:42 PM,,,y,707,ΦNPQ,0.329381512,Grammica__ΦNPQ,Young,Grammica__Young,1705y,C_polygonorum__ΦNPQ
 Grammica,C_cephalanthii,1567,F,6,old,2018-03-23,4:26:33 PM,,,o,709,ΦNPQ,0.220026516,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
 Grammica,C_californica,ss17-105,E,1,haustorium,2018-05-25,6:16:41 PM,,,h,710,ΦNPQ,0.279038354,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
@@ -4710,7 +4710,7 @@ Grammica,C_californica,ss17-105,B,5,old,2018-05-29,3:42:33 PM,,,o,713,ΦNPQ,0.27
 Grammica,C_costaricensis,CUCO,B,2,young,2018-05-25,2:04:09 PM,,,y,714,ΦNPQ,0,Grammica__ΦNPQ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,3,young,2018-05-29,4:47:59 PM,,,y,715,ΦNPQ,0.14045962,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
 Grammica,C_californica,ss17-105,C,7,flower,2018-05-25,1:42:20 PM,,,f,716,ΦNPQ,0.264272167,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
-Grammica,C_tasmanica,17-15,D,1,young,2018-05-29,10:36:38 AM,,,y,717,ΦNPQ,0.221018758,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,Grammica__ΦNPQ
+Grammica,C_tasmanica,17-15,D,1,young,2018-05-29,10:36:38 AM,,,y,717,ΦNPQ,0.221018758,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_californica,ss17-105,A,2,haustorium,2018-05-03,3:52:11 PM,,,h,718,ΦNPQ,0.331408159,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
 Grammica,C_costaricensis,CUCO,C,1,old,2018-05-25,2:54:09 PM,,,o,719,ΦNPQ,0.163626245,Grammica__ΦNPQ,Old,Grammica__Old,CUCOo,C_costaricensis__ΦNPQ
 Grammica,C_californica,ss17-105,E,4,flower,2018-07-06,2:26:42 PM,,,f,722,ΦNPQ,0.395748969,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
@@ -4718,7 +4718,7 @@ Grammica,C_compacta,1566,A,1,young,2017-11-15,11:37:17 AM,,,y,723,ΦNPQ,0.133153
 Grammica,C_californica,ss17-105,E,2,flower,2018-07-06,2:26:42 PM,,,f,724,ΦNPQ,0.296227273,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_costaricensis,CUCO,C,5,haustorium,2018-05-25,3:09:23 PM,,,h,725,ΦNPQ,0.286293518,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__ΦNPQ
 Grammica,C_californica,ss17-105,B,2,young,2018-05-29,3:33:16 PM,,,y,726,ΦNPQ,0.124579125,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
-Grammica,C_californica,ss17-105,D,5,haustorium,2018-05-25,1:08:20 PM,,,h,727,ΦNPQ,0.225322696,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
+Grammica,C_californica,ss17-105,D,5,haustorium,2018-05-25,1:08:20 PM,,,h,727,ΦNPQ,0.225322696,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,Grammica__ΦNPQ
 Grammica,C_californica,ss17-105,A,4,flower,2018-05-29,4:21:52 PM,,,f,728,ΦNPQ,0.386244464,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_indecora,ss16-17,B,2,old,2018-01-25,12:10:09 PM,,,o,729,ΦNPQ,0.243349332,Grammica__ΦNPQ,Old,Grammica__Old,ss16-17o,C_indecora__ΦNPQ
 Grammica,C_costaricensis,CUCO,B,1,haustorium,2018-05-25,2:25:32 PM,,,h,730,ΦNPQ,0.313638572,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__ΦNPQ
@@ -4739,10 +4739,10 @@ Grammica,C_polygonorum,1705,A,2,young,2018-01-25,9:48:59 AM,,,y,747,ΦNPQ,0.3975
 Grammica,C_denticulata,ss13-46,D,1,young,2018-05-29,4:47:59 PM,,,y,748,ΦNPQ,0.243151354,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
 Grammica,C_tasmanica,17-15,A,3,haustorium,2018-04-17,3:29:24 PM,,,h,749,ΦNPQ,0.27095349,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,4,haustorium,2018-06-22,4:57:03 PM,,,h,750,ΦNPQ,0.195621948,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
-Grammica,C_cephalanthii,1567,A,1,seedling,8/24/18,13:52:40,,,sdlg,751,ΦNPQ,0.29215219,C_californica__ΦNPQ,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__ΦNPQ
+Grammica,C_cephalanthii,1567,A,1,seedling,8/24/18,13:52:40,,,sdlg,751,ΦNPQ,0.29215219,Grammica__ΦNPQ,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__ΦNPQ
 Grammica,C_indecora,ss16-17,A,4,old,2017-12-13,1:22:55 PM,,,o,752,ΦNPQ,0.109848485,Grammica__ΦNPQ,Old,Grammica__Old,ss16-17o,C_indecora__ΦNPQ
 Grammica,C_denticulata,ss13-46,A,1,old,2018-05-29,3:19:24 PM,,,o,753,ΦNPQ,0.142394822,Grammica__ΦNPQ,Old,Grammica__Old,ss13-46o,C_denticulata__ΦNPQ
-Grammica,C_costaricensis,CUCO,C,2,old,2018-05-25,2:54:09 PM,,,o,754,ΦNPQ,0.068027211,Grammica__ΦNPQ,Old,Grammica__Old,CUCOo,Grammica__ΦNPQ
+Grammica,C_costaricensis,CUCO,C,2,old,2018-05-25,2:54:09 PM,,,o,754,ΦNPQ,0.068027211,Grammica__ΦNPQ,Old,Grammica__Old,CUCOo,C_costaricensis__ΦNPQ
 Grammica,C_costaricensis,CUCO,C,2,young,2018-05-25,2:39:54 PM,,,y,755,ΦNPQ,0.111425873,Grammica__ΦNPQ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
 Grammica,C_californica,ss17-105,C,1,flower,2018-05-25,1:42:20 PM,,,f,756,ΦNPQ,0.273683623,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,C,2,young,2018-05-03,12:32:45 PM,,,y,757,ΦNPQ,0.135754799,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
@@ -4752,10 +4752,10 @@ Grammica,C_polygonorum,1705,B,1,young,2017-12-13,1:59:42 PM,,,y,762,ΦNPQ,0.2938
 Grammica,C_cephalanthii,1567,D,1,young,2018-03-08,12:22:11 PM,,,y,763,ΦNPQ,0.175322309,Grammica__ΦNPQ,Young,Grammica__Young,1567y,C_cephalanthii__ΦNPQ
 Grammica,C_costaricensis,CUCO,A,2,old,2018-05-03,1:13:39 PM,,,o,765,ΦNPQ,0.218413215,Grammica__ΦNPQ,Old,Grammica__Old,CUCOo,C_costaricensis__ΦNPQ
 Grammica,C_californica,ss17-105,D,5,flower,2018-07-06,2:13:32 PM,,,f,766,ΦNPQ,0.321433443,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
-Grammica,C_denticulata,ss13-46,C,2,haustorium,2018-05-29,12:02:27 PM,,,h,767,ΦNPQ,0.254605597,C_cephalanthii_,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
+Grammica,C_denticulata,ss13-46,C,2,haustorium,2018-05-29,12:02:27 PM,,,h,767,ΦNPQ,0.254605597,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_tasmanica,17-15,B,1,young,2018-04-17,1:55:52 PM,,,y,768,ΦNPQ,0.106716418,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_tasmanica,17-15,A,1,haustorium,2017-12-21,12:12:19 PM,,,h,769,ΦNPQ,0.267429577,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__ΦNPQ
-Grammica,C_denticulata,ss13-46,A,2,young,2018-05-29,11:11:53 AM,,,y,770,ΦNPQ,0.087948718,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
+Grammica,C_denticulata,ss13-46,A,2,young,2018-05-29,11:11:53 AM,,,y,770,ΦNPQ,0.087948718,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,Grammica__ΦNPQ �NPQ
 Grammica,C_californica,ss17-105,A,3,flower,2018-05-29,4:21:52 PM,,,f,771,ΦNPQ,0.358366864,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,E,6,haustorium,2018-05-25,6:16:41 PM,,,h,773,ΦNPQ,0.23641093,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
 Grammica,C_polygonorum,1705,C,3,young,2017-12-13,11:29:05 AM,,,y,774,ΦNPQ,0.190451205,Grammica__ΦNPQ,Young,Grammica__Young,1705y,C_polygonorum__ΦNPQ
@@ -4767,7 +4767,7 @@ Grammica,C_polygonorum,1705,C,4,seed,2017-12-13,1:00:53 PM,,,s,780,ΦNPQ,0.22358
 Grammica,C_californica,ss17-105,B,3,haustorium,2018-05-29,4:03:02 PM,,,h,781,ΦNPQ,0.256272745,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
 Grammica,C_indecora,ss16-17,A,2,old,2017-12-13,1:22:55 PM,,,o,782,ΦNPQ,0.095686179,Grammica__ΦNPQ,Old,Grammica__Old,ss16-17o,C_indecora__ΦNPQ
 Grammica,C_tasmanica,17-15,A,5,young,2018-04-17,2:43:56 PM,,,y,784,ΦNPQ,0.173290961,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
-Grammica,C_costaricensis,CUCO,C,3,old,2018-05-25,2:54:09 PM,,,o,786,ΦNPQ,0.063388398,Grammica__ΦNPQ,Old,Grammica__Old,CUCOo,C_californica__ΦNPQ
+Grammica,C_costaricensis,CUCO,C,3,old,2018-05-25,2:54:09 PM,,,o,786,ΦNPQ,0.063388398,Grammica__ΦNPQ,Old,Grammica__Old,CUCOo,C_costaricensis__ΦNPQ
 Grammica,C_californica,ss17-105,B,4,haustorium,2018-05-29,4:03:02 PM,,,h,787,ΦNPQ,0.306061529,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
 Grammica,C_cephalanthii,1567,A,3,seedling,8/24/18,14:03:55,,,sdlg,788,ΦNPQ,0.219515427,Grammica__ΦNPQ,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__ΦNPQ
 Grammica,C_tasmanica,17-15,B,6,young,2018-04-17,1:55:52 PM,,,y,789,ΦNPQ,0.112776699,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
@@ -4779,11 +4779,11 @@ Grammica,C_californica,ss17-105,B,3,old,2018-05-29,3:42:33 PM,,,o,794,ΦNPQ,0.16
 Grammica,C_denticulata,ss13-46,C,4,old,2018-05-29,11:52:58 AM,,,o,796,ΦNPQ,0.193701668,Grammica__ΦNPQ,Old,Grammica__Old,ss13-46o,C_denticulata__ΦNPQ
 Grammica,C_californica,ss17-105,E,9,haustorium,2018-05-25,6:16:41 PM,,,h,797,ΦNPQ,0.174711649,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
 Grammica,C_cephalanthii,1567,A,2,old,2017-11-15,1:40:51 PM,,,o,799,ΦNPQ,0.362106934,Grammica__ΦNPQ,Old,Grammica__Old,1567o,C_cephalanthii__ΦNPQ
-Grammica,C_californica,ss17-105,D,5,young,2018-05-25,12:42:05 PM,,,y,800,ΦNPQ,0.156004177,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
+Grammica,C_californica,ss17-105,D,5,young,2018-05-25,12:42:05 PM,,,y,800,ΦNPQ,0.156004177,C_costaricensis__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,A,1,young,2018-05-03,3:35:43 PM,,,y,802,ΦNPQ,0.370898606,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_costaricensis,CUCO,B,5,young,2018-05-25,2:04:09 PM,,,y,803,ΦNPQ,0.094359304,Grammica__ΦNPQ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,2,young,2018-05-29,4:47:59 PM,,,y,804,ΦNPQ,0.108795096,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
-Grammica,C_costaricensis,CUCO,A,1,young,2018-05-03,1:03:52 PM,,,y,806,ΦNPQ,0.345748991,C_californica__ΦNPQ ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
+Grammica,C_costaricensis,CUCO,A,1,young,2018-05-03,1:03:52 PM,,,y,806,ΦNPQ,0.345748991,Grammica__ΦNPQ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
 Grammica,C_californica,ss17-105,A,3,haustorium,2018-05-03,3:52:11 PM,,,h,807,ΦNPQ,0.282642896,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,E,4,young,2018-05-25,5:35:48 PM,,,y,808,ΦNPQ,0.118840907,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_denticulata,ss13-46,B,1,haustorium,2018-06-20,1:19:35 PM,,,h,809,ΦNPQ,0.197949793,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
@@ -4807,7 +4807,7 @@ Grammica,C_denticulata,ss13-46,B,1,old,2018-06-20,1:09:13 PM,,,o,831,ΦNPQ,0.211
 Grammica,C_denticulata,ss13-46,C,6,flower,2018-06-20,3:03:14 PM,,,f,832,ΦNPQ,0.1144427,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
 Grammica,C_costaricensis,CUCO,B,6,young,2018-05-25,2:04:09 PM,,,y,833,ΦNPQ,0.272728536,Grammica__ΦNPQ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
 Grammica,C_californica,ss17-105,D,4,young,2018-05-25,12:42:05 PM,,,y,834,ΦNPQ,0.048609236,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
-Grammica,C_californica,ss17-105,E,2,old,2018-05-25,6:05:05 PM,,,o,835,ΦNPQ,0.272075824,Grammica__ΦNPQ,Old,Grammica__Old,ss17-105o,C_californica__ΦNPQ
+Grammica,C_californica,ss17-105,E,2,old,2018-05-25,6:05:05 PM,,,o,835,ΦNPQ,0.272075824,C_denticulata__ΦNPQ,Old,Grammica__Old,ss17-105o,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,C,3,old,2018-05-03,12:43:03 PM,,,o,836,ΦNPQ,0.221995215,Grammica__ΦNPQ,Old,Grammica__Old,ss17-105o,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,E,7,flower,2018-07-06,2:26:42 PM,,,f,837,ΦNPQ,0.235341791,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,A,5,flower,2018-05-29,4:21:52 PM,,,f,838,ΦNPQ,0.287613785,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
@@ -4817,9 +4817,9 @@ Grammica,C_costaricensis,CUCO,B,5,haustorium,2018-05-25,2:25:32 PM,,,h,841,ΦNPQ
 Grammica,C_californica,ss17-105,A,8,flower,2018-05-29,4:21:52 PM,,,f,842,ΦNPQ,0.321826455,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,B,3,young,2018-05-29,3:33:16 PM,,,y,843,ΦNPQ,0.089364519,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_denticulata,ss13-46,A,4,flower,2018-07-06,11:02:42 AM,,,f,844,ΦNPQ,0.150344637,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
-Grammica,C_denticulata,ss13-46,A,1,flower,2018-07-06,11:02:42 AM,,,f,845,ΦNPQ,0.185575968,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
+Grammica,C_denticulata,ss13-46,A,1,flower,2018-07-06,11:02:42 AM,,,f,845,ΦNPQ,0.185575968,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,Grammica__ΦNPQ
 Grammica,C_tasmanica,17-15,A,1,young,2017-12-21,11:50:46 AM,,,y,846,ΦNPQ,0.111842105,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
-Grammica,C_californica,ss17-105,E,4,old,2018-05-25,6:05:05 PM,,,o,847,ΦNPQ,0.190064729,Grammica__ΦNPQ,Old,Grammica__Old,ss17-105o,Grammica__ΦNPQ
+Grammica,C_californica,ss17-105,E,4,old,2018-05-25,6:05:05 PM,,,o,847,ΦNPQ,0.190064729,Grammica__ΦNPQ,Old,Grammica__Old,ss17-105o,C_californica__ΦNPQ
 Grammica,C_cephalanthii,1567,D,2,young,2018-03-08,12:22:11 PM,,,y,848,ΦNPQ,0.232520804,Grammica__ΦNPQ,Young,Grammica__Young,1567y,C_cephalanthii__ΦNPQ
 Grammica,C_californica,ss17-105,E,1,flower,2018-07-06,2:26:42 PM,,,f,849,ΦNPQ,0.227882977,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_denticulata,ss13-46,A,4,young,2018-05-29,11:11:53 AM,,,y,851,ΦNPQ,0.103324949,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
@@ -4842,7 +4842,7 @@ Grammica,C_californica,ss17-105,B,1,old,2018-05-29,3:42:33 PM,,,o,875,ΦNPQ,0.14
 Grammica,C_californica,ss17-105,E,10,flower,2018-07-06,2:26:42 PM,,,f,878,ΦNPQ,0.215723816,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_denticulata,ss13-46,D,1,young,2018-06-22,4:36:43 PM,,,y,879,ΦNPQ,0.119892075,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
 Grammica,C_californica,ss17-105,B,7,flower,2018-05-29,3:51:20 PM,,,f,880,ΦNPQ,0.291950618,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
-Grammica,C_denticulata,ss13-46,A,3,haustorium,2018-05-29,11:30:47 AM,,,h,881,ΦNPQ,0.190626809,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_indecora__ΦNPQ
+Grammica,C_denticulata,ss13-46,A,3,haustorium,2018-05-29,11:30:47 AM,,,h,881,ΦNPQ,0.190626809,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_californica,ss17-105,B,4,flower,2018-05-29,3:51:20 PM,,,f,882,ΦNPQ,0.286590274,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_costaricensis,CUCO,B,4,young,2018-05-25,2:04:09 PM,,,y,883,ΦNPQ,0.161976813,Grammica__ΦNPQ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
 Grammica,C_californica,ss17-105,C,8,flower,2018-05-25,1:42:20 PM,,,f,884,ΦNPQ,0.256008487,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
@@ -4856,7 +4856,7 @@ Grammica,C_californica,ss17-105,A,1,flower,2018-05-29,4:21:52 PM,,,f,896,ΦNPQ,0
 Grammica,C_tasmanica,17-15,C,2,young,2018-05-29,1:12:22 PM,,,y,900,ΦNPQ,0.325709544,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_tasmanica,17-15,B,2,young,2018-04-17,1:55:52 PM,,,y,901,ΦNPQ,0.113622786,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_indecora,ss16-17,C,3,young,2018-01-25,11:41:52 AM,,,y,902,ΦNPQ,0.208231955,Grammica__ΦNPQ,Young,Grammica__Young,ss16-17y,C_indecora__ΦNPQ
-Grammica,C_californica,ss17-105,C,2,flower,2018-05-25,1:42:20 PM,,,f,903,ΦNPQ,0.237728318,C_californica__,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
+Grammica,C_californica,ss17-105,C,2,flower,2018-05-25,1:42:20 PM,,,f,903,ΦNPQ,0.237728318,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_denticulata,ss13-46,C,1,haustorium,2018-05-29,12:02:27 PM,,,h,904,ΦNPQ,0.323955237,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__ΦNPQ
 Grammica,C_denticulata,ss13-46,C,3,flower,2018-06-07,12:39:09 PM,,,f,905,ΦNPQ,0.149555567,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
 Grammica,C_californica,ss17-105,E,3,flower,2018-07-06,2:26:42 PM,,,f,906,ΦNPQ,0.227479517,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
@@ -4866,7 +4866,7 @@ Grammica,C_denticulata,ss13-46,2,1,seedling,2018-05-01,2:22:18 PM,,,sdlg,910,ΦN
 Grammica,C_denticulata,ss13-46,C,2,young,2018-05-29,11:43:17 AM,,,y,911,ΦNPQ,0.179470928,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
 Grammica,C_californica,ss17-105,B,1,flower,2018-05-29,3:51:20 PM,,,f,912,ΦNPQ,0.244686864,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,C,5,flower,2018-05-25,1:42:20 PM,,,f,913,ΦNPQ,0.243899988,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
-Grammica,C_californica,ss17-105,C,6,flower,2018-05-25,1:42:20 PM,,,f,916,ΦNPQ,0.278874818,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,Grammica__ΦNPQ
+Grammica,C_californica,ss17-105,C,6,flower,2018-05-25,1:42:20 PM,,,f,916,ΦNPQ,0.278874818,Grammica__ΦNPQ,Flower,Grammica__Flower,ss17-105f,C_californica__ΦNPQ
 Grammica,C_tasmanica,17-15,A,7,young,2018-04-17,2:43:56 PM,,,y,917,ΦNPQ,0.145680371,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_californica,ss17-105,D,1,haustorium,2018-05-25,1:08:20 PM,,,h,918,ΦNPQ,0.214873482,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,-,5,seedling,2018-04-17,1:20:53 PM,,,sdlg,919,ΦNPQ,0.273965347,Grammica__ΦNPQ,Seedling,Grammica__Seedling,ss17-105sdlg,C_californica__ΦNPQ
@@ -4878,9 +4878,9 @@ Grammica,C_sandwichiana,155,D,1,young,2018-01-25,1:05:39 PM,,,y,924,ΦNPQ,0.2119
 Grammica,C_polygonorum,1705,D,4,young,2018-07-06,11:29:21 AM,,,y,925,ΦNPQ,0.077745384,Grammica__ΦNPQ,Young,Grammica__Young,1705y,C_polygonorum__ΦNPQ
 Grammica,C_californica,ss17-105,B,5,haustorium,2018-05-29,4:03:02 PM,,,h,926,ΦNPQ,0.254879419,Grammica__ΦNPQ,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__ΦNPQ
 Grammica,C_californica,ss17-105,B,4,young,2018-05-29,3:33:16 PM,,,y,927,ΦNPQ,0.238169957,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
-Grammica,C_californica,ss17-105,A,2,young,2018-05-03,3:35:43 PM,,,y,928,ΦNPQ,0.191474253,C_denticulata__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
+Grammica,C_californica,ss17-105,A,2,young,2018-05-03,3:35:43 PM,,,y,928,ΦNPQ,0.191474253,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_polygonorum,1705,D,3,young,2018-07-06,11:29:21 AM,,,y,929,ΦNPQ,0.076933309,Grammica__ΦNPQ,Young,Grammica__Young,1705y,C_polygonorum__ΦNPQ
-Grammica,C_californica,ss17-105,C,1,young,2018-05-03,12:32:45 PM,,,y,930,ΦNPQ,0.1231054,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
+Grammica,C_californica,ss17-105,C,1,young,2018-05-03,12:32:45 PM,,,y,930,ΦNPQ,0.1231054,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,Grammica__ΦNPQ
 Grammica,C_costaricensis,CUCO,C,5,young,2018-05-25,2:39:54 PM,,,y,931,ΦNPQ,0.077506845,Grammica__ΦNPQ,Young,Grammica__Young,CUCOy,C_costaricensis__ΦNPQ
 Grammica,C_tasmanica,17-15,A,6,young,2018-04-17,2:43:56 PM,,,y,932,ΦNPQ,0.201347271,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_denticulata,ss13-46,C,2,flower,2018-06-07,12:39:09 PM,,,f,933,ΦNPQ,0.127675497,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
@@ -4891,7 +4891,7 @@ Grammica,C_polygonorum,1705,D,5,young,2018-07-06,11:29:21 AM,,,y,939,ΦNPQ,0.124
 Grammica,C_tasmanica,17-15,A,1,young,2018-04-17,2:43:56 PM,,,y,940,ΦNPQ,0.107557474,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_californica,ss17-105,B,1,young,2018-05-29,3:33:16 PM,,,y,941,ΦNPQ,0.175668271,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_denticulata,ss13-46,B,2,young,2018-06-20,12:55:09 PM,,,y,942,ΦNPQ,0.103003501,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
-Grammica,C_polygonorum,1705,D,2,young,2018-07-06,11:29:21 AM,,,y,946,ΦNPQ,0.124833177,C_tasmanica__ΦNPQ,Young,Grammica__Young,1705y,C_polygonorum__ΦNPQ
+Grammica,C_polygonorum,1705,D,2,young,2018-07-06,11:29:21 AM,,,y,946,ΦNPQ,0.124833177,Grammica__ΦNPQ,Young,Grammica__Young,1705y,C_polygonorum__ΦNPQ
 Grammica,C_tasmanica,17-15,A,8,young,2018-04-17,2:43:56 PM,,,y,947,ΦNPQ,0.120094192,Grammica__ΦNPQ,Young,Grammica__Young,17-15y,C_tasmanica__ΦNPQ
 Grammica,C_denticulata,ss13-46,B,1,young,2018-06-20,12:55:09 PM,,,y,949,ΦNPQ,0.221616535,Grammica__ΦNPQ,Young,Grammica__Young,ss13-46y,C_denticulata__ΦNPQ
 Grammica,C_denticulata,ss13-46,A,3,flower,2018-07-06,11:02:42 AM,,,f,950,ΦNPQ,0.180100432,Grammica__ΦNPQ,Flower,Grammica__Flower,ss13-46f,C_denticulata__ΦNPQ
@@ -4927,7 +4927,7 @@ Grammica,C_californica,ss17-105,D,3,young,2018-05-25,12:42:05 PM,,,y,1001,ΦNPQ,
 Grammica,C_indecora,ss16-17,B,1,young,2018-01-25,12:01:11 PM,,,y,1004,ΦNPQ,0.076115216,Grammica__ΦNPQ,Young,Grammica__Young,ss16-17y,C_indecora__ΦNPQ
 Grammica,C_californica,ss17-105,D,1,young,2018-05-25,12:42:05 PM,,,y,1008,ΦNPQ,0.152919201,Grammica__ΦNPQ,Young,Grammica__Young,ss17-105y,C_californica__ΦNPQ
 Grammica,C_cephalanthii,1567,A,2,seed,2017-12-21,10:53:16 AM,ok to 0,,s,2,Φf.D,0.710059172,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
-Grammica,C_californica,ss17-105,B,2,old,2018-05-29,3:42:33 PM,,,o,6,Φf.D,0.62962963,Grammica__Φf.D,Old,Grammica__Old,ss17-105o,C_californica__Φf.D
+Grammica,C_californica,ss17-105,B,2,old,2018-05-29,3:42:33 PM,,,o,6,Φf.D,0.62962963,Grammica__Φf.D,Old,Grammica__Old,ss17-105o,C_calica__ΦNPQ �f.D
 Grammica,C_cephalanthii,1567,B,4,old,2017-12-13,12:12:56 PM,,,o,7,Φf.D,0.715447154,Grammica__Φf.D,Old,Grammica__Old,1567o,C_cephalanthii__Φf.D
 Grammica,C_cephalanthii,1567,A,6,flower,2017-12-21,10:53:16 AM,,,f,8,Φf.D,0.63362069,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_cephalanthii__Φf.D
 Grammica,C_cephalanthii,1567,A,8,flower,2017-12-21,10:53:16 AM,,,f,9,Φf.D,0.618046972,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_cephalanthii__Φf.D
@@ -4938,7 +4938,7 @@ Grammica,C_indecora,ss16-17,C,4,flower,2018-03-23,4:45:38 PM,0 YPSII,,f,25,Φf.D
 Grammica,C_indecora,ss16-17,C,5,flower,2018-03-23,4:45:38 PM,,,f,26,Φf.D,0.924528302,Grammica__Φf.D,Flower,Grammica__Flower,ss16-17f,C_indecora__Φf.D
 Grammica,C_sandwichiana,155,-,1,seedling,8/24/18,12:33:37,,,sdlg,75,Φf.D,0.637681159,Grammica__Φf.D,Seedling,Grammica__Seedling,155sdlg,C_sandwichiana__Φf.D
 Grammica,C_sandwichiana,155,A,9,flower,2018-01-15,11:13:48 AM,0 YPSII,,f,76,Φf.D,0.914624506,Grammica__Φf.D,Flower,Grammica__Flower,155f,C_sandwichiana__Φf.D
-Grammica,C_compacta,1566,-,1,seedling,2017-11-08,9:46:35 AM,0 YPSII,,sdlg,80,Φf.D,0.572504708,Grammica__Φf.D,Seedling,Grammica__Seedling,1566sdlg,Grammica__Φf.D
+Grammica,C_compacta,1566,-,1,seedling,2017-11-08,9:46:35 AM,0 YPSII,,sdlg,80,Φf.D,0.572504708,Grammica__Φf.D,Seedling,Grammica__Seedling,1566sdlg,C_compacta__Φf.D
 Grammica,C_compacta,1566,E,1,young,2017-11-15,9:59:32 AM,0 PSII; others have some level of PSII though… just not this one,,y,82,Φf.D,0.52657602,Grammica__Φf.D,Young,Grammica__Young,1566y,C_compacta__Φf.D
 Grammica,C_denticulata,ss13-46,-,4,seedling,2018-04-17,1:38:52 PM,,,sdlg,90,Φf.D,0.535073409,Grammica__Φf.D,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__Φf.D
 Grammica,C_denticulata,ss13-46,A,2,old,2018-05-29,3:19:24 PM,,,o,91,Φf.D,0.743589744,Grammica__Φf.D,Old,Grammica__Old,ss13-46o,C_denticulata__Φf.D
@@ -4954,11 +4954,11 @@ Grammica,C_costaricensis,CUCO,C,3,young,2018-05-25,2:39:54 PM,,,y,119,Φf.D,0.08
 Grammica,C_sandwichiana,155,A,8,flower,2018-01-15,11:13:48 AM,,,f,124,Φf.D,0.649799197,Grammica__Φf.D,Flower,Grammica__Flower,155f,C_sandwichiana__Φf.D
 Grammica,C_cephalanthii,1567,B,12,flower,2017-12-21,10:08:02 AM,,,f,126,Φf.D,0.670281996,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_cephalanthii__Φf.D
 Grammica,C_sandwichiana,155,A,10,flower,2018-01-15,11:13:48 AM,,,f,127,Φf.D,0.786400591,Grammica__Φf.D,Flower,Grammica__Flower,155f,C_sandwichiana__Φf.D
-Grammica,C_sandwichiana,155,C,8,flower,2018-01-15,9:59:00 AM,,,f,128,Φf.D,0.788793103,C_cephalanthii__Φf.D,Flower,Grammica__Flower,155f,C_sandwichiana__Φf.D
+Grammica,C_sandwichiana,155,C,8,flower,2018-01-15,9:59:00 AM,,,f,128,Φf.D,0.788793103,Grammica__Φf.D,Flower,Grammica__Flower,155f,C_sandwichiana__Φf.D
 Grammica,C_sandwichiana,155,A,4,seed,2018-01-15,11:13:48 AM,,,s,129,Φf.D,0.750890736,Grammica__Φf.D,Seed,Grammica__Seed,155s,C_sandwichiana__Φf.D
 Grammica,C_compacta,1566,D,6,flower,2018-03-08,11:00:04 AM,,,f,130,Φf.D,0.701456311,Grammica__Φf.D,Flower,Grammica__Flower,1566f,C_compacta__Φf.D
 Grammica,C_compacta,1566,D,4,flower,2018-03-08,11:00:04 AM,,,f,131,Φf.D,0.733850129,Grammica__Φf.D,Flower,Grammica__Flower,1566f,C_compacta__Φf.D
-Grammica,C_compacta,1566,D,3,flower,2018-03-08,11:00:04 AM,,,f,132,Φf.D,0.768595041,Grammica__Φf.D,Flower,Grammica__Flower,1566f,C_compacta__Φf.D
+Grammica,C_compacta,1566,D,3,flower,2018-03-08,11:00:04 AM,,,f,132,Φf.D,0.768595041,Grammica__Φf.D,Flower,Grammica__Flower,1566f,Grammicata__Φf.D
 Grammica,C_indecora,ss16-17,B,7,flower,2018-01-25,12:25:31 PM,,,f,133,Φf.D,0.70683112,Grammica__Φf.D,Flower,Grammica__Flower,ss16-17f,C_indecora__Φf.D
 Grammica,C_cephalanthii,1567,B,3,seed,2017-12-21,10:08:02 AM,,,s,135,Φf.D,0.691107351,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_indecora,ss16-17,C,3,flower,2018-03-23,4:45:38 PM,,,f,136,Φf.D,0.816666667,Grammica__Φf.D,Flower,Grammica__Flower,ss16-17f,C_indecora__Φf.D
@@ -4967,15 +4967,15 @@ Grammica,C_polygonorum,1705,C,7,flower,2017-12-13,1:00:53 PM,,,f,138,Φf.D,0.548
 Grammica,C_indecora,ss16-17,D,3,flower,2018-02-16,3:35:35 PM,,,f,139,Φf.D,0.619282659,Grammica__Φf.D,Flower,Grammica__Flower,ss16-17f,C_indecora__Φf.D
 Grammica,C_compacta,1566,-,2,seedling,2017-11-09,5:36:41 PM,,,sdlg,140,Φf.D,0.518934081,Grammica__Φf.D,Seedling,Grammica__Seedling,1566sdlg,C_compacta__Φf.D
 Grammica,C_compacta,1566,-,1,seedling,2017-11-09,5:44:53 PM,,,sdlg,142,Φf.D,0.549398625,Grammica__Φf.D,Seedling,Grammica__Seedling,1566sdlg,C_compacta__Φf.D
-Grammica,C_sandwichiana,155,C,9,flower,2018-01-15,9:59:00 AM,,,f,144,Φf.D,0.719546742,Grammica__Φf.D,Flower,Grammica__Flower,155f,C_sandwichiana__Φf.D
+Grammica,C_sandwichiana,155,C,9,flower,2018-01-15,9:59:00 AM,,,f,144,Φf.D,0.719546742,Grammicata__Φf.D,Flower,Grammica__Flower,155f,C_sandwichiana__Φf.D
 Grammica,C_cephalanthii,1567,B,7,old,2017-12-13,12:12:56 PM,,,o,146,Φf.D,0.706586826,Grammica__Φf.D,Old,Grammica__Old,1567o,C_cephalanthii__Φf.D
 Grammica,C_cephalanthii,1567,A,4,old,2017-12-21,10:20:01 AM,,,o,147,Φf.D,0.751592357,Grammica__Φf.D,Old,Grammica__Old,1567o,C_cephalanthii__Φf.D
 Grammica,C_polygonorum,1705,C,3,haustorium,2017-12-13,11:51:43 AM,,,h,148,Φf.D,0.479591837,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__Φf.D
 Grammica,C_sandwichiana,155,C,2,seed,2018-01-15,9:59:00 AM,,,s,149,Φf.D,0.759707193,Grammica__Φf.D,Seed,Grammica__Seed,155s,C_sandwichiana__Φf.D
 Grammica,C_polygonorum,1705,A,2,old,2018-01-25,9:58:34 AM,,,o,150,Φf.D,0.768707483,Grammica__Φf.D,Old,Grammica__Old,1705o,C_polygonorum__Φf.D
 Grammica,C_sandwichiana,155,A,7,old,2018-01-15,11:31:08 AM,,,o,153,Φf.D,0.76056338,Grammica__Φf.D,Old,Grammica__Old,155o,C_sandwichiana__Φf.D
-Grammica,C_polygonorum,1705,C,6,flower,2017-12-13,1:00:53 PM,,,f,154,Φf.D,0.559836809,C_compacta__Φf.D,Flower,Grammica__Flower,1705f,C_polygonorum__Φf.D
-Grammica,C_cephalanthii,1567,F,8,seed (old),2018-05-29,12:23:38 PM,,,s,156,Φf.D,0.612875828,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
+Grammica,C_polygonorum,1705,C,6,flower,2017-12-13,1:00:53 PM,,,f,154,Φf.D,0.559836809,Grammica__Φf.D,Flower,Grammica__Flower,1705f,C_polygonorum__Φf.D
+Grammica,C_cephalanthii,1567,F,8,seed (old),2018-05-29,12:23:38 PM,,,s,156,Φf.D,0.612875828,Grammica__Φf.D,Seed,Grammica__Seed,1567s,Grammica__Φf.D
 Grammica,C_indecora,ss16-17,D,9,haustorium,2018-03-23,3:04:55 PM,,,h,157,Φf.D,0.690140845,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss16-17h,C_indecora__Φf.D
 Grammica,C_compacta,1566,-,2,seedling,2017-11-09,5:44:53 PM,,,sdlg,158,Φf.D,0.35701275,Grammica__Φf.D,Seedling,Grammica__Seedling,1566sdlg,C_compacta__Φf.D
 Grammica,C_compacta,1566,-,1,seedling,2017-11-09,5:36:41 PM,,,sdlg,159,Φf.D,0.393108298,Grammica__Φf.D,Seedling,Grammica__Seedling,1566sdlg,C_compacta__Φf.D
@@ -4987,7 +4987,7 @@ Grammica,C_sandwichiana,155,D,4,old,2018-01-25,1:13:25 PM,,,o,165,Φf.D,0.748936
 Grammica,C_indecora,ss16-17,B,3,seed,2018-01-25,12:25:31 PM,,,s,166,Φf.D,0.732265446,Grammica__Φf.D,Seed,Grammica__Seed,ss16-17s,C_indecora__Φf.D
 Grammica,C_cephalanthii,1567,B,7,seed,2017-12-21,10:08:02 AM,,,s,167,Φf.D,0.550406116,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_indecora,ss16-17,E,2,seed,2018-03-23,3:52:37 PM,,,s,168,Φf.D,0.608108108,Grammica__Φf.D,Seed,Grammica__Seed,ss16-17s,C_indecora__Φf.D
-Grammica,C_compacta,1566,D,5,flower,2018-03-08,11:00:04 AM,,,f,170,Φf.D,0.776699029,Grammica__Φf.D,Flower,Grammica__Flower,1566f,C_compacta__Φf.D
+Grammica,C_compacta,1566,D,5,flower,2018-03-08,11:00:04 AM,,,f,170,Φf.D,0.776699029,Grammica__Φf.D,Flower,Grammica__Flower,1566f,C_cephalanthii__Φf.D
 Grammica,C_polygonorum,1705,A,2,seed,2018-01-25,10:20:42 AM,,,s,171,Φf.D,0.771505376,Grammica__Φf.D,Seed,Grammica__Seed,1705s,C_polygonorum__Φf.D
 Grammica,C_tasmanica,17-15,A,3,flower,2018-04-17,3:16:54 PM,,,f,174,Φf.D,0.70399221,Grammica__Φf.D,Flower,Grammica__Flower,17-15f,C_tasmanica__Φf.D
 Grammica,C_cephalanthii,1567,G,3,seed (old),2018-05-29,12:53:01 PM,,,s,176,Φf.D,0.703498715,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
@@ -4995,8 +4995,8 @@ Grammica,C_tasmanica,17-15,A,1,old,2018-04-17,3:00:16 PM,,,o,177,Φf.D,0.8255813
 Grammica,C_cephalanthii,1567,G,4,haustorium,2018-03-04,5:38:33 PM,,,h,178,Φf.D,0.448732084,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__Φf.D
 Grammica,C_tasmanica,17-15,C,5,flower,2018-06-22,1:42:52 PM,,,f,179,Φf.D,0.682648402,Grammica__Φf.D,Flower,Grammica__Flower,17-15f,C_tasmanica__Φf.D
 Grammica,C_australis,1382,-,1,seedling,2017-11-02,2:55:01 PM,,,sdlg,180,Φf.D,0.222891566,Grammica__Φf.D,Seedling,Grammica__Seedling,1382sdlg,C_australis__Φf.D
-Grammica,C_cephalanthii,1567,G,4,seed (old),2018-05-29,12:53:01 PM,,,s,181,Φf.D,0.750650316,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
-Grammica,C_cephalanthii,1567,B,11,flower,2017-12-21,10:08:02 AM,,,f,182,Φf.D,0.559432289,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_compacta__Φf.D
+Grammica,C_cephalanthii,1567,G,4,seed (old),2018-05-29,12:53:01 PM,,,s,181,Φf.D,0.750650316,Grammica__Φf.D,Seed,Grammica__Seed,1567s,Grammica__Φf.D
+Grammica,C_cephalanthii,1567,B,11,flower,2017-12-21,10:08:02 AM,,,f,182,Φf.D,0.559432289,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_cephalanthii__Φf.D
 Grammica,C_sandwichiana,155,A,5,old,2018-01-15,11:31:08 AM,,,o,183,Φf.D,0.68159204,Grammica__Φf.D,Old,Grammica__Old,155o,C_sandwichiana__Φf.D
 Grammica,C_australis,1382,B,2,haustorium,2017-12-13,3:30:14 PM,,,h,184,Φf.D,0.6648,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1382h,C_australis__Φf.D
 Grammica,C_cephalanthii,1567,B,10,flower,2017-12-21,10:08:02 AM,,,f,185,Φf.D,0.555240793,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_cephalanthii__Φf.D
@@ -5009,7 +5009,7 @@ Grammica,C_cephalanthii,1567,A,5,flower,2017-12-21,10:53:16 AM,,,f,193,Φf.D,0.4
 Grammica,C_cephalanthii,1567,A,4,seed,2017-12-21,10:53:16 AM,,,s,194,Φf.D,0.67154811700000006,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_denticulata,ss13-46,D,4,haustorium,2018-05-29,4:58:54 PM,,,h,195,Φf.D,0.689329556,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
 Grammica,C_compacta,1566,D,2,flower,2018-03-08,11:00:04 AM,,,f,196,Φf.D,0.541411043,Grammica__Φf.D,Flower,Grammica__Flower,1566f,C_compacta__Φf.D
-Grammica,C_tasmanica,17-15,D,1,flower,2018-05-29,10:52:34 AM,,,f,197,Φf.D,0.786956522,Grammica__Φf.D,Flower,Grammica__Flower,17-15f,C_tasmanica__Φf.D
+Grammica,C_tasmanica,17-15,D,1,flower,2018-05-29,10:52:34 AM,,,f,197,Φf.D,0.786956522,Grammica__Φf.D,Flower,Grammica__Flower,17-15f,Grammica__Φf.D
 Grammica,C_polygonorum,1705,A,5,seed,2018-01-25,10:20:42 AM,,,s,198,Φf.D,0.760537113,Grammica__Φf.D,Seed,Grammica__Seed,1705s,C_polygonorum__Φf.D
 Grammica,C_tasmanica,17-15,D,1,young,2018-05-03,1:32:11 PM,,,y,199,Φf.D,0.756410256,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
 Grammica,C_cephalanthii,1567,D,14,seed,2018-04-19,5:03:34 PM,,,s,201,Φf.D,0.517472119,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
@@ -5019,20 +5019,20 @@ Grammica,C_denticulata,ss13-46,C,5,flower,2018-06-20,3:03:14 PM,,,f,204,Φf.D,0.
 Grammica,C_tasmanica,17-15,C,1,flower,2018-06-22,1:42:52 PM,,,f,205,Φf.D,0.701530612,Grammica__Φf.D,Flower,Grammica__Flower,17-15f,C_tasmanica__Φf.D
 Grammica,C_denticulata,ss13-46,-,5,seedling,2018-04-17,1:38:52 PM,,,sdlg,206,Φf.D,0.358208955,Grammica__Φf.D,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__Φf.D
 Grammica,C_cephalanthii,1567,A,2,seedling ,8/24/18,13:52:40,,,sdlg,207,Φf.D,0.418518519,Grammica__Φf.D,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__Φf.D
-Grammica,C_polygonorum,1705,C,1,haustorium,2017-12-13,11:51:43 AM,,,h,208,Φf.D,0.665680473,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__Φf.D
-Grammica,C_cephalanthii,1567,B,2,seed,2017-12-21,10:08:02 AM,,,s,210,Φf.D,0.562973923,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
+Grammica,C_polygonorum,1705,C,1,haustorium,2017-12-13,11:51:43 AM,,,h,208,Φf.D,0.665680473,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1705h,Grammica__Φf.D
+Grammica,C_cephalanthii,1567,B,2,seed,2017-12-21,10:08:02 AM,,,s,210,Φf.D,0.562973923,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_sandwichiana__Φf.D
 Grammica,C_tasmanica,17-15,B,3,flower,2018-05-25,12:21:17 PM,,,f,214,Φf.D,0.625,Grammica__Φf.D,Flower,Grammica__Flower,17-15f,C_tasmanica__Φf.D
 Grammica,C_tasmanica,17-15,A,4,flower,2018-04-17,3:16:54 PM,,,f,215,Φf.D,0.779787898,Grammica__Φf.D,Flower,Grammica__Flower,17-15f,C_tasmanica__Φf.D
 Grammica,C_sandwichiana,155,C,13,flower,2018-01-15,9:59:00 AM,,,f,216,Φf.D,0.642112125,Grammica__Φf.D,Flower,Grammica__Flower,155f,C_sandwichiana__Φf.D
 Grammica,C_polygonorum,1705,A,6,seed,2018-01-25,10:20:42 AM,,,s,218,Φf.D,0.659517426,Grammica__Φf.D,Seed,Grammica__Seed,1705s,C_polygonorum__Φf.D
 Grammica,C_polygonorum,1705,A,4,haustorium,2018-01-25,10:10:26 AM,,,h,219,Φf.D,0.63204005,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__Φf.D
-Grammica,C_californica,ss17-105,D,6,young,2018-05-25,12:42:05 PM,,,y,220,Φf.D,0.677631579,C_cephalanthii__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
+Grammica,C_californica,ss17-105,D,6,young,2018-05-25,12:42:05 PM,,,y,220,Φf.D,0.677631579,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
 Grammica,C_denticulata,ss13-46,-,1,seedling,2018-04-17,1:38:52 PM,,,sdlg,221,Φf.D,0.342857143,Grammica__Φf.D,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__Φf.D
 Grammica,C_tasmanica,17-15,A,6,flower,2018-04-17,3:16:54 PM,,,f,222,Φf.D,0.729448491,Grammica__Φf.D,Flower,Grammica__Flower,17-15f,C_tasmanica__Φf.D
 Grammica,C_tasmanica,17-15,B,7,flower,2018-05-25,12:21:17 PM,,,f,224,Φf.D,0.681607419,Grammica__Φf.D,Flower,Grammica__Flower,17-15f,C_tasmanica__Φf.D
 Grammica,C_cephalanthii,1567,G,3,haustorium,2018-03-04,5:38:33 PM,,,h,225,Φf.D,0.462509866,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__Φf.D
 Grammica,C_denticulata,ss13-46,C,10,flower,2018-06-20,3:03:14 PM,,,f,226,Φf.D,0.725882973,Grammica__Φf.D,Flower,Grammica__Flower,ss13-46f,C_denticulata__Φf.D
-Grammica,C_cephalanthii,1567,B,3,haustorium,2017-12-21,10:34:52 AM,,,h,227,Φf.D,0.52097561,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__Φf.D
+Grammica,C_cephalanthii,1567,B,3,haustorium,2017-12-21,10:34:52 AM,,,h,227,Φf.D,0.52097561,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1567h,C_costaricensis__Φf.D
 Grammica,C_tasmanica,17-15,B,3,old,2018-04-17,2:09:31 PM,,,o,228,Φf.D,0.830508475,Grammica__Φf.D,Old,Grammica__Old,17-15o,C_tasmanica__Φf.D
 Grammica,C_tasmanica,17-15,B,4,old,2018-03-15,4:32:42 PM,,,o,229,Φf.D,0.830508475,Grammica__Φf.D,Old,Grammica__Old,17-15o,C_tasmanica__Φf.D
 Grammica,C_cephalanthii,1567,B,2,haustorium,2017-12-21,10:34:52 AM,,,h,230,Φf.D,0.559558658,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__Φf.D
@@ -5062,10 +5062,10 @@ Grammica,C_denticulata,ss13-46,D,5,haustorium,2018-05-29,4:58:54 PM,,,h,265,Φf.
 Grammica,C_sandwichiana,155,D,2,haustorium,2018-01-25,1:21:03 PM,,,h,266,Φf.D,0.654358974,Grammica__Φf.D,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__Φf.D
 Grammica,C_cephalanthii,1567,D,11,seed,2018-04-19,5:03:34 PM,,,s,267,Φf.D,0.439250759,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_cephalanthii,1567,A,9,seed,2017-12-21,10:53:16 AM,,,s,268,Φf.D,0.603858785,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
-Grammica,C_cephalanthii,1567,G,2,haustorium,2018-03-04,5:38:33 PM,,,h,270,Φf.D,0.432225064,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__Φf.D
+Grammica,C_cephalanthii,1567,G,2,haustorium,2018-03-04,5:38:33 PM,,,h,270,Φf.D,0.432225064,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1567h,C_polygonorum__Φf.D 
 Grammica,C_polygonorum,1705,A,9,flower,2018-01-25,10:20:42 AM,,,f,271,Φf.D,0.73057701,Grammica__Φf.D,Flower,Grammica__Flower,1705f,C_polygonorum__Φf.D
 Grammica,C_polygonorum,1705,A,11,flower,2018-01-25,10:20:42 AM,,,f,272,Φf.D,0.704602774,Grammica__Φf.D,Flower,Grammica__Flower,1705f,C_polygonorum__Φf.D
-Grammica,C_cephalanthii,1567,D,10,flower,2018-04-03,4:33:24 PM,,,f,274,Φf.D,0.44386005,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_compacta__Φf.D
+Grammica,C_cephalanthii,1567,D,10,flower,2018-04-03,4:33:24 PM,,,f,274,Φf.D,0.44386005,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_cephalanthii__Φf.D
 Grammica,C_denticulata,ss13-46,D,5,haustorium,2018-06-22,4:57:03 PM,,,h,275,Φf.D,0.687629293,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
 Grammica,C_compacta,1566,E,1,haustorium,2017-11-15,10:46:02 AM,,,h,276,Φf.D,0.443243243,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1566h,C_compacta__Φf.D
 Grammica,C_cephalanthii,1567,G,7,seed (old),2018-05-29,12:53:01 PM,,,s,278,Φf.D,0.585472236,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
@@ -5088,10 +5088,10 @@ Grammica,C_cephalanthii,1567,B,5,seed,2017-12-21,10:08:02 AM,,,s,300,Φf.D,0.430
 Grammica,C_sandwichiana,155,A,1,haustorium,2018-01-15,11:21:16 AM,,,h,301,Φf.D,0.659196291,Grammica__Φf.D,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__Φf.D
 Grammica,C_cephalanthii,1567,D,1,seed,2018-03-04,4:33:24 PM,,,s,304,Φf.D,0.469677081,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_cephalanthii,1567,A,2,old,2017-12-21,10:20:01 AM,,,o,305,Φf.D,0.439461883,Grammica__Φf.D,Old,Grammica__Old,1567o,C_cephalanthii__Φf.D
-Grammica,C_australis,1382,C,4,old,2017-12-13,2:31:06 PM,,,o,306,Φf.D,0.555240793,Grammica__Φf.D,Old,Grammica__Old,1382o,C_tasmanica__Φf.D
+Grammica,C_australis,1382,C,4,old,2017-12-13,2:31:06 PM,,,o,306,Φf.D,0.555240793,Grammica__Φf.D,Old,Grammica__Old,1382o,C_australis__Φf.D
 Grammica,C_denticulata,ss13-46,C,7,flower,2018-06-20,3:03:14 PM,,,f,307,Φf.D,0.714516999,Grammica__Φf.D,Flower,Grammica__Flower,ss13-46f,C_denticulata__Φf.D
 Grammica,C_polygonorum,1705,A,1,haustorium,2018-01-25,10:10:26 AM,,,h,308,Φf.D,0.585784314,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__Φf.D
-Grammica,C_denticulata,ss13-46,D,1,haustorium,2018-06-22,4:57:03 PM,,,h,309,Φf.D,0.671979598,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
+Grammica,C_denticulata,ss13-46,D,1,haustorium,2018-06-22,4:57:03 PM,,,h,309,Φf.D,0.671979598,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_sandwichiana__Φf.
 Grammica,C_compacta,1566,A,5,old,2017-11-15,10:28:34 AM,,,o,310,Φf.D,0.659192825,Grammica__Φf.D,Old,Grammica__Old,1566o,C_compacta__Φf.D
 Grammica,C_compacta,1566,E,1,haustorium,2017-11-15,10:56:43 AM,,,h,311,Φf.D,0.357874134,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1566h,C_compacta__Φf.D
 Grammica,C_polygonorum,1705,C,7,old,2017-12-13,11:41:35 AM,,,o,312,Φf.D,0.553145336,Grammica__Φf.D,Old,Grammica__Old,1705o,C_polygonorum__Φf.D
@@ -5127,8 +5127,8 @@ Grammica,C_tasmanica,17-15,B,2,young,2018-03-15,4:44:24 PM,,,y,353,Φf.D,0.61971
 Grammica,C_sandwichiana,155,C,1,old,2017-12-13,3:46:17 PM,,,o,355,Φf.D,0.575591985,Grammica__Φf.D,Old,Grammica__Old,155o,C_sandwichiana__Φf.D
 Grammica,C_cephalanthii,1567,G,2,seed (old),2018-05-29,12:53:01 PM,,,s,356,Φf.D,0.480267152,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_australis,1382,A,1,haustorium,2018-01-25,11:30:18 AM,,,h,357,Φf.D,0.588571429,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1382h,C_australis__Φf.D
-Grammica,C_cephalanthii,1567,B,3,haustorium,2017-12-13,12:25:12 PM,,,h,358,Φf.D,0.43285124,C_cephalanthii__Φf.D ,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__Φf.D
-Grammica,C_sandwichiana,155,A,3,haustorium,2018-01-15,11:21:16 AM,,,h,359,Φf.D,0.706221198,C_australis__Φf.D,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__Φf.D
+Grammica,C_cephalanthii,1567,B,3,haustorium,2017-12-13,12:25:12 PM,,,h,358,Φf.D,0.43285124,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1567h,C_cephalanthii__Φf.D
+Grammica,C_sandwichiana,155,A,3,haustorium,2018-01-15,11:21:16 AM,,,h,359,Φf.D,0.706221198,Grammica__Φf.D,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__Φf.D
 Grammica,C_cephalanthii,1567,B,5,old,2017-12-13,12:12:56 PM,,,o,361,Φf.D,0.578534031,Grammica__Φf.D,Old,Grammica__Old,1567o,C_cephalanthii__Φf.D
 Grammica,C_indecora,ss16-17,A,3,haustorium,2017-12-13,1:34:11 PM,,,h,362,Φf.D,0.495748299,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss16-17h,C_indecora__Φf.D
 Grammica,C_polygonorum,1705,D,2,haustorium,2018-07-06,12:10:49 PM,,,h,363,Φf.D,0.54667462,Grammica__Φf.D,Haustorium,Grammica__Haustorium,1705h,C_polygonorum__Φf.D
@@ -5140,10 +5140,10 @@ Grammica,C_polygonorum,1705,A,3,haustorium,2018-01-25,11:10:26 AM,,,h,369,Φf.D,
 Grammica,C_polygonorum,1705,S,1,seedling,2017-11-09,6:13:19 PM,,,sdlg,370,Φf.D,0.490229885,Grammica__Φf.D,Seedling,Grammica__Seedling,1705sdlg,C_polygonorum__Φf.D
 Grammica,C_californica,ss17-105,D,7,flower,2018-07-06,2:13:32 PM,,,f,371,Φf.D,0.495287061,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_cephalanthii,1567,D,13,flower,2018-04-03,4:33:24 PM,,,f,372,Φf.D,0.508211541,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_cephalanthii__Φf.D
-Grammica,C_australis,1382,C,3,old,2017-12-13,2:31:06 PM,,,o,374,Φf.D,0.525483304,Grammica__Φf.D,Old,Grammica__Old,1382o,C_australis__Φf.D
+Grammica,C_australis,1382,C,3,old,2017-12-13,2:31:06 PM,,,o,374,Φf.D,0.525483304,Grammifornica__Φf.D,Old,Grammica__Old,1382o,C_australis__Φf.D
 Grammica,C_cephalanthii,1567,B,8,seed,2017-12-21,10:08:02 AM,,,s,376,Φf.D,0.396904367,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_compacta,1566,D,2,seed,2018-03-23,3:29:35 PM,,,s,377,Φf.D,0.496142719,Grammica__Φf.D,Seed,Grammica__Seed,1566s,C_compacta__Φf.D
-Grammica,C_californica,ss17-105,D,3,flower,2018-07-06,2:13:32 PM,,,f,378,Φf.D,0.569237918,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
+Grammica,C_californica,ss17-105,D,3,flower,2018-07-06,2:13:32 PM,,,f,378,Φf.D,0.569237918,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,Grammifornica__Φf.D
 Grammica,C_sandwichiana,155,A,1,young,2018-01-15,10:49:39 AM,,,y,379,Φf.D,0.744075829,Grammica__Φf.D,Young,Grammica__Young,155y,C_sandwichiana__Φf.D
 Grammica,C_denticulata,ss13-46,A,5,old,2018-05-29,3:19:24 PM,,,o,380,Φf.D,0.613636364,Grammica__Φf.D,Old,Grammica__Old,ss13-46o,C_denticulata__Φf.D
 Grammica,C_californica,ss17-105,E,8,flower,2018-07-06,2:26:42 PM,,,f,382,Φf.D,0.534626039,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
@@ -5198,18 +5198,18 @@ Grammica,C_polygonorum,1705,A,7,flower,2018-01-25,10:20:42 AM,,,f,452,Φf.D,0.67
 Grammica,C_californica,ss17-105,D,2,flower,2018-07-06,2:13:32 PM,,,f,453,Φf.D,0.618273543,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_cephalanthii,1567,D,8,seed,2018-04-19,5:03:34 PM,,,s,454,Φf.D,0.367899948,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_compacta,1566,D,3,seed,2018-03-23,3:29:35 PM,,,s,455,Φf.D,0.46124031,Grammica__Φf.D,Seed,Grammica__Seed,1566s,C_compacta__Φf.D
-Grammica,C_costaricensis,CUCO,C,2,haustorium,2018-05-25,3:09:23 PM,,,h,456,Φf.D,0.4045,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,Grammicricensis__Φf.D
+Grammica,C_costaricensis,CUCO,C,2,haustorium,2018-05-25,3:09:23 PM,,,h,456,Φf.D,0.4045,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__Φf.D
 Grammica,C_tasmanica,17-15,B,1,haustorium,2018-04-17,2:21:56 PM,,,h,457,Φf.D,0.398119122,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
 Grammica,C_polygonorum,1705,D,3,old,2018-07-06,11:37:37 AM,,,o,459,Φf.D,0.46185853,Grammica__Φf.D,Old,Grammica__Old,1705o,C_polygonorum__Φf.D
 Grammica,C_sandwichiana,155,C,2,haustorium,2017-12-13,3:55:12 PM,,,h,460,Φf.D,0.438441098,Grammica__Φf.D,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__Φf.D
 Grammica,C_tasmanica,17-15,C,3,old,2018-05-29,1:24:33 PM,,,o,465,Φf.D,0.584507042,Grammica__Φf.D,Old,Grammica__Old,17-15o,C_tasmanica__Φf.D
 Grammica,C_australis,1382,C,2,seed,2018-01-25,10:33:13 AM,,,s,466,Φf.D,0.536618098,Grammica__Φf.D,Seed,Grammica__Seed,1382s,C_australis__Φf.D
 Grammica,C_cephalanthii,1567,D,7,flower,2018-04-03,4:33:24 PM,,,f,468,Φf.D,0.443406206,Grammica__Φf.D,Flower,Grammica__Flower,1567f,C_cephalanthii__Φf.D
-Grammica,C_cephalanthii,1567,G,1,young,2018-04-03,5:15:39 PM,,,y,469,Φf.D,0.2672148,Grammicricensis__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
+Grammica,C_cephalanthii,1567,G,1,young,2018-04-03,5:15:39 PM,,,y,469,Φf.D,0.2672148,Grammica__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
 Grammica,C_sandwichiana,155,B,3,old,2018-01-25,12:49:08 PM,,,o,470,Φf.D,0.575812274,Grammica__Φf.D,Old,Grammica__Old,155o,C_sandwichiana__Φf.D
 Grammica,C_australis,1382,B,2,old,2017-12-13,3:17:31 PM,,,o,475,Φf.D,0.413157895,Grammica__Φf.D,Old,Grammica__Old,1382o,C_australis__Φf.D
 Grammica,C_costaricensis,CUCO,C,4,haustorium,2018-05-25,3:09:23 PM,,,h,476,Φf.D,0.515299335,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__Φf.D
-Grammica,C_tasmanica,17-15,A,5,haustorium,2018-04-17,3:29:24 PM,,,h,477,Φf.D,0.560163154,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
+Grammica,C_tasmanica,17-15,A,5,haustorium,2018-04-17,3:29:24 PM,,,h,477,Φf.D,0.560163154,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,Grammica__Φf.D
 Grammica,C_tasmanica,17-15,B,3,haustorium,2018-04-17,2:21:56 PM,,,h,480,Φf.D,0.590331831,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
 Grammica,C_cephalanthii,1567,D,2,young,2018-03-08,4:06:19 PM,,,y,481,Φf.D,0.330143541,Grammica__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
 Grammica,C_tasmanica,17-15,B,3,haustorium,2018-03-15,4:54:21 PM,,,h,482,Φf.D,0.620396601,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
@@ -5222,13 +5222,13 @@ Grammica,C_sandwichiana,155,B,2,haustorium,2018-01-25,12:57:24 PM,,,h,489,Φf.D,
 Grammica,C_tasmanica,17-15,B,3,young,2018-04-17,1:55:52 PM,,,y,490,Φf.D,0.47133758,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
 Grammica,C_costaricensis,CUCO,B,5,old,2018-05-25,2:16:35 PM,,,o,491,Φf.D,0.718446602,Grammica__Φf.D,Old,Grammica__Old,CUCOo,C_costaricensis__Φf.D
 Grammica,C_indecora,ss16-17,A,6,seed,2018-01-15,10:19:56 AM,,,s,493,Φf.D,0.437305053,Grammica__Φf.D,Seed,Grammica__Seed,ss16-17s,C_indecora__Φf.D
-Grammica,C_tasmanica,17-15,A,1,haustorium,2018-04-17,3:29:24 PM,,,h,495,Φf.D,0.428571429,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_californica__Φf.D
+Grammica,C_tasmanica,17-15,A,1,haustorium,2018-04-17,3:29:24 PM,,,h,495,Φf.D,0.428571429,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_sandwichiana__Φ
 Grammica,C_cephalanthii,1567,G,2,old,2018-04-03,5:27:45 PM,,,o,497,Φf.D,0.539267016,Grammica__Φf.D,Old,Grammica__Old,1567o,C_cephalanthii__Φf.D
 Grammica,C_denticulata,ss13-46,D,6,haustorium,2018-06-22,4:57:03 PM,,,h,498,Φf.D,0.538815789,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
-Grammica,C_polygonorum,1705,D,1,old,2018-07-06,11:37:37 AM,,,o,499,Φf.D,0.57006673,Grammica__Φf.D,Old,Grammica__Old,1705o,C_polygonorum__Φf.D
+Grammica,C_polygonorum,1705,D,1,old,2018-07-06,11:37:37 AM,,,o,499,Φf.D,0.57006673,Grammica__Φf.D,Old,Grammica__Old,1705o,Grammica__Φf.D �f.D
 Grammica,C_cephalanthii,1567,D,4,old,2018-04-03,4:18:12 PM,,,o,500,Φf.D,0.445772059,Grammica__Φf.D,Old,Grammica__Old,1567o,C_cephalanthii__Φf.D
 Grammica,C_sandwichiana,155,B,1,haustorium,2018-01-25,12:57:24 PM,,,h,502,Φf.D,0.577173913,Grammica__Φf.D,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__Φf.D
-Grammica,C_indecora,ss16-17,B,2,seed,2018-01-25,12:25:31 PM,,,s,504,Φf.D,0.563665004,Grammica__Φf.D,Seed,Grammica__Seed,ss16-17s,Grammica__Φf.D D
+Grammica,C_indecora,ss16-17,B,2,seed,2018-01-25,12:25:31 PM,,,s,504,Φf.D,0.563665004,Grammica__Φf.D,Seed,Grammica__Seed,ss16-17s,C_indecora__Φf.D
 Grammica,C_australis,1382,B,3,old,2017-12-13,3:17:31 PM,,,o,506,Φf.D,0.355740181,Grammica__Φf.D,Old,Grammica__Old,1382o,C_australis__Φf.D
 Grammica,C_cephalanthii,1567,D,2,young,2018-02-16,2:57:26 PM,,,y,508,Φf.D,0.769953052,Grammica__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
 Grammica,C_tasmanica,17-15,A,4,young,2018-04-17,2:43:56 PM,,,y,510,Φf.D,0.35768262,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
@@ -5238,14 +5238,14 @@ Grammica,C_tasmanica,17-15,B,2,old,2017-12-21,12:02:39 PM,,,o,516,Φf.D,0.682795
 Grammica,C_cephalanthii,1567,D,5,seed,2018-04-19,5:03:34 PM,,,s,517,Φf.D,0.29496253099999997,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_polygonorum,1705,A,1,young,2018-01-25,9:48:59 AM,,,y,518,Φf.D,0.533642691,Grammica__Φf.D,Young,Grammica__Young,1705y,C_polygonorum__Φf.D
 Grammica,C_polygonorum,1705,X,3,seed,2017-11-02,11:20:52 AM,,,s,519,Φf.D,0.405661948,Grammica__Φf.D,Seed,Grammica__Seed,1705s,C_polygonorum__Φf.D
-Grammica,C_costaricensis,CUCO,B,4,haustorium,2018-05-25,2:25:32 PM,,,h,520,Φf.D,0.525270758,Grammicaica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__Φf.D
+Grammica,C_costaricensis,CUCO,B,4,haustorium,2018-05-25,2:25:32 PM,,,h,520,Φf.D,0.525270758,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__Φf.D
 Grammica,C_denticulata,ss13-46,A,5,young,2018-05-29,11:11:53 AM,,,y,521,Φf.D,0.656050955,Grammica__Φf.D,Young,Grammica__Young,ss13-46y,C_denticulata__Φf.D
 Grammica,C_tasmanica,17-15,B,1,haustorium,2018-03-15,4:54:21 PM,,,h,522,Φf.D,0.471223022,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
 Grammica,C_tasmanica,17-15,B,2,old,2018-03-15,4:32:42 PM,,,o,523,Φf.D,0.649659864,Grammica__Φf.D,Old,Grammica__Old,17-15o,C_tasmanica__Φf.D
 Grammica,C_sandwichiana,155,C,3,haustorium,2017-12-13,3:55:12 PM,,,h,524,Φf.D,0.660328714,Grammica__Φf.D,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__Φf.D
 Grammica,C_tasmanica,17-15,C,2,haustorium,2018-05-29,1:36:57 PM,,,h,525,Φf.D,0.397782705,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
 Grammica,C_californica,ss17-105,E,1,old,2018-05-25,6:05:05 PM,,,o,526,Φf.D,0.530864198,Grammica__Φf.D,Old,Grammica__Old,ss17-105o,C_californica__Φf.D
-Grammica,C_tasmanica,17-15,C,1,young,2018-05-29,1:12:22 PM,,,y,527,Φf.D,0.473829201,Grammica__Φf.D,Young,Grammica__Young,17-15y,Grammicaica__Φf.D
+Grammica,C_tasmanica,17-15,C,1,young,2018-05-29,1:12:22 PM,,,y,527,Φf.D,0.473829201,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
 Grammica,C_tasmanica,17-15,B,2,haustorium,2018-04-17,2:21:56 PM,,,h,528,Φf.D,0.52045779700000006,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
 Grammica,C_polygonorum,1705,D,2,old,2018-07-06,11:37:37 AM,,,o,529,Φf.D,0.536020151,Grammica__Φf.D,Old,Grammica__Old,1705o,C_polygonorum__Φf.D
 Grammica,C_denticulata,ss13-46,D,2,old,2018-06-22,4:47:32 PM,,,o,530,Φf.D,0.636363636,Grammica__Φf.D,Old,Grammica__Old,ss13-46o,C_denticulata__Φf.D
@@ -5280,7 +5280,7 @@ Grammica,C_cephalanthii,1567,F,3,old,2018-03-23,4:26:33 PM,,,o,573,Φf.D,0.51889
 Grammica,C_australis,1382,A,2,old,2018-01-25,11:20:59 AM,,,o,576,Φf.D,0.570909091,Grammica__Φf.D,Old,Grammica__Old,1382o,C_australis__Φf.D
 Grammica,C_cephalanthii,1567,F,1,seed (old),2018-05-29,12:23:38 PM,,,s,577,Φf.D,0.39297246,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_compacta,1566,B,2,young,2017-12-21,11:12:51 AM,,,y,578,Φf.D,0.731372549,Grammica__Φf.D,Young,Grammica__Young,1566y,C_compacta__Φf.D
-Grammica,C_cephalanthii,1567,G,4,old,2018-04-03,5:27:45 PM,,,o,579,Φf.D,0.545243619,Grammica__Φf.D,Old,Grammica__Old,1567o,Grammica__Φf.D
+Grammica,C_cephalanthii,1567,G,4,old,2018-04-03,5:27:45 PM,,,o,579,Φf.D,0.545243619,Grammica__Φf.D,Old,Grammica__Old,1567o,C_cephalanthii__Φf.D
 Grammica,C_indecora,ss16-17,D,3,seed,2018-03-23,3:04:55 PM,,,s,580,Φf.D,0.337223438,Grammica__Φf.D,Seed,Grammica__Seed,ss16-17s,C_indecora__Φf.D
 Grammica,C_indecora,ss16-17,D,1,flower,2018-02-16,3:35:35 PM,,,f,581,Φf.D,0.471441321,Grammica__Φf.D,Flower,Grammica__Flower,ss16-17f,C_indecora__Φf.D
 Grammica,C_californica,ss17-105,-,3,seedling,2018-04-17,1:20:53 PM,,,sdlg,582,Φf.D,0.169123351,Grammica__Φf.D,Seedling,Grammica__Seedling,ss17-105sdlg,C_californica__Φf.D
@@ -5298,7 +5298,7 @@ Grammica,C_compacta,1566,B,3,young,2017-12-21,11:12:51 AM,,,y,594,Φf.D,0.671641
 Grammica,C_californica,ss17-105,A,3,old,2018-05-03,3:45:01 PM,,,o,595,Φf.D,0.23358396,Grammica__Φf.D,Old,Grammica__Old,ss17-105o,C_californica__Φf.D
 Grammica,C_polygonorum,1705,C,4,old,2017-12-13,11:41:35 AM,,,o,596,Φf.D,0.519205298,Grammica__Φf.D,Old,Grammica__Old,1705o,C_polygonorum__Φf.D
 Grammica,C_sandwichiana,155,B,3,haustorium,2018-01-25,12:57:24 PM,,,h,597,Φf.D,0.491385252,Grammica__Φf.D,Haustorium,Grammica__Haustorium,155h,C_sandwichiana__Φf.D
-Grammica,C_cephalanthii,1567,B,2,young,2017-12-13,12:04:21 PM,,,y,600,Φf.D,0.413343558,C_compacta__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
+Grammica,C_cephalanthii,1567,B,2,young,2017-12-13,12:04:21 PM,,,y,600,Φf.D,0.413343558,Grammica__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
 Grammica,C_polygonorum,1705,S,2,seedling,2017-11-09,6:13:19 PM,,,sdlg,601,Φf.D,0.204422194,Grammica__Φf.D,Seedling,Grammica__Seedling,1705sdlg,C_polygonorum__Φf.D
 Grammica,C_tasmanica,17-15,B,4,haustorium,2018-04-17,2:21:56 PM,,,h,602,Φf.D,0.559210526,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
 Grammica,C_denticulata,ss13-46,A,3,young,2018-05-29,11:11:53 AM,,,y,603,Φf.D,0.475728155,Grammica__Φf.D,Young,Grammica__Young,ss13-46y,C_denticulata__Φf.D
@@ -5328,10 +5328,10 @@ Grammica,C_cephalanthii,1567,A,1,seedling,8/24/18,14:03:55,,,sdlg,629,Φf.D,0.43
 Grammica,C_australis,1382,C,1,young,2017-12-13,2:21:20 PM,,,y,630,Φf.D,0.47763864,Grammica__Φf.D,Young,Grammica__Young,1382y,C_australis__Φf.D
 Grammica,C_sandwichiana,155,B,1,old,2018-01-25,12:49:08 PM,,,o,631,Φf.D,0.537280702,Grammica__Φf.D,Old,Grammica__Old,155o,C_sandwichiana__Φf.D
 Grammica,C_polygonorum,1705,S,1,seedling,2017-11-09,6:22:52 PM,,,sdlg,632,Φf.D,0.502585802,Grammica__Φf.D,Seedling,Grammica__Seedling,1705sdlg,C_polygonorum__Φf.D
-Grammica,C_tasmanica,17-15,B,7,haustorium,2018-04-17,2:21:56 PM,,,h,634,Φf.D,0.51710831,C_cephalanthii__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
+Grammica,C_tasmanica,17-15,B,7,haustorium,2018-04-17,2:21:56 PM,,,h,634,Φf.D,0.51710831,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
 Grammica,C_cephalanthii,1567,G,2,young,2018-04-03,5:15:39 PM,,,y,635,Φf.D,0.420577617,Grammica__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
 Grammica,C_tasmanica,17-15,B,8,young,2018-04-17,1:55:52 PM,,,y,636,Φf.D,0.559183673,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
-Grammica,C_compacta,1566,E,1,young,2017-11-15,9:48:07 AM,,,y,637,Φf.D,0.600429646,C_californica__Φf.D,Young,Grammica__Young,1566y,C_compacta__Φf.D
+Grammica,C_compacta,1566,E,1,young,2017-11-15,9:48:07 AM,,,y,637,Φf.D,0.600429646,Grammica__Φf.D,Young,Grammica__Young,1566y,C_compacta__Φf.D
 Grammica,C_sandwichiana,155,B,2,young,2018-01-25,12:41:23 PM,,,y,638,Φf.D,0.557823129,Grammica__Φf.D,Young,Grammica__Young,155y,C_sandwichiana__Φf.D
 Grammica,C_compacta,1566,E,1,young,2017-11-15,10:09:26 AM,,,y,639,Φf.D,0.52866861,Grammica__Φf.D,Young,Grammica__Young,1566y,C_compacta__Φf.D
 Grammica,C_tasmanica,17-15,C,2,old,2018-05-29,1:24:33 PM,,,o,640,Φf.D,0.613636364,Grammica__Φf.D,Old,Grammica__Old,17-15o,C_tasmanica__Φf.D
@@ -5353,8 +5353,8 @@ Grammica,C_cephalanthii,1567,F,4,seed (old),2018-05-29,12:23:38 PM,,,s,662,Φf.D
 Grammica,C_denticulata,ss13-46,A,4,old,2018-05-29,3:19:24 PM,,,o,663,Φf.D,0.565217391,Grammica__Φf.D,Old,Grammica__Old,ss13-46o,C_denticulata__Φf.D
 Grammica,C_indecora,ss16-17,E,4,flower,2018-03-23,3:52:37 PM,,,f,664,Φf.D,0.466208477,Grammica__Φf.D,Flower,Grammica__Flower,ss16-17f,C_indecora__Φf.D
 Grammica,C_australis,1382,B,3,young,2017-12-13,3:07:51 PM,,,y,665,Φf.D,0.358416703,Grammica__Φf.D,Young,Grammica__Young,1382y,C_australis__Φf.D
-Grammica,C_compacta,1566,A,4,old,2017-11-15,10:19:29 AM,,,o,666,Φf.D,0.497637795,Grammica__Φf.D,Old,Grammica__Old,1566o,Grammica__Φf.D D
-Grammica,C_denticulata,ss13-46,B,6,haustorium,2018-06-20,1:19:35 PM,,,h,667,Φf.D,0.523125997,C_compacta__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
+Grammica,C_compacta,1566,A,4,old,2017-11-15,10:19:29 AM,,,o,666,Φf.D,0.497637795,Grammica__Φf.D,Old,Grammica__Old,1566o,C_compacta__Φf.D
+Grammica,C_denticulata,ss13-46,B,6,haustorium,2018-06-20,1:19:35 PM,,,h,667,Φf.D,0.523125997,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
 Grammica,C_sandwichiana,155,C,2,young,2017-12-13,3:38:43 PM,,,y,668,Φf.D,0.357293869,Grammica__Φf.D,Young,Grammica__Young,155y,C_sandwichiana__Φf.D
 Grammica,C_tasmanica,17-15,B,5,haustorium,2018-04-17,2:21:56 PM,,,h,669,Φf.D,0.536356529,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
 Grammica,C_costaricensis,CUCO,B,3,haustorium,2018-05-25,2:25:32 PM,,,h,670,Φf.D,0.402439024,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__Φf.D
@@ -5365,7 +5365,7 @@ Grammica,C_cephalanthii,1567,D,9,seed,2018-04-19,5:03:34 PM,,,s,675,Φf.D,0.2991
 Grammica,C_tasmanica,17-15,D,2,young,2018-05-03,1:32:11 PM,,,y,676,Φf.D,0.61971831,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
 Grammica,C_costaricensis,CUCO,B,2,old,2018-05-25,2:16:35 PM,,,o,677,Φf.D,0.586826347,Grammica__Φf.D,Old,Grammica__Old,CUCOo,C_costaricensis__Φf.D
 Grammica,C_tasmanica,17-15,C,3,haustorium,2018-05-29,1:36:57 PM,,,h,678,Φf.D,0.35264163,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
-Grammica,C_cephalanthii,1567,G,3,young,2018-04-03,5:15:39 PM,,,y,679,Φf.D,0.396907216,Grammica__Φf.D,Young,Grammica__Young,1567y,Grammica__Φf.D
+Grammica,C_cephalanthii,1567,G,3,young,2018-04-03,5:15:39 PM,,,y,679,Φf.D,0.396907216,Grammica__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
 Grammica,C_costaricensis,CUCO,B,2,haustorium,2018-05-25,2:25:32 PM,,,h,680,Φf.D,0.374913853,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__Φf.D
 Grammica,C_tasmanica,17-15,B,6,haustorium,2018-04-17,2:21:56 PM,,,h,681,Φf.D,0.436341162,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
 Grammica,C_californica,ss17-105,C,1,old,2018-05-03,12:43:03 PM,,,o,682,Φf.D,0.365022422,Grammica__Φf.D,Old,Grammica__Old,ss17-105o,C_californica__Φf.D
@@ -5375,7 +5375,7 @@ Grammica,C_sandwichiana,155,B,1,young,2018-01-25,12:41:23 PM,,,y,686,Φf.D,0.551
 Grammica,C_australis,1382,C,2,young,2017-12-13,2:21:20 PM,,,y,688,Φf.D,0.465442765,Grammica__Φf.D,Young,Grammica__Young,1382y,C_australis__Φf.D
 Grammica,C_cephalanthii,1567,D,1,young,2018-02-16,2:57:26 PM,,,y,690,Φf.D,0.659615385,Grammica__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
 Grammica,C_sandwichiana,155,C,1,young,2017-12-13,3:38:43 PM,,,y,691,Φf.D,0.50739645,Grammica__Φf.D,Young,Grammica__Young,155y,C_sandwichiana__Φf.D
-Grammica,C_costaricensis,CUCO,C,6,haustorium,2018-05-25,3:09:23 PM,,,h,693,Φf.D,0.438576987,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__Φf.D
+Grammica,C_costaricensis,CUCO,C,6,haustorium,2018-05-25,3:09:23 PM,,,h,693,Φf.D,0.438576987,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,Grammica__Φf.D
 Grammica,C_californica,ss17-105,E,2,haustorium,2018-05-25,6:16:41 PM,,,h,694,Φf.D,0.538116592,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__Φf.D
 Grammica,C_cephalanthii,1567,G,6,seed (old),2018-05-29,12:53:01 PM,,,s,695,Φf.D,0.384689225,Grammica__Φf.D,Seed,Grammica__Seed,1567s,C_cephalanthii__Φf.D
 Grammica,C_tasmanica,17-15,D,4,young,2018-05-29,10:36:38 AM,,,y,696,Φf.D,0.543307087,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
@@ -5404,9 +5404,9 @@ Grammica,C_californica,ss17-105,E,4,flower,2018-07-06,2:26:42 PM,,,f,722,Φf.D,0
 Grammica,C_compacta,1566,A,1,young,2017-11-15,11:37:17 AM,,,y,723,Φf.D,0.554413025,Grammica__Φf.D,Young,Grammica__Young,1566y,C_compacta__Φf.D
 Grammica,C_californica,ss17-105,E,2,flower,2018-07-06,2:26:42 PM,,,f,724,Φf.D,0.389772727,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_costaricensis,CUCO,C,5,haustorium,2018-05-25,3:09:23 PM,,,h,725,Φf.D,0.399067006,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__Φf.D
-Grammica,C_californica,ss17-105,B,2,young,2018-05-29,3:33:16 PM,,,y,726,Φf.D,0.560606061,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_indecora__Φf.D
+Grammica,C_californica,ss17-105,B,2,young,2018-05-29,3:33:16 PM,,,y,726,Φf.D,0.560606061,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
 Grammica,C_californica,ss17-105,D,5,haustorium,2018-05-25,1:08:20 PM,,,h,727,Φf.D,0.459821429,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__Φf.D
-Grammica,C_californica,ss17-105,A,4,flower,2018-05-29,4:21:52 PM,,,f,728,Φf.D,0.297588652,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_polygonorum__Φf.D
+Grammica,C_californica,ss17-105,A,4,flower,2018-05-29,4:21:52 PM,,,f,728,Φf.D,0.297588652,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_indecora,ss16-17,B,2,old,2018-01-25,12:10:09 PM,,,o,729,Φf.D,0.439446367,Grammica__Φf.D,Old,Grammica__Old,ss16-17o,C_indecora__Φf.D
 Grammica,C_costaricensis,CUCO,B,1,haustorium,2018-05-25,2:25:32 PM,,,h,730,Φf.D,0.367080934,Grammica__Φf.D,Haustorium,Grammica__Haustorium,CUCOh,C_costaricensis__Φf.D
 Grammica,C_costaricensis,CUCO,A,2,young,2018-05-03,1:03:52 PM,,,y,732,Φf.D,0.680555556,Grammica__Φf.D,Young,Grammica__Young,CUCOy,C_costaricensis__Φf.D
@@ -5453,25 +5453,25 @@ Grammica,C_californica,ss17-105,E,5,haustorium,2018-05-25,6:16:41 PM,,,h,777,Φf
 Grammica,C_cephalanthii,1567,E,1,young,2018-03-08,12:56:48 PM,,,y,779,Φf.D,0.382749326,Grammica__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
 Grammica,C_polygonorum,1705,C,4,seed,2017-12-13,1:00:53 PM,,,s,780,Φf.D,0.424152682,Grammica__Φf.D,Seed,Grammica__Seed,1705s,C_polygonorum__Φf.D
 Grammica,C_californica,ss17-105,B,3,haustorium,2018-05-29,4:03:02 PM,,,h,781,Φf.D,0.391304348,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__Φf.D
-Grammica,C_indecora,ss16-17,A,2,old,2017-12-13,1:22:55 PM,,,o,782,Φf.D,0.551020408,Grammica__Φf.D,Old,Grammica__Old,ss16-17o,C_denticulata__Φ
+Grammica,C_indecora,ss16-17,A,2,old,2017-12-13,1:22:55 PM,,,o,782,Φf.D,0.551020408,Grammica__Φf.D,Old,Grammica__Old,ss16-17o,C_indecora__Φf.D
 Grammica,C_tasmanica,17-15,A,5,young,2018-04-17,2:43:56 PM,,,y,784,Φf.D,0.472477064,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
-Grammica,C_costaricensis,CUCO,C,3,old,2018-05-25,2:54:09 PM,,,o,786,Φf.D,0.578947368,C_polygonorum__Φf.D,Old,Grammica__Old,CUCOo,C_cosifornica__Φf.D
-Grammica,C_californica,ss17-105,B,4,haustorium,2018-05-29,4:03:02 PM,,,h,787,Φf.D,0.334754797,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss17-105h,C_denticulata__Φf.D
+Grammica,C_costaricensis,CUCO,C,3,old,2018-05-25,2:54:09 PM,,,o,786,Φf.D,0.578947368,Grammica__Φf.D,Old,Grammica__Old,CUCOo,C_costaricensis__Φf.D
+Grammica,C_californica,ss17-105,B,4,haustorium,2018-05-29,4:03:02 PM,,,h,787,Φf.D,0.334754797,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__Φf.D
 Grammica,C_cephalanthii,1567,A,3,seedling,8/24/18,14:03:55,,,sdlg,788,Φf.D,0.421282799,Grammica__Φf.D,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__Φf.D
 Grammica,C_tasmanica,17-15,B,6,young,2018-04-17,1:55:52 PM,,,y,789,Φf.D,0.528,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
 Grammica,C_tasmanica,17-15,A,2,haustorium,2018-04-17,3:29:24 PM,,,h,790,Φf.D,0.369070209,Grammica__Φf.D,Haustorium,Grammica__Haustorium,17-15h,C_tasmanica__Φf.D
-Grammica,C_australis,1382,-,2,seedling,2017-11-02,3:16:57 PM,,,sdlg,791,Φf.D,0.29060816,C_californica__Φf.D,Seedling,Grammica__Seedling,1382sdlg,C_australis__Φf.D
+Grammica,C_australis,1382,-,2,seedling,2017-11-02,3:16:57 PM,,,sdlg,791,Φf.D,0.29060816,Grammica__Φf.D,Seedling,Grammica__Seedling,1382sdlg,C_australis__Φf.D
 Grammica,C_cephalanthii,1567,D,3,young,2018-03-08,12:22:11 PM,,,y,792,Φf.D,0.408809892,Grammica__Φf.D,Young,Grammica__Young,1567y,C_cephalanthii__Φf.D
 Grammica,C_polygonorum,1705,C,2,seed,2017-12-13,1:00:53 PM,,,s,793,Φf.D,0.411789652,Grammica__Φf.D,Seed,Grammica__Seed,1705s,C_polygonorum__Φf.D
-Grammica,C_californica,ss17-105,B,3,old,2018-05-29,3:42:33 PM,,,o,794,Φf.D,0.47311828,C_polygonorum__Φf.D,Old,Grammica__Old,ss17-105o,C_cosifornica__Φf.D
+Grammica,C_californica,ss17-105,B,3,old,2018-05-29,3:42:33 PM,,,o,794,Φf.D,0.47311828,Grammica__Φf.D,Old,Grammica__Old,ss17-105o,C_californica__Φf.D
 Grammica,C_denticulata,ss13-46,C,4,old,2018-05-29,11:52:58 AM,,,o,796,Φf.D,0.443872297,Grammica__Φf.D,Old,Grammica__Old,ss13-46o,C_denticulata__Φf.D
 Grammica,C_californica,ss17-105,E,9,haustorium,2018-05-25,6:16:41 PM,,,h,797,Φf.D,0.461786868,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__Φf.D
 Grammica,C_cephalanthii,1567,A,2,old,2017-11-15,1:40:51 PM,,,o,799,Φf.D,0.273187184,Grammica__Φf.D,Old,Grammica__Old,1567o,C_cephalanthii__Φf.D
-Grammica,C_californica,ss17-105,D,5,young,2018-05-25,12:42:05 PM,,,y,800,Φf.D,0.479289941,C_californica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
+Grammica,C_californica,ss17-105,D,5,young,2018-05-25,12:42:05 PM,,,y,800,Φf.D,0.479289941,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
 Grammica,C_californica,ss17-105,A,1,young,2018-05-03,3:35:43 PM,,,y,802,Φf.D,0.263429752,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
 Grammica,C_costaricensis,CUCO,B,5,young,2018-05-25,2:04:09 PM,,,y,803,Φf.D,0.539944904,Grammica__Φf.D,Young,Grammica__Young,CUCOy,C_costaricensis__Φf.D
 Grammica,C_denticulata,ss13-46,D,2,young,2018-05-29,4:47:59 PM,,,y,804,Φf.D,0.52516129,Grammica__Φf.D,Young,Grammica__Young,ss13-46y,C_denticulata__Φf.D
-Grammica,C_costaricensis,CUCO,A,1,young,2018-05-03,1:03:52 PM,,,y,806,Φf.D,0.287859825,Grammica__Φf.D,Young,Grammica__Young,CUCOy,Grammica__Φf.D _Φf.D
+Grammica,C_costaricensis,CUCO,A,1,young,2018-05-03,1:03:52 PM,,,y,806,Φf.D,0.287859825,Grammica__Φf.D,Young,Grammica__Young,CUCOy,C_costaricensis__Φf.D
 Grammica,C_californica,ss17-105,A,3,haustorium,2018-05-03,3:52:11 PM,,,h,807,Φf.D,0.350764677,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__Φf.D
 Grammica,C_californica,ss17-105,E,4,young,2018-05-25,5:35:48 PM,,,y,808,Φf.D,0.513812155,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
 Grammica,C_denticulata,ss13-46,B,1,haustorium,2018-06-20,1:19:35 PM,,,h,809,Φf.D,0.434412266,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
@@ -5519,7 +5519,7 @@ Grammica,C_californica,ss17-105,A,6,flower,2018-05-29,4:21:52 PM,,,f,858,Φf.D,0
 Grammica,C_californica,ss17-105,A,2,flower,2018-05-29,4:21:52 PM,,,f,862,Φf.D,0.266358025,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_californica,ss17-105,B,5,young,2018-05-29,3:33:16 PM,,,y,863,Φf.D,0.449704142,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
 Grammica,C_denticulata,ss13-46,A,2,haustorium,2018-05-29,11:30:47 AM,,,h,865,Φf.D,0.391794872,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
-Grammica,C_costaricensis,CUCO,B,3,young,2018-05-25,2:04:09 PM,,,y,867,Φf.D,0.368544601,Grammica__Φf.D,Young,Grammica__Young,CUCOy,Grammica__Φf.D _Φf.D
+Grammica,C_costaricensis,CUCO,B,3,young,2018-05-25,2:04:09 PM,,,y,867,Φf.D,0.368544601,Grammica__Φf.D,Young,Grammica__Young,CUCOy,C_costaricensis__Φf.D
 Grammica,C_californica,ss17-105,E,6,young,2018-05-25,5:35:48 PM,,,y,868,Φf.D,0.519553073,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
 Grammica,C_californica,ss17-105,E,8,haustorium,2018-05-25,6:16:41 PM,,,h,870,Φf.D,0.299201162,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss17-105h,C_californica__Φf.D
 Grammica,C_denticulata,ss13-46,A,1,haustorium,2018-05-29,11:30:47 AM,,,h,871,Φf.D,0.435992579,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
@@ -5529,19 +5529,19 @@ Grammica,C_denticulata,ss13-46,C,2,flower,2018-06-20,3:03:14 PM,,,f,874,Φf.D,0.
 Grammica,C_californica,ss17-105,B,1,old,2018-05-29,3:42:33 PM,,,o,875,Φf.D,0.446280992,Grammica__Φf.D,Old,Grammica__Old,ss17-105o,C_californica__Φf.D
 Grammica,C_indecora,ss16-17,-,1,seedling,8/24/18,13:19:55,,,sdlg,876,Φf.D,0.454756381,Grammica__Φf.D,Seedling,Grammica__Seedling,ss16-17sdlg,C_indecora__Φf.D
 Grammica,C_californica,ss17-105,E,10,flower,2018-07-06,2:26:42 PM,,,f,878,Φf.D,0.3724,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
-Grammica,C_denticulata,ss13-46,D,1,young,2018-06-22,4:36:43 PM,,,y,879,Φf.D,0.467939973,Grammica__Φf.D,Young,Grammica__Young,ss13-46y,C_tasmanica__Φf.D
+Grammica,C_denticulata,ss13-46,D,1,young,2018-06-22,4:36:43 PM,,,y,879,Φf.D,0.467939973,Grammica__Φf.D,Young,Grammica__Young,ss13-46y,C_denticulata__Φf.D
 Grammica,C_californica,ss17-105,B,7,flower,2018-05-29,3:51:20 PM,,,f,880,Φf.D,0.294927536,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_denticulata,ss13-46,A,3,haustorium,2018-05-29,11:30:47 AM,,,h,881,Φf.D,0.396135266,Grammica__Φf.D,Haustorium,Grammica__Haustorium,ss13-46h,C_denticulata__Φf.D
 Grammica,C_californica,ss17-105,B,4,flower,2018-05-29,3:51:20 PM,,,f,882,Φf.D,0.298327759,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
-Grammica,C_costaricensis,CUCO,B,4,young,2018-05-25,2:04:09 PM,,,y,883,Φf.D,0.422885572,Grammica__Φf.D,Young,Grammica__Young,CUCOy,C_costaricensis__Φf.D
+Grammica,C_costaricensis,CUCO,B,4,young,2018-05-25,2:04:09 PM,,,y,883,Φf.D,0.422885572,Grammica__Φf.D,Young,Grammica__Young,CUCOy,C_cosifornica__Φf.D
 Grammica,C_californica,ss17-105,C,8,flower,2018-05-25,1:42:20 PM,,,f,884,Φf.D,0.327759197,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
-Grammica,C_cephalanthii,1567,A,2,seedling,8/24/18,14:03:55,,,sdlg,885,Φf.D,0.374509804,C_californica__Φf.D,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__Φf.D
+Grammica,C_cephalanthii,1567,A,2,seedling,8/24/18,14:03:55,,,sdlg,885,Φf.D,0.374509804,Grammica__Φf.D,Seedling,Grammica__Seedling,1567sdlg,C_cephalanthii__Φf.D
 Grammica,C_denticulata,ss13-46,C,2,old,2018-05-29,11:52:58 AM,,,o,886,Φf.D,0.379249707,Grammica__Φf.D,Old,Grammica__Old,ss13-46o,C_denticulata__Φf.D
-Grammica,C_tasmanica,17-15,B,7,young,2018-04-17,1:55:52 PM,,,y,887,Φf.D,0.4527897,C_denticulata__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
+Grammica,C_tasmanica,17-15,B,7,young,2018-04-17,1:55:52 PM,,,y,887,Φf.D,0.4527897,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
 Grammica,C_californica,ss17-105,B,5,flower,2018-05-29,3:51:20 PM,,,f,888,Φf.D,0.47960251,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_californica,ss17-105,A,7,flower,2018-05-29,4:21:52 PM,,,f,889,Φf.D,0.287550201,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
-Grammica,C_californica,ss17-105,E,5,flower,2018-07-06,2:26:42 PM,,,f,894,Φf.D,0.384191176,C_californica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
-Grammica,C_californica,ss17-105,A,1,flower,2018-05-29,4:21:52 PM,,,f,896,Φf.D,0.274229902,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
+Grammica,C_californica,ss17-105,E,5,flower,2018-07-06,2:26:42 PM,,,f,894,Φf.D,0.384191176,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
+Grammica,C_californica,ss17-105,A,1,flower,2018-05-29,4:21:52 PM,,,f,896,Φf.D,0.274229902,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_cosifornica__Φf.D
 Grammica,C_indecora,ss16-17,-,3,seedling,8/24/18,13:19:55,,,sdlg,899,Φf.D,0.446280992,Grammica__Φf.D,Seedling,Grammica__Seedling,ss16-17sdlg,C_indecora__Φf.D
 Grammica,C_tasmanica,17-15,C,2,young,2018-05-29,1:12:22 PM,,,y,900,Φf.D,0.244712991,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
 Grammica,C_tasmanica,17-15,B,2,young,2018-04-17,1:55:52 PM,,,y,901,Φf.D,0.455782313,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
@@ -5551,10 +5551,10 @@ Grammica,C_denticulata,ss13-46,C,1,haustorium,2018-05-29,12:02:27 PM,,,h,904,Φf
 Grammica,C_denticulata,ss13-46,C,3,flower,2018-06-07,12:39:09 PM,,,f,905,Φf.D,0.416770964,Grammica__Φf.D,Flower,Grammica__Flower,ss13-46f,C_denticulata__Φf.D
 Grammica,C_californica,ss17-105,E,3,flower,2018-07-06,2:26:42 PM,,,f,906,Φf.D,0.336758893,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_californica,ss17-105,E,1,young,2018-05-25,5:35:48 PM,,,y,907,Φf.D,0.449704142,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
-Grammica,C_tasmanica,17-15,C,7,young,2018-05-29,1:12:22 PM,,,y,908,Φf.D,0.34469697,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
+Grammica,C_tasmanica,17-15,C,7,young,2018-05-29,1:12:22 PM,,,y,908,Φf.D,0.34469697,Grammica__Φf.D,Young,Grammica__Young,17-15y,Grammica__Φf.D
 Grammica,C_denticulata,ss13-46,2,1,seedling,2018-05-01,2:22:18 PM,,,sdlg,910,Φf.D,0.319405099,Grammica__Φf.D,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__Φf.D
 Grammica,C_denticulata,ss13-46,C,2,young,2018-05-29,11:43:17 AM,,,y,911,Φf.D,0.381059752,Grammica__Φf.D,Young,Grammica__Young,ss13-46y,C_denticulata__Φf.D
-Grammica,C_californica,ss17-105,B,1,flower,2018-05-29,3:51:20 PM,,,f,912,Φf.D,0.315160796,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
+Grammica,C_californica,ss17-105,B,1,flower,2018-05-29,3:51:20 PM,,,f,912,Φf.D,0.315160796,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,Grammica__Φf.D �f.D
 Grammica,C_californica,ss17-105,C,5,flower,2018-05-25,1:42:20 PM,,,f,913,Φf.D,0.314744079,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_californica,ss17-105,C,6,flower,2018-05-25,1:42:20 PM,,,f,916,Φf.D,0.275981926,Grammica__Φf.D,Flower,Grammica__Flower,ss17-105f,C_californica__Φf.D
 Grammica,C_tasmanica,17-15,A,7,young,2018-04-17,2:43:56 PM,,,y,917,Φf.D,0.408053691,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
@@ -5576,7 +5576,7 @@ Grammica,C_tasmanica,17-15,A,6,young,2018-04-17,2:43:56 PM,,,y,932,Φf.D,0.33523
 Grammica,C_denticulata,ss13-46,C,2,flower,2018-06-07,12:39:09 PM,,,f,933,Φf.D,0.408642911,Grammica__Φf.D,Flower,Grammica__Flower,ss13-46f,C_denticulata__Φf.D
 Grammica,C_tasmanica,17-15,C,4,young,2018-05-29,1:12:22 PM,,,y,935,Φf.D,0.339002268,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
 Grammica,C_denticulata,ss13-46,D,2,young,2018-06-22,4:36:43 PM,,,y,936,Φf.D,0.447178003,Grammica__Φf.D,Young,Grammica__Young,ss13-46y,C_denticulata__Φf.D
-Grammica,C_denticulata,ss13-46,1,2,seedling,2018-05-01,3:53:06 PM,,,sdlg,937,Φf.D,0.307420495,Grammica__Φf.D,Seedling,Grammica__Seedling,ss13-46sdlg,C_californica__Φf.D
+Grammica,C_denticulata,ss13-46,1,2,seedling,2018-05-01,3:53:06 PM,,,sdlg,937,Φf.D,0.307420495,Grammica__Φf.D,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__Φf.D
 Grammica,C_polygonorum,1705,D,5,young,2018-07-06,11:29:21 AM,,,y,939,Φf.D,0.407960199,Grammica__Φf.D,Young,Grammica__Young,1705y,C_polygonorum__Φf.D
 Grammica,C_tasmanica,17-15,A,1,young,2018-04-17,2:43:56 PM,,,y,940,Φf.D,0.424742268,Grammica__Φf.D,Young,Grammica__Young,17-15y,C_tasmanica__Φf.D
 Grammica,C_californica,ss17-105,B,1,young,2018-05-29,3:33:16 PM,,,y,941,Φf.D,0.355817875,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
@@ -5616,8 +5616,8 @@ Grammica,C_indecora,ss16-17,C,1,young,2018-01-25,11:41:52 AM,,,y,997,Φf.D,0.367
 Grammica,C_indecora,ss16-17,C,2,young,2018-01-25,11:41:52 AM,,,y,999,Φf.D,0.317865429,Grammica__Φf.D,Young,Grammica__Young,ss16-17y,C_indecora__Φf.D
 Grammica,C_denticulata,ss13-46,-,3,seedling,2018-04-17,1:38:52 PM,,,sdlg,1000,Φf.D,0.312603648,Grammica__Φf.D,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__Φf.D
 Grammica,C_californica,ss17-105,D,3,young,2018-05-25,12:42:05 PM,,,y,1001,Φf.D,0.30802603,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
-Grammica,C_indecora,ss16-17,B,1,young,2018-01-25,12:01:11 PM,,,y,1004,Φf.D,0.32810271,Grammica__Φf.D,Young,Grammica__Young,ss16-17y,C_indecora__Φf.D
-Grammica,C_californica,ss17-105,D,1,young,2018-05-25,12:42:05 PM,,,y,1008,Φf.D,0.222379603,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,C_californica__Φf.D
+Grammica,C_indecora,ss16-17,B,1,young,2018-01-25,12:01:11 PM,,,y,1004,Φf.D,0.32810271,Grammica__Φf.D,Young,Grammica__Young,ss16-17y,C_denticulata__Φ
+Grammica,C_californica,ss17-105,D,1,young,2018-05-25,12:42:05 PM,,,y,1008,Φf.D,0.222379603,Grammica__Φf.D,Young,Grammica__Young,ss17-105y,Grammica__Φf.D
 Grammica,C_denticulata,ss13-46,1,1,seedling,2018-05-01,3:53:06 PM,,,sdlg,1009,Φf.D,0.257631258,Grammica__Φf.D,Seedling,Grammica__Seedling,ss13-46sdlg,C_denticulata__Φf.D
 Grammica,C_cephalanthii,1567,A,2,seed,2017-12-21,10:53:16 AM,ok to 0,,s,2,NPQ,0.49041411,Grammica__NPQ,Seed,Grammica__Seed,1567s,C_cephalanthii__NPQ
 Grammica,C_indecora,ss16-17,A,7,seed,2018-01-15,10:19:56 AM,other aoi had signal,,s,4,NPQ,0.264755481,Grammica__NPQ,Seed,Grammica__Seed,ss16-17s,C_indecora__NPQ

@@ -4800,7 +4800,7 @@ Cuscuta,C_epithymum,CUEP,C,4,haustorium,2018-05-29,2:14:27 PM,,,h,561,φPSII,0.2
 Cuscuta,C_epithymum,CUEP,D,3,old,2018-06-20,3:33:30 PM,,,o,564,φPSII,0.234375,Cuscuta__φPSII,Old,Cuscuta__Old
 Cuscuta,C_epithymum,CUEP,A,2,young,2018-05-25,4:13:09 PM,,,y,588,φPSII,0.242718447,Cuscuta__φPSII,Young,Cuscuta__Young
 Cuscuta,C_epithymum,CUEP,D,1,haustorium,2018-06-20,3:54:20 PM,,,h,598,φPSII,0.246464646,Cuscuta__φPSII,Haustorium,Cuscuta__Haustorium
-Cuscuta,C_epithymum,CUEP,A,6,young,2018-05-25,4:13:09 PM,,,y,633,φPSII,0.262135922,Cuscuta__φPSII,Young,Cuscuta__Young
+Cuscuta,C_epithymum,CUEP,A,6,young,2018-05-25,4:13:09 PM,,,y,633,φPSII,0.262135922,Grammica__φPSII,Young,Cuscuta__Young
 Cuscuta,C_epithymum,CUEP,D,1,seed,8/20/18,17:50:06,,,s,657,φPSII,0.271621622,Cuscuta__φPSII,Seed,Cuscuta__Seed
 Cuscuta,C_epithymum,CUEP,2,1,seedling,2018-05-01,2:08:56 PM,,,sdlg,660,φPSII,0.273464658,Cuscuta__φPSII,Seedling,Cuscuta__Seedling
 Cuscuta,C_epithymum,CUEP,C,3,young,2018-05-29,1:56:11 PM,,,y,692,φPSII,0.292993631,Cuscuta__φPSII,Young,Cuscuta__Young
@@ -6642,9 +6642,9 @@ Monogynella,C_monogyna,CUMO,D,3,young,2018-03-08,11:17:00 AM,,,y,985,ΦNPQ,0.201
 Monogynella,C_monogyna,CUMO,A,1,young,2017-11-15,12:49:21 PM,,,y,986,ΦNPQ,0.156309163,Monogynella__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,A,2,old,2017-11-15,1:08:04 PM,,,o,987,ΦNPQ,0.160414248,Monogynella__ΦNPQ,Old,Monogynella__Old
 Monogynella,C_monogyna,CUMO,D,2,young,2018-03-08,11:17:00 AM,,,y,988,ΦNPQ,0.181902888,Monogynella__ΦNPQ,Young,Monogynella__Young
-Monogynella,C_monogyna,CUMO,D,1,young,2018-03-08,11:17:00 AM,,,y,989,ΦNPQ,0.177464278,Monogynella__ΦNPQ,Young,Monogynella__Young
+Monogynella,C_monogyna,CUMO,D,1,young,2018-03-08,11:17:00 AM,,,y,989,ΦNPQ,0.177464278,Ipomoea_nil__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,B,1,young,2017-12-13,10:48:48 AM,,,y,994,ΦNPQ,0.141861062,Monogynella__ΦNPQ,Young,Monogynella__Young
-Monogynella,C_monogyna,CUMO,A,1,young,2017-11-15,12:58:46 PM,,,y,998,ΦNPQ,0.141310239,Ipomoea_nil__ΦNPQ,Young,Monogynella__Young
+Monogynella,C_monogyna,CUMO,A,1,young,2017-11-15,12:58:46 PM,,,y,998,ΦNPQ,0.141310239,Monogynella__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,D,3,young,2018-02-16,4:07:19 PM,,,y,1002,ΦNPQ,0.170842098,Monogynella__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,D,2,young,2018-02-16,4:07:19 PM,,,y,1003,ΦNPQ,0.157244123,Monogynella__ΦNPQ,Young,Monogynella__Young
 Monogynella,C_monogyna,CUMO,D,1,young,2018-02-16,4:07:19 PM,,,y,1005,ΦNPQ,0.140712875,Monogynella__ΦNPQ,Young,Monogynella__Young
@@ -6662,7 +6662,7 @@ Ipomoea_nil,Ipomoea_nil,IPNI,B,2,seed,2018-06-26,5:15:03 PM,,,s,347,ΦNPQ,0.2265
 Ipomoea_nil,Ipomoea_nil,IPNI,E,4,flower,2018-06-23,5:22:41 PM,,,f,349,ΦNPQ,0.455999856,Ipomoea_nil__ΦNPQ,Flower,Ipomoea_nil__Flower
 Ipomoea_nil,Ipomoea_nil,IPNI,E,3,flower,2018-06-22,1:28:35 PM,,,f,351,ΦNPQ,0.368050433,Ipomoea_nil__ΦNPQ,Flower,Ipomoea_nil__Flower
 Ipomoea_nil,Ipomoea_nil,IPNI,B,1,flower,2018-06-12,5:26:04 PM,,,f,367,ΦNPQ,0.406589812,Ipomoea_nil__ΦNPQ,Flower,Ipomoea_nil__Flower
-Ipomoea_nil,Ipomoea_nil,IPNI,B,4,seed,2018-07-06,1:58:18 PM,,,s,384,ΦNPQ,0.17524628,Ipomoenella__ΦNPQ,Seed,Ipomoea_nil__Seed
+Ipomoea_nil,Ipomoea_nil,IPNI,B,4,seed,2018-07-06,1:58:18 PM,,,s,384,ΦNPQ,0.17524628,Ipomoea_nil__ΦNPQ,Seed,Ipomoea_nil__Seed
 Ipomoea_nil,Ipomoea_nil,IPNI,B,3,seed,2018-07-06,1:58:18 PM,,,s,402,ΦNPQ,0.160386674,Ipomoea_nil__ΦNPQ,Seed,Ipomoea_nil__Seed
 Ipomoea_nil,Ipomoea_nil,IPNI,A,1,seed,2018-06-26,4:57:58 PM,,,s,410,ΦNPQ,0.182579473,Ipomoea_nil__ΦNPQ,Seed,Ipomoea_nil__Seed
 Ipomoea_nil,Ipomoea_nil,IPNI,B,2,seed,2018-07-06,1:58:18 PM,,,s,420,ΦNPQ,0.164740566,Ipomoea_nil__ΦNPQ,Seed,Ipomoea_nil__Seed
@@ -7480,7 +7480,7 @@ Grammica,C_denticulata,ss13-46,1,7,seedling,2018-05-01,3:53:06 PM,,,sdlg,993,Φf
 Grammica,C_denticulata,ss13-46,B,3,young,2018-06-20,12:55:09 PM,,,y,995,Φf.D,0.355555556,Grammica__Φf.D,Young,Grammica__Young
 Grammica,C_denticulata,ss13-46,1,5,seedling,2018-05-01,3:53:06 PM,,,sdlg,996,Φf.D,0.287365813,Grammica__Φf.D,Seedling,Grammica__Seedling
 Grammica,C_indecora,ss16-17,C,1,young,2018-01-25,11:41:52 AM,,,y,997,Φf.D,0.367346939,Grammica__Φf.D,Young,Grammica__Young
-Grammica,C_indecora,ss16-17,C,2,young,2018-01-25,11:41:52 AM,,,y,999,Φf.D,0.317865429,C_purpurata__Φf.D,Young,Grammica__Young
+Grammica,C_indecora,ss16-17,C,2,young,2018-01-25,11:41:52 AM,,,y,999,Φf.D,0.317865429,Grammica__Φf.D,Young,Grammica__Young
 Grammica,C_denticulata,ss13-46,-,3,seedling,2018-04-17,1:38:52 PM,,,sdlg,1000,Φf.D,0.312603648,Grammica__Φf.D,Seedling,Grammica__Seedling
 Grammica,C_californica,ss17-105,D,3,young,2018-05-25,12:42:05 PM,,,y,1001,Φf.D,0.30802603,Grammica__Φf.D,Young,Grammica__Young
 Grammica,C_indecora,ss16-17,B,1,young,2018-01-25,12:01:11 PM,,,y,1004,Φf.D,0.32810271,Grammica__Φf.D,Young,Grammica__Young
