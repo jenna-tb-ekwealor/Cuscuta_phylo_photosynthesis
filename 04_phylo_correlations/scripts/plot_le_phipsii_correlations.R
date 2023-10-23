@@ -114,12 +114,12 @@ stats <- data.frame(file_name, BF_correlated, BF_positive, BF_negative)
 
 stats %>%
   dplyr::mutate("Life stage" = case_when(
-    file_name == "le_phipsii_seedling/output/multivariate_BM.log" ~ "1", 
-    file_name == "le_phipsii_young/output/multivariate_BM.log" ~ "2", 
-    file_name == "le_phipsii_old/output/multivariate_BM.log" ~ "3", 
-    file_name == "le_phipsii_haustorium/output/multivariate_BM.log" ~ "4", 
-    file_name == "le_phipsii_flower/output/multivariate_BM.log" ~ "5", 
-    file_name == "le_phipsii_seed/output/multivariate_BM.log" ~ "6"), .before = file_name) %>% dplyr::select("Life stage", BF_correlated, BF_positive, BF_negative) -> stats
+    file_name == "../output/le_phipsii_seedling/multivariate_BM.log" ~ "1", 
+    file_name == "../output/le_phipsii_young/multivariate_BM.log" ~ "2", 
+    file_name == "../output/le_phipsii_old/multivariate_BM.log" ~ "3", 
+    file_name == "../output/le_phipsii_haustorium/multivariate_BM.log" ~ "4", 
+    file_name == "../output/le_phipsii_flower/multivariate_BM.log" ~ "5", 
+    file_name == "../output/le_phipsii_seed/multivariate_BM.log" ~ "6"), .before = file_name) %>% dplyr::select("Life stage", BF_correlated, BF_positive, BF_negative) -> stats
 
 # add significance asterisks to stats table, a la  kass and raftery 1995
 # 0 to 2 ns

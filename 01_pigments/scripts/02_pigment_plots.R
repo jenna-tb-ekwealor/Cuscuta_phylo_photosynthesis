@@ -65,7 +65,7 @@ Chl.a_ipomoea_boxplot <- ggplot(data_ipomoea_Chl.a, aes(x=Tissue.code, y=logFW.n
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0, 8), breaks = seq(0, 8, by = 2)) + 
   geom_text(
@@ -142,7 +142,7 @@ Chl.b_ipomoea_boxplot <- ggplot(data_ipomoea_Chl.b, aes(x=Tissue.code, y=logFW.n
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0, 8), breaks = seq(0, 8, by = 2))+
   geom_text(
@@ -218,7 +218,7 @@ Tot.Chl_ipomoea_boxplot <- ggplot(data_ipomoea_Tot.Chl, aes(x=Tissue.code, y=log
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0, 10), breaks = seq(0, 10, by = 2)) + 
   geom_text(
@@ -580,7 +580,7 @@ Chl.a_C_purpurata_boxplot <- ggplot(data_grammica_Chl.a, aes(x=Tissue.code, y=lo
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 8), breaks = seq(0, 8, by = 2)) + 
   geom_text(
@@ -867,7 +867,7 @@ Chl.b_C_purpurata_boxplot <- ggplot(data_C_purpurata_Chl.b, aes(x=Tissue.code, y
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 8), breaks = seq(0, 8, by = 2)) + 
   geom_text(
@@ -1110,7 +1110,7 @@ Tot.Chl_C_purpurata_boxplot <- ggplot(data_C_purpurata_Tot.Chl, aes(x=Tissue.cod
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 10), breaks = seq(0, 10, by = 2)) + 
   geom_text(
@@ -1888,7 +1888,7 @@ Tot.Car_ipomoea_boxplot <- ggplot(data_ipomoea_Tot.Car, aes(x=Tissue.code, y=log
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0, 8)) + 
   geom_text(
@@ -3710,7 +3710,7 @@ Tot.Car_C_purpurata_boxplot <- ggplot(data_C_purpurata_Tot.Car, aes(x=Tissue.cod
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 8)) + 
   geom_text(
@@ -4024,7 +4024,7 @@ Chl.a_C_australis_boxplot <- ggplot(data_C_australis_Chl.a, aes(x=Tissue.code, y
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0, 6)) + 
   geom_text(
@@ -4061,7 +4061,7 @@ Chl.b_C_australis_boxplot <- ggplot(data_C_australis_Chl.b, aes(x=Tissue.code, y
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0, 5))+
   geom_text(
@@ -4096,7 +4096,7 @@ Tot.Chl_C_australis_boxplot <- ggplot(data_C_australis_Tot.Chl, aes(x=Tissue.cod
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0, 8)) + 
   geom_text(
@@ -4448,7 +4448,7 @@ Chl.a_C_indecora_boxplot <- ggplot(data_Grammica_Chl.a, aes(x=Tissue.code, y=log
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 6)) + 
   geom_text(
@@ -4980,7 +4980,7 @@ Chl.b_C_indecora_boxplot <- ggplot(data_Grammica_Chl.b, aes(x=Tissue.code, y=log
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 5)) + 
   geom_text(
@@ -5425,7 +5425,7 @@ Tot.Chl_C_indecora_boxplot <- ggplot(data_Grammica_Tot.Chl, aes(x=Tissue.code, y
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg Fresh Weight") +
+  ylab("Natural Log ng/mg Fresh Weight") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 8)) + 
   geom_text(
@@ -6203,7 +6203,7 @@ Tot.Car_C_australis_boxplot <- ggplot(data_C_australis_Tot.Car, aes(x=Tissue.cod
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg FW") +
+  ylab("Natural Log ng/mg FW") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0, 6)) + 
   geom_text(
@@ -9078,7 +9078,7 @@ Tot.Car_C_indecora_boxplot <- ggplot(data_Grammica_Tot.Car, aes(x=Tissue.code, y
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg FW") +
+  ylab("Natural Log ng/mg FW") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 6)) + 
   geom_text(
@@ -9787,7 +9787,7 @@ Car.Chl31_ipomoea_boxplot <- ggplot(data_ipomoea_Car.Chl31, aes(x=Tissue.code, y
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 mmol/mol") +
+  ylab("Natural Log mmol/mol") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0,15)) + 
   geom_text(
@@ -9987,7 +9987,7 @@ Car.Chl31_Grammica_boxplot <- ggplot(data_Grammica_Car.Chl31, aes(x=Tissue.code,
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 mmol/mol") +
+  ylab("Natural Log mmol/mol") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0,15)) + 
   geom_text(
@@ -10084,7 +10084,7 @@ Car.Chl31_C_australis_boxplot <- ggplot(data_C_australis_Car.Chl31, aes(x=Tissue
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 ng/mg FW") +
+  ylab("Natural Log ng/mg FW") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "left", limits = c(0, 15)) + 
   geom_text(
@@ -10403,7 +10403,7 @@ Car.Chl31_C_indecora_boxplot <- ggplot(data_Grammica_Car.Chl31, aes(x=Tissue.cod
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 5),
         legend.position = "none") +
-  ylab("Log10 mmol/mol") +
+  ylab("Natural Log mmol/mol") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 15)) + 
   geom_text(

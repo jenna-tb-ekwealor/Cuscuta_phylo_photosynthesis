@@ -14,6 +14,7 @@ setwd(dirname(current_path ))
 pigments <- read.csv("../../01_pigments/output/stat_results/pigments_species_summary.csv")
 
 le <- pigments %>% filter(Pigment == "Lutein.epoxide")
+neo <- pigments %>% filter(Pigment == "Neoxanthin")
 car.chl <- pigments %>% filter(Pigment == "Car.Chl31")
 
 pam <- read.csv("../../02_pam/output/stat_results/fluorescence_species_summary.csv")
@@ -29,7 +30,7 @@ npq <- npq %>% filter(Species != "C_sandwichiana")
 
 
 
-#### le fvfm ####
+# FVFM LE ------------------------------------------------------------
 #### for seedling ####
 le_seedling <- le %>% filter(Tissue.code == "sdlg") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
@@ -413,9 +414,8 @@ write.nexus.data(le_fvfm_seed, file = "../output/le_fvfm_seed.nex", format = "co
 
 
 
-
-#### le phipsii ####
-#### for seedling ####
+# PHIPSII LE ------------------------------------------------------------
+##### for seedling #####
 le_seedling <- le %>% filter(Tissue.code == "sdlg") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_seedling)[colnames(le_seedling) == 'Mean'] <- 'le'
@@ -480,7 +480,7 @@ write.nexus.data(le_phipsii_seedling, file = "../output/le_phipsii_seedling.nex"
 
 
 
-#### for young stem ####
+##### for young stem #####
 le_young <- le %>% filter(Tissue.code == "y") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_young)[colnames(le_young) == 'Mean'] <- 'le'
@@ -544,7 +544,7 @@ write.nexus.data(le_phipsii_young, file = "../output/le_phipsii_young.nex", form
 
 
 
-#### for old stem ####
+##### for old stem #####
 le_old <- le %>% filter(Tissue.code == "o") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_old)[colnames(le_old) == 'Mean'] <- 'le'
@@ -607,7 +607,7 @@ write.nexus.data(le_phipsii_old, file = "../output/le_phipsii_old.nex", format =
 
 
 
-#### for haustorium ####
+##### for haustorium #####
 le_haustorium <- le %>% filter(Tissue.code == "h") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_haustorium)[colnames(le_haustorium) == 'Mean'] <- 'le'
@@ -670,7 +670,7 @@ write.nexus.data(le_phipsii_haustorium, file = "../output/le_phipsii_haustorium.
 
 
 
-#### for flower ####
+##### for flower #####
 le_flower <- le %>% filter(Tissue.code == "f") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_flower)[colnames(le_flower) == 'Mean'] <- 'le'
@@ -733,7 +733,7 @@ write.nexus.data(le_phipsii_flower, file = "../output/le_phipsii_flower.nex", fo
 
 
 
-#### for seed ####
+##### for seed #####
 le_seed <- le %>% filter(Tissue.code == "s") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_seed)[colnames(le_seed) == 'Mean'] <- 'le'
@@ -798,9 +798,8 @@ write.nexus.data(le_phipsii_seed, file = "../output/le_phipsii_seed.nex", format
 
 
 
-
-#### le car/chl ####
-#### for seedling ####
+# CAR/CHL LE ------------------------------------------------------------
+##### for seedling #####
 le_seedling <- le %>% filter(Tissue.code == "sdlg") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_seedling)[colnames(le_seedling) == 'Mean'] <- 'le'
@@ -865,7 +864,7 @@ write.nexus.data(le_car.chl_seedling, file = "../output/le_car.chl_seedling.nex"
 
 
 
-#### for young stem ####
+##### for young stem #####
 le_young <- le %>% filter(Tissue.code == "y") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_young)[colnames(le_young) == 'Mean'] <- 'le'
@@ -929,7 +928,7 @@ write.nexus.data(le_car.chl_young, file = "../output/le_car.chl_young.nex", form
 
 
 
-#### for old stem ####
+##### for old stem #####
 le_old <- le %>% filter(Tissue.code == "o") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_old)[colnames(le_old) == 'Mean'] <- 'le'
@@ -992,7 +991,7 @@ write.nexus.data(le_car.chl_old, file = "../output/le_car.chl_old.nex", format =
 
 
 
-#### for haustorium ####
+##### for haustorium #####
 le_haustorium <- le %>% filter(Tissue.code == "h") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_haustorium)[colnames(le_haustorium) == 'Mean'] <- 'le'
@@ -1055,7 +1054,7 @@ write.nexus.data(le_car.chl_haustorium, file = "../output/le_car.chl_haustorium.
 
 
 
-#### for flower ####
+##### for flower #####
 le_flower <- le %>% filter(Tissue.code == "f") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_flower)[colnames(le_flower) == 'Mean'] <- 'le'
@@ -1118,7 +1117,7 @@ write.nexus.data(le_car.chl_flower, file = "../output/le_car.chl_flower.nex", fo
 
 
 
-#### for seed ####
+##### for seed #####
 le_seed <- le %>% filter(Tissue.code == "s") %>% dplyr::select(Species, Mean)
 # change "Mean" to le
 colnames(le_seed)[colnames(le_seed) == 'Mean'] <- 'le'
@@ -1181,32 +1180,30 @@ write.nexus.data(le_car.chl_seed, file = "../output/le_car.chl_seed.nex", format
 
 
 
-
-
-# PHIPSII FVFM ------------------------------------------------------------
+# PHIPSII NEOXANTHIN ------------------------------------------------------------
 ##### for seedling #####
+neo_seedling <- neo %>% filter(Tissue.code == "sdlg") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(neo_seedling)[colnames(neo_seedling) == 'Mean'] <- 'neo'
+
 phipsii_seedling <- phipsii %>% filter(Tissue.edit == "sdlg") %>% dplyr::select(Species, mean)
 # change "mean" to phipsii
 colnames(phipsii_seedling)[colnames(phipsii_seedling) == 'mean'] <- 'phipsii'
 
-fvfm_seedling <- fvfm %>% filter(Tissue.edit == "sdlg") %>% dplyr::select(Species, mean)
-# change "mean" to fvfm
-colnames(fvfm_seedling)[colnames(fvfm_seedling) == 'mean'] <- 'fvfm'
 
-
-# join phipsii and fvfm 
-phipsii_fvfm_seedling <- full_join(phipsii_seedling, fvfm_seedling, by = "Species")
+# join neo and phipsii 
+neo_phipsii_seedling <- full_join(neo_seedling, phipsii_seedling, by = "Species")
 
 
 # make a duplicate of C_sandwichiana
-# phipsii_fvfm_seedling_C_sandwichiana <- phipsii_fvfm_seedling %>% filter(Species == "C_sandwichiana") 
-# phipsii_fvfm_seedling_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", phipsii_fvfm_seedling_C_sandwichiana$Species)
+# neo_phipsii_seedling_C_sandwichiana <- neo_phipsii_seedling %>% filter(Species == "C_sandwichiana") 
+# neo_phipsii_seedling_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", neo_phipsii_seedling_C_sandwichiana$Species)
 
 # join second sandwichiana to full 
-# phipsii_fvfm_seedling <- rbind(phipsii_fvfm_seedling, phipsii_fvfm_seedling_C_sandwichiana)
+# neo_phipsii_seedling <- rbind(neo_phipsii_seedling, neo_phipsii_seedling_C_sandwichiana)
 
 # replace species names with how they are listed in the tree
-phipsii_fvfm_seedling %>%
+neo_phipsii_seedling %>%
   dplyr::mutate(Species_tree = case_when(
     Species == "C_australis"  ~  "Cuscuta_australis", 
     Species == "C_californica"  ~  "Cuscuta_californica",
@@ -1225,24 +1222,24 @@ phipsii_fvfm_seedling %>%
     Species == "C_epithymum"	~ "Cuscuta_epithymum",
     Species == "C_monogyna"	~ "Cuscuta_monogyna",
     Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
-    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> phipsii_fvfm_seedling
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> neo_phipsii_seedling
 
 # omit Ipomoea 
-phipsii_fvfm_seedling <- phipsii_fvfm_seedling %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+neo_phipsii_seedling <- neo_phipsii_seedling %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
 
-phipsii_fvfm_seedling <- phipsii_fvfm_seedling %>% dplyr::select(Species_tree, phipsii, fvfm)
+neo_phipsii_seedling <- neo_phipsii_seedling %>% dplyr::select(Species_tree, neo, phipsii)
 
-phipsii_fvfm_seedling <- na.omit(phipsii_fvfm_seedling)
+neo_phipsii_seedling <- na.omit(neo_phipsii_seedling)
 
 # transpose df 
-phipsii_fvfm_seedling <- data.table::transpose(phipsii_fvfm_seedling)
-names(phipsii_fvfm_seedling) <- phipsii_fvfm_seedling[1,] # move row 1 to col names
-phipsii_fvfm_seedling <- phipsii_fvfm_seedling[-1,] # delete first row
+neo_phipsii_seedling <- data.table::transpose(neo_phipsii_seedling)
+names(neo_phipsii_seedling) <- neo_phipsii_seedling[1,] # move row 1 to col names
+neo_phipsii_seedling <- neo_phipsii_seedling[-1,] # delete first row
 # add rownames
-rownames(phipsii_fvfm_seedling) <- c("phipsii", "fvfm") # did not need perhaps 
+rownames(neo_phipsii_seedling) <- c("neo", "phipsii") # did not need perhaps 
 
 # write to nexus 
-write.nexus.data(phipsii_fvfm_seedling, file = "../output/phipsii_fvfm_seedling.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(neo_phipsii_seedling, file = "../output/neo_phipsii_seedling.nex", format = "continuous", datablock = TRUE)
 
 
 
@@ -1250,28 +1247,28 @@ write.nexus.data(phipsii_fvfm_seedling, file = "../output/phipsii_fvfm_seedling.
 
 
 ##### for young stem #####
+neo_young <- neo %>% filter(Tissue.code == "y") %>% dplyr::select(Species, Mean)
+# change "Mean" to neo
+colnames(neo_young)[colnames(neo_young) == 'Mean'] <- 'neo'
+
 phipsii_young <- phipsii %>% filter(Tissue.edit == "y") %>% dplyr::select(Species, mean)
 # change "mean" to phipsii
 colnames(phipsii_young)[colnames(phipsii_young) == 'mean'] <- 'phipsii'
 
-fvfm_young <- fvfm %>% filter(Tissue.edit == "y") %>% dplyr::select(Species, mean)
-# change "mean" to fvfm
-colnames(fvfm_young)[colnames(fvfm_young) == 'mean'] <- 'fvfm'
 
-
-# join phipsii and fvfm 
-phipsii_fvfm_young <- full_join(phipsii_young, fvfm_young, by = "Species")
+# join neo and phipsii 
+neo_phipsii_young <- full_join(neo_young, phipsii_young, by = "Species")
 
 
 # make a duplicate of C_sandwichiana
-# phipsii_fvfm_young_C_sandwichiana <- phipsii_fvfm_young %>% filter(Species == "C_sandwichiana") 
-# phipsii_fvfm_young_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", phipsii_fvfm_young_C_sandwichiana$Species)
+# neo_phipsii_young_C_sandwichiana <- neo_phipsii_young %>% filter(Species == "C_sandwichiana") 
+# neo_phipsii_young_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", neo_phipsii_young_C_sandwichiana$Species)
 
 # join second sandwichiana to full 
-# phipsii_fvfm_young <- rbind(phipsii_fvfm_young, phipsii_fvfm_young_C_sandwichiana)
+# neo_phipsii_young <- rbind(neo_phipsii_young, neo_phipsii_young_C_sandwichiana)
 
 # replace species names with how they are listed in the tree
-phipsii_fvfm_young %>%
+neo_phipsii_young %>%
   dplyr::mutate(Species_tree = case_when(
     Species == "C_australis"  ~  "Cuscuta_australis", 
     Species == "C_californica"  ~  "Cuscuta_californica",
@@ -1290,52 +1287,52 @@ phipsii_fvfm_young %>%
     Species == "C_epithymum"	~ "Cuscuta_epithymum",
     Species == "C_monogyna"	~ "Cuscuta_monogyna",
     Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
-    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> phipsii_fvfm_young
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> neo_phipsii_young
 
 # omit Ipomoea 
-phipsii_fvfm_young <- phipsii_fvfm_young %>% dplyr::filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+neo_phipsii_young <- neo_phipsii_young %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
 
-phipsii_fvfm_young <- phipsii_fvfm_young %>% dplyr::select(Species_tree, phipsii, fvfm)
+neo_phipsii_young <- neo_phipsii_young %>% dplyr::select(Species_tree, neo, phipsii)
 
-phipsii_fvfm_young <- na.omit(phipsii_fvfm_young)
+neo_phipsii_young <- na.omit(neo_phipsii_young)
 
 # transpose df 
-phipsii_fvfm_young <- data.table::transpose(phipsii_fvfm_young)
-names(phipsii_fvfm_young) <- phipsii_fvfm_young[1,] # move row 1 to col names
-phipsii_fvfm_young <- phipsii_fvfm_young[-1,] # delete first row
+neo_phipsii_young <- data.table::transpose(neo_phipsii_young)
+names(neo_phipsii_young) <- neo_phipsii_young[1,] # move row 1 to col names
+neo_phipsii_young <- neo_phipsii_young[-1,] # delete first row
 # add rownames
-rownames(phipsii_fvfm_young) <- c("phipsii", "fvfm") # did not need perhaps 
+rownames(neo_phipsii_young) <- c("neo", "phipsii") # did not need perhaps 
 
 # write to nexus 
-write.nexus.data(phipsii_fvfm_young, file = "../output/phipsii_fvfm_young.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(neo_phipsii_young, file = "../output/neo_phipsii_young.nex", format = "continuous", datablock = TRUE)
 
 
 
 
 
 ##### for old stem #####
+neo_old <- neo %>% filter(Tissue.code == "o") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(neo_old)[colnames(neo_old) == 'Mean'] <- 'neo'
+
 phipsii_old <- phipsii %>% filter(Tissue.edit == "o") %>% dplyr::select(Species, mean)
 # change "mean" to phipsii
 colnames(phipsii_old)[colnames(phipsii_old) == 'mean'] <- 'phipsii'
 
-fvfm_old <- fvfm %>% filter(Tissue.edit == "o") %>% dplyr::select(Species, mean)
-# change "mean" to fvfm
-colnames(fvfm_old)[colnames(fvfm_old) == 'mean'] <- 'fvfm'
 
-
-# join phipsii and fvfm 
-phipsii_fvfm_old <- full_join(phipsii_old, fvfm_old, by = "Species")
+# join neo and phipsii 
+neo_phipsii_old <- full_join(neo_old, phipsii_old, by = "Species")
 
 
 # make a duplicate of C_sandwichiana
-# phipsii_fvfm_old_C_sandwichiana <- phipsii_fvfm_old %>% filter(Species == "C_sandwichiana") 
-# phipsii_fvfm_old_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", phipsii_fvfm_old_C_sandwichiana$Species)
+# neo_phipsii_old_C_sandwichiana <- neo_phipsii_old %>% filter(Species == "C_sandwichiana") 
+# neo_phipsii_old_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", neo_phipsii_old_C_sandwichiana$Species)
 
 # join second sandwichiana to full 
-# phipsii_fvfm_old <- rbind(phipsii_fvfm_old, phipsii_fvfm_old_C_sandwichiana)
+# neo_phipsii_old <- rbind(neo_phipsii_old, neo_phipsii_old_C_sandwichiana)
 
 # replace species names with how they are listed in the tree
-phipsii_fvfm_old %>%
+neo_phipsii_old %>%
   dplyr::mutate(Species_tree = case_when(
     Species == "C_australis"  ~  "Cuscuta_australis", 
     Species == "C_californica"  ~  "Cuscuta_californica",
@@ -1354,51 +1351,51 @@ phipsii_fvfm_old %>%
     Species == "C_epithymum"	~ "Cuscuta_epithymum",
     Species == "C_monogyna"	~ "Cuscuta_monogyna",
     Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
-    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> phipsii_fvfm_old
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> neo_phipsii_old
 
 # omit Ipomoea 
-phipsii_fvfm_old <- phipsii_fvfm_old %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+neo_phipsii_old <- neo_phipsii_old %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
 
-phipsii_fvfm_old <- phipsii_fvfm_old %>% dplyr::select(Species_tree, phipsii, fvfm)
+neo_phipsii_old <- neo_phipsii_old %>% dplyr::select(Species_tree, neo, phipsii)
 
-phipsii_fvfm_old <- na.omit(phipsii_fvfm_old)
+neo_phipsii_old <- na.omit(neo_phipsii_old)
 
 # transpose df 
-phipsii_fvfm_old <- data.table::transpose(phipsii_fvfm_old)
-names(phipsii_fvfm_old) <- phipsii_fvfm_old[1,] # move row 1 to col names
-phipsii_fvfm_old <- phipsii_fvfm_old[-1,] # delete first row
+neo_phipsii_old <- data.table::transpose(neo_phipsii_old)
+names(neo_phipsii_old) <- neo_phipsii_old[1,] # move row 1 to col names
+neo_phipsii_old <- neo_phipsii_old[-1,] # delete first row
 # add rownames
-rownames(phipsii_fvfm_old) <- c("phipsii", "fvfm") # did not need perhaps 
+rownames(neo_phipsii_old) <- c("neo", "phipsii") # did not need perhaps 
 
 # write to nexus 
-write.nexus.data(phipsii_fvfm_old, file = "../output/phipsii_fvfm_old.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(neo_phipsii_old, file = "../output/neo_phipsii_old.nex", format = "continuous", datablock = TRUE)
 
 
 
 
 ##### for haustorium #####
+neo_haustorium <- neo %>% filter(Tissue.code == "h") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(neo_haustorium)[colnames(neo_haustorium) == 'Mean'] <- 'neo'
+
 phipsii_haustorium <- phipsii %>% filter(Tissue.edit == "h") %>% dplyr::select(Species, mean)
 # change "mean" to phipsii
 colnames(phipsii_haustorium)[colnames(phipsii_haustorium) == 'mean'] <- 'phipsii'
 
-fvfm_haustorium <- fvfm %>% filter(Tissue.edit == "h") %>% dplyr::select(Species, mean)
-# change "mean" to fvfm
-colnames(fvfm_haustorium)[colnames(fvfm_haustorium) == 'mean'] <- 'fvfm'
 
-
-# join phipsii and fvfm 
-phipsii_fvfm_haustorium <- full_join(phipsii_haustorium, fvfm_haustorium, by = "Species")
+# join neo and phipsii 
+neo_phipsii_haustorium <- full_join(neo_haustorium, phipsii_haustorium, by = "Species")
 
 
 # make a duplicate of C_sandwichiana
-# phipsii_fvfm_haustorium_C_sandwichiana <- phipsii_fvfm_haustorium %>% filter(Species == "C_sandwichiana") 
-# phipsii_fvfm_haustorium_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", phipsii_fvfm_haustorium_C_sandwichiana$Species)
+# neo_phipsii_haustorium_C_sandwichiana <- neo_phipsii_haustorium %>% filter(Species == "C_sandwichiana") 
+# neo_phipsii_haustorium_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", neo_phipsii_haustorium_C_sandwichiana$Species)
 
 # join second sandwichiana to full 
-# phipsii_fvfm_haustorium <- rbind(phipsii_fvfm_haustorium, phipsii_fvfm_haustorium_C_sandwichiana)
+# neo_phipsii_haustorium <- rbind(neo_phipsii_haustorium, neo_phipsii_haustorium_C_sandwichiana)
 
 # replace species names with how they are listed in the tree
-phipsii_fvfm_haustorium %>%
+neo_phipsii_haustorium %>%
   dplyr::mutate(Species_tree = case_when(
     Species == "C_australis"  ~  "Cuscuta_australis", 
     Species == "C_californica"  ~  "Cuscuta_californica",
@@ -1417,51 +1414,51 @@ phipsii_fvfm_haustorium %>%
     Species == "C_epithymum"	~ "Cuscuta_epithymum",
     Species == "C_monogyna"	~ "Cuscuta_monogyna",
     Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
-    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> phipsii_fvfm_haustorium
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> neo_phipsii_haustorium
 
 # omit Ipomoea 
-phipsii_fvfm_haustorium <- phipsii_fvfm_haustorium %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+neo_phipsii_haustorium <- neo_phipsii_haustorium %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
 
-phipsii_fvfm_haustorium <- phipsii_fvfm_haustorium %>% dplyr::select(Species_tree, phipsii, fvfm)
+neo_phipsii_haustorium <- neo_phipsii_haustorium %>% dplyr::select(Species_tree, neo, phipsii)
 
-phipsii_fvfm_haustorium <- na.omit(phipsii_fvfm_haustorium)
+neo_phipsii_haustorium <- na.omit(neo_phipsii_haustorium)
 
 # transpose df 
-phipsii_fvfm_haustorium <- data.table::transpose(phipsii_fvfm_haustorium)
-names(phipsii_fvfm_haustorium) <- phipsii_fvfm_haustorium[1,] # move row 1 to col names
-phipsii_fvfm_haustorium <- phipsii_fvfm_haustorium[-1,] # delete first row
+neo_phipsii_haustorium <- data.table::transpose(neo_phipsii_haustorium)
+names(neo_phipsii_haustorium) <- neo_phipsii_haustorium[1,] # move row 1 to col names
+neo_phipsii_haustorium <- neo_phipsii_haustorium[-1,] # delete first row
 # add rownames
-rownames(phipsii_fvfm_haustorium) <- c("phipsii", "fvfm") # did not need perhaps 
+rownames(neo_phipsii_haustorium) <- c("neo", "phipsii") # did not need perhaps 
 
 # write to nexus 
-write.nexus.data(phipsii_fvfm_haustorium, file = "../output/phipsii_fvfm_haustorium.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(neo_phipsii_haustorium, file = "../output/neo_phipsii_haustorium.nex", format = "continuous", datablock = TRUE)
 
 
 
 
 ##### for flower #####
+neo_flower <- neo %>% filter(Tissue.code == "f") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(neo_flower)[colnames(neo_flower) == 'Mean'] <- 'neo'
+
 phipsii_flower <- phipsii %>% filter(Tissue.edit == "f") %>% dplyr::select(Species, mean)
 # change "mean" to phipsii
 colnames(phipsii_flower)[colnames(phipsii_flower) == 'mean'] <- 'phipsii'
 
-fvfm_flower <- fvfm %>% filter(Tissue.edit == "f") %>% dplyr::select(Species, mean)
-# change "mean" to fvfm
-colnames(fvfm_flower)[colnames(fvfm_flower) == 'mean'] <- 'fvfm'
 
-
-# join phipsii and fvfm 
-phipsii_fvfm_flower <- full_join(phipsii_flower, fvfm_flower, by = "Species")
+# join neo and phipsii 
+neo_phipsii_flower <- full_join(neo_flower, phipsii_flower, by = "Species")
 
 
 # make a duplicate of C_sandwichiana
-# phipsii_fvfm_flower_C_sandwichiana <- phipsii_fvfm_flower %>% filter(Species == "C_sandwichiana") 
-# phipsii_fvfm_flower_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", phipsii_fvfm_flower_C_sandwichiana$Species)
+# neo_phipsii_flower_C_sandwichiana <- neo_phipsii_flower %>% filter(Species == "C_sandwichiana") 
+# neo_phipsii_flower_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", neo_phipsii_flower_C_sandwichiana$Species)
 
 # join second sandwichiana to full 
-# phipsii_fvfm_flower <- rbind(phipsii_fvfm_flower, phipsii_fvfm_flower_C_sandwichiana)
+# neo_phipsii_flower <- rbind(neo_phipsii_flower, neo_phipsii_flower_C_sandwichiana)
 
 # replace species names with how they are listed in the tree
-phipsii_fvfm_flower %>%
+neo_phipsii_flower %>%
   dplyr::mutate(Species_tree = case_when(
     Species == "C_australis"  ~  "Cuscuta_australis", 
     Species == "C_californica"  ~  "Cuscuta_californica",
@@ -1480,51 +1477,51 @@ phipsii_fvfm_flower %>%
     Species == "C_epithymum"	~ "Cuscuta_epithymum",
     Species == "C_monogyna"	~ "Cuscuta_monogyna",
     Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
-    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> phipsii_fvfm_flower
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> neo_phipsii_flower
 
 # omit Ipomoea 
-phipsii_fvfm_flower <- phipsii_fvfm_flower %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+neo_phipsii_flower <- neo_phipsii_flower %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
 
-phipsii_fvfm_flower <- phipsii_fvfm_flower %>% dplyr::select(Species_tree, phipsii, fvfm)
+neo_phipsii_flower <- neo_phipsii_flower %>% dplyr::select(Species_tree, neo, phipsii)
 
-phipsii_fvfm_flower <- na.omit(phipsii_fvfm_flower)
+neo_phipsii_flower <- na.omit(neo_phipsii_flower)
 
 # transpose df 
-phipsii_fvfm_flower <- data.table::transpose(phipsii_fvfm_flower)
-names(phipsii_fvfm_flower) <- phipsii_fvfm_flower[1,] # move row 1 to col names
-phipsii_fvfm_flower <- phipsii_fvfm_flower[-1,] # delete first row
+neo_phipsii_flower <- data.table::transpose(neo_phipsii_flower)
+names(neo_phipsii_flower) <- neo_phipsii_flower[1,] # move row 1 to col names
+neo_phipsii_flower <- neo_phipsii_flower[-1,] # delete first row
 # add rownames
-rownames(phipsii_fvfm_flower) <- c("phipsii", "fvfm") # did not need perhaps 
+rownames(neo_phipsii_flower) <- c("neo", "phipsii") # did not need perhaps 
 
 # write to nexus 
-write.nexus.data(phipsii_fvfm_flower, file = "../output/phipsii_fvfm_flower.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(neo_phipsii_flower, file = "../output/neo_phipsii_flower.nex", format = "continuous", datablock = TRUE)
 
 
 
 
 ##### for seed #####
+neo_seed <- neo %>% filter(Tissue.code == "s") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(neo_seed)[colnames(neo_seed) == 'Mean'] <- 'neo'
+
 phipsii_seed <- phipsii %>% filter(Tissue.edit == "s") %>% dplyr::select(Species, mean)
 # change "mean" to phipsii
 colnames(phipsii_seed)[colnames(phipsii_seed) == 'mean'] <- 'phipsii'
 
-fvfm_seed <- fvfm %>% filter(Tissue.edit == "s") %>% dplyr::select(Species, mean)
-# change "mean" to fvfm
-colnames(fvfm_seed)[colnames(fvfm_seed) == 'mean'] <- 'fvfm'
 
-
-# join phipsii and fvfm 
-phipsii_fvfm_seed <- full_join(phipsii_seed, fvfm_seed, by = "Species")
+# join neo and phipsii 
+neo_phipsii_seed <- full_join(neo_seed, phipsii_seed, by = "Species")
 
 
 # make a duplicate of C_sandwichiana
-# phipsii_fvfm_seed_C_sandwichiana <- phipsii_fvfm_seed %>% filter(Species == "C_sandwichiana") 
-# phipsii_fvfm_seed_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", phipsii_fvfm_seed_C_sandwichiana$Species)
+# neo_phipsii_seed_C_sandwichiana <- neo_phipsii_seed %>% filter(Species == "C_sandwichiana") 
+# neo_phipsii_seed_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", neo_phipsii_seed_C_sandwichiana$Species)
 
 # join second sandwichiana to full 
-# phipsii_fvfm_seed <- rbind(phipsii_fvfm_seed, phipsii_fvfm_seed_C_sandwichiana)
+# neo_phipsii_seed <- rbind(neo_phipsii_seed, neo_phipsii_seed_C_sandwichiana)
 
 # replace species names with how they are listed in the tree
-phipsii_fvfm_seed %>%
+neo_phipsii_seed %>%
   dplyr::mutate(Species_tree = case_when(
     Species == "C_australis"  ~  "Cuscuta_australis", 
     Species == "C_californica"  ~  "Cuscuta_californica",
@@ -1543,22 +1540,24 @@ phipsii_fvfm_seed %>%
     Species == "C_epithymum"	~ "Cuscuta_epithymum",
     Species == "C_monogyna"	~ "Cuscuta_monogyna",
     Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
-    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> phipsii_fvfm_seed
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> neo_phipsii_seed
 
 # omit Ipomoea 
-phipsii_fvfm_seed <- phipsii_fvfm_seed %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+neo_phipsii_seed <- neo_phipsii_seed %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
 
-phipsii_fvfm_seed <- phipsii_fvfm_seed %>% dplyr::select(Species_tree, phipsii, fvfm)
+neo_phipsii_seed <- neo_phipsii_seed %>% dplyr::select(Species_tree, neo, phipsii)
 
-phipsii_fvfm_seed <- na.omit(phipsii_fvfm_seed)
+neo_phipsii_seed <- na.omit(neo_phipsii_seed)
 
 # transpose df 
-phipsii_fvfm_seed <- data.table::transpose(phipsii_fvfm_seed)
-names(phipsii_fvfm_seed) <- phipsii_fvfm_seed[1,] # move row 1 to col names
-phipsii_fvfm_seed <- phipsii_fvfm_seed[-1,] # delete first row
+neo_phipsii_seed <- data.table::transpose(neo_phipsii_seed)
+names(neo_phipsii_seed) <- neo_phipsii_seed[1,] # move row 1 to col names
+neo_phipsii_seed <- neo_phipsii_seed[-1,] # delete first row
 # add rownames
-rownames(phipsii_fvfm_seed) <- c("phipsii", "fvfm") # did not need perhaps 
+rownames(neo_phipsii_seed) <- c("neo", "phipsii") # did not need perhaps 
 
 # write to nexus 
-write.nexus.data(phipsii_fvfm_seed, file = "../output/phipsii_fvfm_seed.nex", format = "continuous", datablock = TRUE)
+write.nexus.data(neo_phipsii_seed, file = "../output/neo_phipsii_seed.nex", format = "continuous", datablock = TRUE)
+
+
 
