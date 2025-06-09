@@ -4,7 +4,7 @@ library(dplyr)
 library(colorBlindness)
 library(patchwork)
 library(grid)
-library(data.table)
+library(data.table) # new
 # install.packages("BiocManager")
 # BiocManager::install("phyloseq")
 library(phyloseq)
