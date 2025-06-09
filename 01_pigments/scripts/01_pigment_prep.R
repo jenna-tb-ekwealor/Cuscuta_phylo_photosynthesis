@@ -1,12 +1,14 @@
 # http://www.sthda.com/english/wiki/r-xlsx-package-a-quick-start-guide-to-manipulate-excel-files-in-r
 # https://www.oracle.com/java/technologies/javase-jdk16-downloads.html
 # library(rJava)
-library(xlsx)
+library(openxlsx) # new
 library(tidyverse)
 library(plyr)
 library(rstatix)
 library(gtools)
 library(rstudioapi)
+library(FSA) # new
+library(data.table) # new
 
 # Getting the path of your current open file
 # if not using rstudio, simply set your working directory to the scripts/ location of this script
@@ -18,7 +20,10 @@ setwd(dirname(current_path ))
 
 # load data
 # skip the first row which has units info (check raw csv for units)
-samples <- read.csv("../data/pigment_organized_data_tab_AS_edit.csv", skip = 1, header = T, stringsAsFactors = FALSE, na.strings = c("NA","NaN","","#DIV/0!")) 
+samples <- read.csv("../data/pigment_organized_data_tab_AS_edit.csv", 
+                    skip = 1, header = T, 
+                    stringsAsFactors = FALSE, 
+                    na.strings = c("NA","NaN","","#DIV/0!")) 
 
 
 #### data cleaning ####
@@ -70,7 +75,8 @@ samples %>%
 samples$Tissue.code <- factor(samples$Tissue.code, levels = c("l", "sdlg", "y", "o", "h", "f", "s"))
 
 
-#### select ng pigments, remove peak.11.9 column, omit d-Tocopherol because no standard and it's in area not ng ####
+#### subset data ####
+# select ng pigments, remove peak.11.9 column, omit d-Tocopherol because no standard and it's in area not ng
 samples %>% select( -peak.11.9) %>% select( -d.Tocopherol) %>% select(Date.Extracted:Chl.a, Car.Chl31) -> samples
 
 #### remove erroneous rows ####
@@ -256,52 +262,83 @@ for(pig in pigment_list) {
   rstatix::kruskal_test(FW.norm ~ Subgenus.Tissue, data = data_loop_kruskal) -> kruskal_big_list[[pig]]
 }
 
+
 # all highly sig, move on to post hoc 
-wilcox_big_list <- list()
+# REPLACED wilcox WITH dunnTest
+dunn_big_list <- list()
 pigment_list <- unique(data_long_calcs$Pigment)
+
 for(pig in pigment_list) {
-  data_loop_wilcox <- data_long_calcs %>% filter(Pigment == pig) 
-  data_loop_wilcox$Tissue.code_names <- droplevels(data_loop_wilcox$Tissue.code_names)
-  pairwise.wilcox.test(data_loop_wilcox$FW.norm, data_loop_wilcox$Subgenus.Tissue, p.adjust.method = "BH") -> wilcox_big_list[[pig]]
+  data_loop_dunn <- data_long_calcs %>% filter(Pigment == pig)
+  data_loop_dunn$Tissue.code_names <- droplevels(data_loop_dunn$Tissue.code_names)
+  
+  # dunnTest requires a formula: response ~ group
+  dunnTest(FW.norm ~ Subgenus.Tissue, data = data_loop_dunn, method = "bh") -> dunn_big_list[[pig]]
 }
 
 # export only plotted pigments
 plotted_pigs <- c("Chl.a", "Chl.b", "Tot.Chl", "Chl.a.b", "VAZ", "Neoxanthin", "Lutein.epoxide", "Lutein", "a.Carotene", "b.Carotene", "Tot.Car", "NVZ.Car")
-# format p-values, NAs, and column headers
+
 excel_list <- list()
 for(pig in plotted_pigs) {
-  sheet_loop <- wilcox_big_list[[pig]][["p.value"]] 
-  rownames(sheet_loop) <- gsub(x = rownames(sheet_loop), pattern = "__", replacement = ".Tissue.")  
-  colnames(sheet_loop) <- gsub(x = colnames(sheet_loop), pattern = "__", replacement = ".Tissue.")
-  rownames(sheet_loop) <- gsub(x = rownames(sheet_loop), pattern = "_", replacement = ". ")  
-  colnames(sheet_loop) <- gsub(x = colnames(sheet_loop), pattern = "_", replacement = ". ") 
-  sheet_loop[is.na(sheet_loop)] <- "-"
-  rownames(sheet_loop) <- gsub(x = rownames(sheet_loop), pattern = ".Tissue.", replacement = "__")  
-  colnames(sheet_loop) <- gsub(x = colnames(sheet_loop), pattern = ".Tissue.", replacement = "__")  
-  rbind(colnames(sheet_loop), sheet_loop) -> sheet_loop
-  cbind(rownames(sheet_loop), sheet_loop) -> sheet_loop
-  setNames(rbind(names(sheet_loop), sheet_loop), names(sheet_loop)) -> sheet_loop
-  sheet_loop <- separate(as.data.frame(sheet_loop), 1, into = c("Subgenus", "Tissue"), sep = "__")
+  # extract Dunn results
+  dunn_df <- dunn_big_list[[pig]]$res
+  
+  # split the comparison column into two groups
+  dunn_df <- dunn_df %>%
+    separate(Comparison, into = c("Group1", "Group2"), sep = " - ") %>%
+    select(Group1, Group2, P.adj)
+  
+  # create a square matrix of adjusted p-values
+  group_levels <- unique(c(dunn_df$Group1, dunn_df$Group2))
+  pmat <- matrix(NA, nrow = length(group_levels), ncol = length(group_levels),
+                 dimnames = list(group_levels, group_levels))
+  
+  for (i in 1:nrow(dunn_df)) {
+    g1 <- dunn_df$Group1[i]
+    g2 <- dunn_df$Group2[i]
+    p <- dunn_df$P.adj[i]
+    pmat[g1, g2] <- p
+    pmat[g2, g1] <- p  # fill both halves for symmetry
+  }
+  
+  # cleanup to match your existing formatting
+  rownames(pmat) <- gsub("__", ".Tissue.", rownames(pmat))
+  colnames(pmat) <- gsub("__", ".Tissue.", colnames(pmat))
+  rownames(pmat) <- gsub("_", ". ", rownames(pmat))
+  colnames(pmat) <- gsub("_", ". ", colnames(pmat))
+  pmat[is.na(pmat)] <- "-"
+  rownames(pmat) <- gsub(".Tissue.", "__", rownames(pmat))
+  colnames(pmat) <- gsub(".Tissue.", "__", colnames(pmat))
+  
+  pmat <- rbind(colnames(pmat), pmat)
+  pmat <- cbind(rownames(pmat), pmat)
+  pmat <- setNames(rbind(names(pmat), pmat), names(pmat))
+  sheet_loop <- separate(as.data.frame(pmat), 1, into = c("Subgenus", "Tissue"), sep = "__")
   sheet_loop <- as.data.frame(data.table::transpose(sheet_loop))
   sheet_loop <- separate(sheet_loop, 1, into = c("Subgenus", "Tissue"), sep = "__")
-  sheet_loop <- data.frame(lapply(sheet_loop, function(x) {gsub("Ipomoea.", "Ipomoea", x)})) 
+  sheet_loop <- data.frame(lapply(sheet_loop, function(x) gsub("Ipomoea.", "Ipomoea", x)))
   sheet_loop <- data.table::transpose(sheet_loop)
+  
   excel_list[[pig]] <- sheet_loop
 }
 
-# save pairwise wilcox test with a different sheet for each pigment
-write.xlsx(excel_list[["Chl.a"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="Chl.a", row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["Chl.b"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="Chl.b", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["Tot.Chl"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="Tot.Chl", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["Chl.a.b"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="Chl.a.b", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["VAZ"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="VAZ", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["Neoxanthin"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="Neoxanthin", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["Lutein.epoxide"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="Lutein.epoxide", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["Lutein"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="Lutein", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["a.Carotene"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="a.Carotene", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["b.Carotene"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="b.Carotene", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["Tot.Car"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="Tot.Car", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["NVZ.Car"]], file="../output/stat_results/pairwise_allpigsxtissues.xlsx", sheetName="NVZ.Car", append=TRUE, row.names=FALSE, col.names=FALSE)
+# save pairwise posthoc results to a separate tab of an excel file each
+# Define output file path
+output_file <- "../output/stat_results/pairwise_allpigsxtissues.xlsx"
+
+# Create a new workbook
+wb <- createWorkbook()
+
+# Loop over pigments and write each to its own sheet
+for (pig in names(excel_list)) {
+  addWorksheet(wb, sheetName = pig)
+  writeData(wb, sheet = pig, x = excel_list[[pig]], rowNames = FALSE, colNames = FALSE)
+}
+
+# Save the workbook
+saveWorkbook(wb, file = output_file, overwrite = TRUE)
+
 
 
 
@@ -376,7 +413,7 @@ filter(data_long_calcs, Subgenus.Pigment %in% kruskal_Tissue_pig_sub_sig_vector)
 
 ####### #######
 # perform posthoc on these
-# filter for one pigment x subgenus then do a pairwise wilcox on those
+# filter for one pigment x subgenus then do a pairwise dunn test on those
 # after getting it working for one, set up loop to do for all combos (for those that had a positive kruskal-wallace at least)
 # add these to individual plots that then get arranged with patchwork package
 
@@ -384,18 +421,18 @@ only_sig_pig$Pigment <- droplevels(only_sig_pig$Pigment)
 subgenuspigment_list <- unique(only_sig_pig$Subgenus.Pigment)
 only_sig_pig$log.FW.norm <- log(only_sig_pig$FW.norm)
 
-wilcox_list <- list()
+dunn_list <- list()
 for(subpig in subgenuspigment_list) {
-data_loop_wilcox <- only_sig_pig %>% filter(Subgenus.Pigment == subpig) 
-data_loop_wilcox$Tissue.code <- droplevels(data_loop_wilcox$Tissue.code)
-data_loop_wilcox$Pigment <- droplevels(data_loop_wilcox$Pigment)
-pairwise.wilcox.test(data_loop_wilcox$FW.norm, data_loop_wilcox$Tissue.code, p.adjust.method = "BH") -> wilcox_list[[subpig]]
+  data_loop_dunn <- only_sig_pig %>% filter(Subgenus.Pigment == subpig)
+  data_loop_dunn$Tissue.code <- droplevels(data_loop_dunn$Tissue.code)
+  data_loop_dunn$Pigment <- droplevels(data_loop_dunn$Pigment)
+  
+  # Run Dunn test with BH correction
+  dunnTest(FW.norm ~ Tissue.code, data = data_loop_dunn, method = "bh") -> dunn_list[[subpig]]
 }
 
 # save this list for later use 
-saveRDS(wilcox_list, file="../output/stat_results/wilcox_list.RData")
-
-
+saveRDS(dunn_list, file="../output/stat_results/dunn_list.RData")
 
 
 # create a dataframe using the kruskal wallace results
@@ -606,7 +643,7 @@ write_csv(data_long_calcs_Grammica_plot, file = "../output/stat_results/data_lon
 
 ####### #######
 # perform posthoc on these
-# dplyr::filter for one pigment x subgenus then do a pairwise wilcox on those
+# dplyr::filter for one pigment x subgenus then do a pairwise dunn test on those
 # after getting it working for one, set up loop to do for all combos (for those that had a positive kruskal-wallace at least)
 # add these to individual plots that then get arranged with patchwork package
 
@@ -614,16 +651,17 @@ only_sig_pig_Grammica$Pigment <- droplevels(only_sig_pig_Grammica$Pigment)
 specispigment_list <- unique(only_sig_pig_Grammica$Species.Pigment)
 only_sig_pig_Grammica$log.FW.norm <- log(only_sig_pig_Grammica$FW.norm)
 
-wilcox_list_Grammica <- list()
+dunn_list_Grammica <- list()
 for(spepig in specispigment_list) {
-  data_loop_wilcox <- only_sig_pig_Grammica %>% dplyr::filter(Species.Pigment == spepig) 
-  data_loop_wilcox$Tissue.code <- droplevels(data_loop_wilcox$Tissue.code)
-  data_loop_wilcox$Pigment <- droplevels(data_loop_wilcox$Pigment)
-  pairwise.wilcox.test(data_loop_wilcox$FW.norm, data_loop_wilcox$Tissue.code, p.adjust.method = "BH") -> wilcox_list_Grammica[[spepig]]
+  data_loop_dunn <- only_sig_pig_Grammica %>% dplyr::filter(Species.Pigment == spepig)
+  data_loop_dunn$Tissue.code <- droplevels(data_loop_dunn$Tissue.code)
+  data_loop_dunn$Pigment <- droplevels(data_loop_dunn$Pigment)
+  
+  dunnTest(FW.norm ~ Tissue.code, data = data_loop_dunn, method = "bh") -> dunn_list_Grammica[[spepig]]
 }
 
 # save this list for later use 
-saveRDS(wilcox_list_Grammica, file="../output/stat_results/wilcox_list_Grammica.RData")
+saveRDS(dunn_list_Grammica, file="../output/stat_results/dunn_list_Grammica.RData")
 
 
 
@@ -632,7 +670,7 @@ saveRDS(wilcox_list_Grammica, file="../output/stat_results/wilcox_list_Grammica.
 # edit scientific notation 
 kruskal_Tissue_pig_spe_Grammica$p.adj <- kruskal_Tissue_pig_spe_Grammica$p.adj %>% p_round(digits = 3)
 
-# # will need to add wilcox test asterisks to each tissue in each box of the subgenus boxplot from posthoc_pig_spe (including ns?)
+# # will need to add dunn test asterisks to each tissue in each box of the subgenus boxplot from posthoc_pig_spe (including ns?)
 
 
 # create a dataframe using the kruskal wallace results

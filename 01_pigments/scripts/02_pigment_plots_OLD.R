@@ -38,17 +38,64 @@ dat_text_plot_kruskal <- read.csv(file = "../output/stat_results/dat_text_plot_k
 data_long_calcs_Grammica_plot <- read.csv(file = "../output/stat_results/data_long_calcs_for_Grammica_plots.csv", stringsAsFactors = T)
 dat_text_plot_kruskal_Grammica <- read.csv(file = "../output/stat_results/dat_text_plot_kruskal_Grammica.csv")
 summary_accession <- read.csv(file = "../output/stat_results/pigments_species_summary.csv", stringsAsFactors = T)
-wilcox_list <- readRDS("../output/stat_results/wilcox_list.RData")
-wilcox_list_Grammica <- readRDS("../output/stat_results/wilcox_list_Grammica.RData")
+dunn_list_before <- readRDS("../output/stat_results/dunn_list.RData")
+dunn_list_before_Grammica <- readRDS("../output/stat_results/dunn_list_Grammica.RData")
+# wilcox_list <- readRDS("../output/stat_results/wilcox_list.RData")
+# wilcox_list_Grammica <- readRDS("../output/stat_results/wilcox_list_Grammica.RData")
+
+
+# Convert dunn_list to Wilcoxon-style structure with only lower triangle filled
+dunn_formatting <- function(name, dunn_obj, data_name = "dunn_data") {
+  dunn_df <- dunn_obj[[name]]$res
+  comps <- strsplit(dunn_df$Comparison, " - ")
+  
+  # Build list of groups only used as LHS (i.e., rows in Wilcoxon)
+  row_groups <- sapply(comps, function(x) x[2])  # second element = row
+  col_groups <- sapply(comps, function(x) x[1])  # first element = col
+  row_levels <- unique(row_groups)
+  col_levels <- unique(col_groups)
+  
+  # Init matrix with NA, only rows > cols
+  pmat <- matrix(NA, nrow = length(row_levels), ncol = length(col_levels),
+                 dimnames = list(row_levels, col_levels))
+  
+  for (i in seq_along(comps)) {
+    g1 <- comps[[i]][1]
+    g2 <- comps[[i]][2]
+    pval <- dunn_df$P.adj[i]
+    
+    if (g2 %in% row_levels && g1 %in% col_levels) {
+      pmat[g2, g1] <- pval  # match Wilcoxon: rows > columns
+    }
+  }
+  
+  structure(list(
+    method = "Dunn test with BH correction",
+    data.name = data_name,
+    p.value = pmat
+  ), class = "pairwise.htest")
+}
+
+dunn_list_Grammica <- list()
+for (name in names(dunn_list_before_Grammica)) {
+  dunn_list_Grammica[[name]] <- dunn_formatting(name, dunn_list_before_Grammica, data_name = name)
+}
+
+dunn_list <- list()
+for (name in names(dunn_list_before)) {
+  dunn_list[[name]] <- dunn_formatting(name, dunn_list_before, data_name = name)
+}
 
 
 #### CHLOROPHYLL PLOTS ####
 
 #### Chl.a Ipomoea_nil ####
 data_ipomoea <-  dplyr::filter(data_long_calcs, Subgenus == "Ipomoea_nil")
-data_ipomoea_Chl.a <- dplyr::filter(data_ipomoea, Pigment == "Chl.a")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
 data_ipomoea$Tissue.code <- factor(data_ipomoea$Tissue.code, levels = c("l", "y", "o", "f", "s"))
+
+data_ipomoea_Chl.a <- dplyr::filter(data_ipomoea, Pigment == "Chl.a")
+
 
 Chl.a_ipomoea_boxplot <- ggplot(data_ipomoea_Chl.a, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
   scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
@@ -93,7 +140,7 @@ top_positions_Chl.a_ipomoea <- boxplot_positions_Chl.a_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__Chl.a"]])[["Letters"]])
+cbd_Chl.a_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Chl.a"]])[["Letters"]])
 colnames(cbd_Chl.a_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 data.table::setDT(cbd_Chl.a_ipomoea, keep.rownames = "Tissue.code")
@@ -168,7 +215,7 @@ top_positions_Chl.b_ipomoea <- boxplot_positions_Chl.b_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__Chl.b"]])[["Letters"]])
+cbd_Chl.b_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 data.table::setDT(cbd_Chl.b_ipomoea, keep.rownames = "Tissue.code")
@@ -246,7 +293,7 @@ top_positions_Tot.Chl_ipomoea <- boxplot_positions_Tot.Chl_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_ipomoea, keep.rownames = "Tissue.code")
@@ -323,7 +370,7 @@ top_positions_Chl.a.b_ipomoea <- boxplot_positions_Chl.a.b_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a.b_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__Chl.a.b"]])[["Letters"]])
+cbd_Chl.a.b_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Chl.a.b"]])[["Letters"]])
 colnames(cbd_Chl.a.b_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a.b_ipomoea, keep.rownames = "Tissue.code")
@@ -415,7 +462,7 @@ top_positions_Chl.a_Monogynella <- boxplot_positions_Chl.a_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__Chl.a"]])[["Letters"]])
+cbd_Chl.a_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Chl.a"]])[["Letters"]])
 colnames(cbd_Chl.a_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a_Monogynella, keep.rownames = "Tissue.code")
@@ -473,7 +520,7 @@ top_positions_Chl.a_Cuscuta <- boxplot_positions_Chl.a_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__Chl.a"]])[["Letters"]])
+cbd_Chl.a_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Chl.a"]])[["Letters"]])
 colnames(cbd_Chl.a_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a_Cuscuta, keep.rownames = "Tissue.code")
@@ -533,7 +580,7 @@ top_positions_Chl.a_Grammica <- boxplot_positions_Chl.a_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__Chl.a"]])[["Letters"]])
+cbd_Chl.a_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Chl.a"]])[["Letters"]])
 colnames(cbd_Chl.a_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a_Grammica, keep.rownames = "Tissue.code")
@@ -611,7 +658,7 @@ top_positions_Chl.a_C_purpurata <- boxplot_positions_Chl.a_C_purpurata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["C_purpurata__Chl.a"]])[["Letters"]])
+cbd_Chl.a_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__Chl.a"]])[["Letters"]])
 colnames(cbd_Chl.a_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a_C_purpurata, keep.rownames = "Tissue.code")
@@ -705,7 +752,7 @@ top_positions_Chl.b_Monogynella <- boxplot_positions_Chl.b_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__Chl.b"]])[["Letters"]])
+cbd_Chl.b_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_Monogynella, keep.rownames = "Tissue.code")
@@ -762,7 +809,7 @@ top_positions_Chl.b_Cuscuta <- boxplot_positions_Chl.b_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__Chl.b"]])[["Letters"]])
+cbd_Chl.b_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_Cuscuta, keep.rownames = "Tissue.code")
@@ -818,7 +865,7 @@ top_positions_Chl.b_Grammica <- boxplot_positions_Chl.b_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__Chl.b"]])[["Letters"]])
+cbd_Chl.b_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_Grammica, keep.rownames = "Tissue.code")
@@ -945,7 +992,7 @@ top_positions_Tot.Chl_Monogynella <- boxplot_positions_Tot.Chl_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_Monogynella, keep.rownames = "Tissue.code")
@@ -1002,7 +1049,7 @@ top_positions_Tot.Chl_Cuscuta <- boxplot_positions_Tot.Chl_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_Cuscuta, keep.rownames = "Tissue.code")
@@ -1060,7 +1107,7 @@ top_positions_Tot.Chl_Grammica <- boxplot_positions_Tot.Chl_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_Grammica, keep.rownames = "Tissue.code")
@@ -1140,7 +1187,7 @@ top_positions_Tot.Chl_C_purpurata <- boxplot_positions_Tot.Chl_C_purpurata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["C_purpurata__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_C_purpurata, keep.rownames = "Tissue.code")
@@ -1233,7 +1280,7 @@ top_positions_Chl.a.b_Monogynella <- boxplot_positions_Chl.a.b_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a.b_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__Chl.a.b"]])[["Letters"]])
+cbd_Chl.a.b_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Chl.a.b"]])[["Letters"]])
 colnames(cbd_Chl.a.b_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a.b_Monogynella, keep.rownames = "Tissue.code")
@@ -1290,7 +1337,7 @@ top_positions_Chl.a.b_Cuscuta <- boxplot_positions_Chl.a.b_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a.b_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__Chl.a.b"]])[["Letters"]])
+cbd_Chl.a.b_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Chl.a.b"]])[["Letters"]])
 colnames(cbd_Chl.a.b_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a.b_Cuscuta, keep.rownames = "Tissue.code")
@@ -1347,7 +1394,7 @@ top_positions_Chl.a.b_Grammica <- boxplot_positions_Chl.a.b_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a.b_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__Chl.a.b"]])[["Letters"]])
+cbd_Chl.a.b_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Chl.a.b"]])[["Letters"]])
 colnames(cbd_Chl.a.b_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a.b_Grammica, keep.rownames = "Tissue.code")
@@ -1446,9 +1493,9 @@ dev.off()
 
 #### VAZ.Car Ipomoea_nil ####
 data_ipomoea <-  dplyr::filter(data_long_calcs, Subgenus == "Ipomoea_nil")
+data_ipomoea$Tissue.code <- factor(data_ipomoea$Tissue.code, levels = c("l", "y", "o", "f", "s"))
 data_ipomoea_VAZ.Car <- dplyr::filter(data_ipomoea, Pigment == "VAZ.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_ipomoea$Tissue.code <- factor(data_ipomoea$Tissue.code, levels = c("l", "y", "o", "f", "s"))
 
 VAZ.Car_ipomoea_boxplot <- ggplot(data_ipomoea_VAZ.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
   scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
@@ -1493,7 +1540,7 @@ top_positions_VAZ.Car_ipomoea <- boxplot_positions_VAZ.Car_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_ipomoea, keep.rownames = "Tissue.code")
@@ -1567,7 +1614,7 @@ top_positions_Neoxanthin_ipomoea <- boxplot_positions_Neoxanthin_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Neoxanthin_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__Neo.Car"]])[["Letters"]])
+cbd_Neoxanthin_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Neo.Car"]])[["Letters"]])
 colnames(cbd_Neoxanthin_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Neoxanthin_ipomoea, keep.rownames = "Tissue.code")
@@ -1682,7 +1729,7 @@ top_positions_Lutein_ipomoea <- boxplot_positions_Lutein_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__Lut.Car"]])[["Letters"]])
+cbd_Lutein_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_ipomoea, keep.rownames = "Tissue.code")
@@ -1761,7 +1808,7 @@ top_positions_a.Carotene_ipomoea <- boxplot_positions_a.Carotene_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__a.Car.Car"]])[["Letters"]])
+cbd_a.Carotene_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__a.Car.Car"]])[["Letters"]])
 colnames(cbd_a.Carotene_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_a.Carotene_ipomoea, keep.rownames = "Tissue.code")
@@ -1839,7 +1886,7 @@ top_positions_b.Carotene_ipomoea <- boxplot_positions_b.Carotene_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__b.Car.Car"]])[["Letters"]])
+cbd_b.Carotene_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__b.Car.Car"]])[["Letters"]])
 colnames(cbd_b.Carotene_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_b.Carotene_ipomoea, keep.rownames = "Tissue.code")
@@ -1916,7 +1963,7 @@ top_positions_Tot.Car_ipomoea <- boxplot_positions_Tot.Car_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_ipomoea, keep.rownames = "Tissue.code")
@@ -1994,7 +2041,7 @@ top_positions_NVZ.Car_ipomoea <- boxplot_positions_NVZ.Car_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NVZ.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_ipomoea, keep.rownames = "Tissue.code")
@@ -2086,7 +2133,7 @@ top_positions_VAZ.Car_Monogynella <- boxplot_positions_VAZ.Car_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_Monogynella, keep.rownames = "Tissue.code")
@@ -2144,7 +2191,7 @@ top_positions_VAZ.Car_Cuscuta <- boxplot_positions_VAZ.Car_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_Cuscuta, keep.rownames = "Tissue.code")
@@ -2204,7 +2251,7 @@ top_positions_VAZ.Car_Grammica <- boxplot_positions_VAZ.Car_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_Grammica, keep.rownames = "Tissue.code")
@@ -2282,7 +2329,7 @@ top_positions_VAZ.Car_C_purpurata <- boxplot_positions_VAZ.Car_C_purpurata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["C_purpurata__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_C_purpurata, keep.rownames = "Tissue.code")
@@ -2376,16 +2423,16 @@ top_positions_Neoxanthin_Monogynella <- boxplot_positions_Neoxanthin_Monogynella
 
 
 # # add pairwise significance letter groups (compact letter display; CLD)
-# wilcox_list[["Monogynella__Neo.Car"]]
-# cbd_Neoxanthin_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__Neo.Car"]])[["Letters"]])
+# dunn_list[["Monogynella__Neo.Car"]]
+# cbd_Neoxanthin_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Neo.Car"]])[["Letters"]])
 # colnames(cbd_Neoxanthin_Monogynella)[1] <- "Letter"
 # # turn rownames into first column for Tissue.code
 # setDT(cbd_Neoxanthin_Monogynella, keep.rownames = "Tissue.code")
 
 
 # Monogynella Neoxanthin was causing a problem in this pipeline because of the exact matches.. 
-wilcox_list[["Monogynella__Neo.Car"]]
-# QsRutils::make_letter_assignments(wilcox_list[["Monogynella__Neo.Car"]])
+dunn_list[["Monogynella__Neo.Car"]]
+# QsRutils::make_letter_assignments(dunn_list[["Monogynella__Neo.Car"]])
 
 # create letter groups manually 
 
@@ -2562,7 +2609,7 @@ top_positions_Lutein.epoxide_Cuscuta <- boxplot_positions_Lutein.epoxide_Cuscuta
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein.epoxide_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__Lut.epo.Car"]])[["Letters"]])
+cbd_Lutein.epoxide_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Lut.epo.Car"]])[["Letters"]])
 colnames(cbd_Lutein.epoxide_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein.epoxide_Cuscuta, keep.rownames = "Tissue.code")
@@ -2620,7 +2667,7 @@ top_positions_Lutein.epoxide_Grammica <- boxplot_positions_Lutein.epoxide_Grammi
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein.epoxide_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__Lut.epo.Car"]])[["Letters"]])
+cbd_Lutein.epoxide_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Lut.epo.Car"]])[["Letters"]])
 colnames(cbd_Lutein.epoxide_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein.epoxide_Grammica, keep.rownames = "Tissue.code")
@@ -2745,7 +2792,7 @@ top_positions_Lutein_Monogynella <- boxplot_positions_Lutein_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__Lut.Car"]])[["Letters"]])
+cbd_Lutein_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_Monogynella, keep.rownames = "Tissue.code")
@@ -2802,7 +2849,7 @@ top_positions_Lutein_Cuscuta <- boxplot_positions_Lutein_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__Lut.Car"]])[["Letters"]])
+cbd_Lutein_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_Cuscuta, keep.rownames = "Tissue.code")
@@ -2860,7 +2907,7 @@ top_positions_Lutein_Grammica <- boxplot_positions_Lutein_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__Lut.Car"]])[["Letters"]])
+cbd_Lutein_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_Grammica, keep.rownames = "Tissue.code")
@@ -2940,7 +2987,7 @@ top_positions_Lutein_C_purpurata <- boxplot_positions_Lutein_C_purpurata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["C_purpurata__Lut.Car"]])[["Letters"]])
+cbd_Lutein_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_C_purpurata, keep.rownames = "Tissue.code")
@@ -3034,7 +3081,7 @@ top_positions_a.Carotene_Monogynella <- boxplot_positions_a.Carotene_Monogynella
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__a.Car.Car"]])[["Letters"]])
+cbd_a.Carotene_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__a.Car.Car"]])[["Letters"]])
 colnames(cbd_a.Carotene_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_a.Carotene_Monogynella, keep.rownames = "Tissue.code")
@@ -3090,15 +3137,15 @@ top_positions_a.Carotene_Cuscuta <- boxplot_positions_a.Carotene_Cuscuta[5,]
 
 
 # #add pairwise significance letter groups (compact letter display; CLD)
-# cbd_a.Carotene_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__a.Car.Car"]])[["Letters"]])
+# cbd_a.Carotene_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__a.Car.Car"]])[["Letters"]])
 # colnames(cbd_a.Carotene_Cuscuta)[1] <- "Letter"
 # # turn rownames into first column for Tissue.code
 # setDT(cbd_a.Carotene_Cuscuta, keep.rownames = "Tissue.code")
 
 
 # Cuscuta a.Carotene was causing a problem in this pipeline because of the exact matches.. 
-wilcox_list[["Cuscuta__a.Car.Car"]]
-# QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__a.Car.Car"]])
+dunn_list[["Cuscuta__a.Car.Car"]]
+# QsRutils::make_letter_assignments(dunn_list[["Cuscuta__a.Car.Car"]])
 
 # create letter groups manually 
 
@@ -3174,7 +3221,7 @@ top_positions_a.Carotene_Grammica <- boxplot_positions_a.Carotene_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__a.Car.Car"]])[["Letters"]])
+cbd_a.Carotene_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__a.Car.Car"]])[["Letters"]])
 colnames(cbd_a.Carotene_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_a.Carotene_Grammica, keep.rownames = "Tissue.code")
@@ -3254,7 +3301,7 @@ top_positions_a.Carotene_C_purpurata <- boxplot_positions_a.Carotene_C_purpurata
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["C_purpurata__a.Car.Car"]])[["Letters"]])
+cbd_a.Carotene_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__a.Car.Car"]])[["Letters"]])
 colnames(cbd_a.Carotene_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_a.Carotene_C_purpurata, keep.rownames = "Tissue.code")
@@ -3328,7 +3375,49 @@ plot_list_Cuscuta_b.Carotene[["Monogynella"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> b.Carotene_Monogynella_boxplot
 
-# KW not sig so no post hoc
+# use base R boxplot to get the coordinates of the boxes
+data_Monogynella_b.Carotene <- dplyr::filter(data_b.Carotene_plots_cuscutasub, Subgenus == "Monogynella")
+
+box.rslt_b.Carotene_Monogynella <- with(data_Monogynella_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Carotene_Monogynella)
+boxplot_positions_b.Carotene_Monogynella <- as.data.frame(box.rslt_b.Carotene_Monogynella$stats)
+
+# what are these column tissue codes?
+tissues_b.Carotene_Monogynella <- levels(data_Monogynella_b.Carotene$Tissue.code)
+# add appropriate tissues to position df
+colnames(boxplot_positions_b.Carotene_Monogynella) <- tissues_b.Carotene_Monogynella
+
+# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+top_positions_b.Carotene_Monogynella <- boxplot_positions_b.Carotene_Monogynella[5,]
+
+
+#add pairwise significance letter groups (compact letter display; CLD)
+cbd_b.Carotene_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Carotene_Monogynella)[1] <- "Letter"
+# turn rownames into first column for Tissue.code
+setDT(cbd_b.Carotene_Monogynella, keep.rownames = "Tissue.code")
+
+
+# add a column y.position taken from top_positions based on mtaching up Tissue.code
+# first reshape top_positions so that colnames are a column called Tissue.code
+top_positions_b.Carotene_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_Monogynella
+# now join these positions to cbd
+left_join(cbd_b.Carotene_Monogynella, top_positions_b.Carotene_Monogynella, by = "Tissue.code") -> cbd_b.Carotene_Monogynella
+
+# calculate how much to nudge
+data_Monogynella_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_Monogynella
+cbd_b.Carotene_Monogynella$nudged <- (max_b.Carotene_Monogynella$max + 0.01) * 1.05
+
+
+# add CLDs to plot
+b.Carotene_Monogynella_boxplot + 
+  geom_text(
+    size    = 2,
+    color = "black",
+    data    = cbd_b.Carotene_Monogynella,
+    inherit.aes = T,
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_Monogynella_boxplot
+
 b.Carotene_Monogynella_boxplot
 
 
@@ -3342,11 +3431,49 @@ plot_list_Cuscuta_b.Carotene[["Cuscuta"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> b.Carotene_Cuscuta_boxplot
 
-# KW not sig so no post hoc
+# use base R boxplot to get the coordinates of the boxes
+data_Cuscuta_b.Carotene <- dplyr::filter(data_b.Carotene_plots_cuscutasub, Subgenus == "Cuscuta")
+
+box.rslt_b.Carotene_Cuscuta <- with(data_Cuscuta_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Carotene_Cuscuta)
+boxplot_positions_b.Carotene_Cuscuta <- as.data.frame(box.rslt_b.Carotene_Cuscuta$stats)
+
+# what are these column tissue codes?
+tissues_b.Carotene_Cuscuta <- levels(data_Cuscuta_b.Carotene$Tissue.code)
+# add appropriate tissues to position df
+colnames(boxplot_positions_b.Carotene_Cuscuta) <- tissues_b.Carotene_Cuscuta
+
+# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+top_positions_b.Carotene_Cuscuta <- boxplot_positions_b.Carotene_Cuscuta[5,]
+
+
+#add pairwise significance letter groups (compact letter display; CLD)
+cbd_b.Carotene_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Carotene_Cuscuta)[1] <- "Letter"
+# turn rownames into first column for Tissue.code
+setDT(cbd_b.Carotene_Cuscuta, keep.rownames = "Tissue.code")
+
+
+# add a column y.position taken from top_positions based on mtaching up Tissue.code
+# first reshape top_positions so that colnames are a column called Tissue.code
+top_positions_b.Carotene_Cuscuta %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_Cuscuta
+# now join these positions to cbd
+left_join(cbd_b.Carotene_Cuscuta, top_positions_b.Carotene_Cuscuta, by = "Tissue.code") -> cbd_b.Carotene_Cuscuta
+
+# calculate how much to nudge
+data_Cuscuta_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_Cuscuta
+cbd_b.Carotene_Cuscuta$nudged <- (max_b.Carotene_Cuscuta$max + 0.01) * 1.05
+
+# add CLDs to plot
+b.Carotene_Cuscuta_boxplot + 
+  geom_text(
+    size    = 2,
+    color = "black",
+    data    = cbd_b.Carotene_Cuscuta,
+    inherit.aes = T,
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_Cuscuta_boxplot
 
 b.Carotene_Cuscuta_boxplot
-
-
 
 #### b.Carotene Grammica ####
 plot_list_Cuscuta_b.Carotene[["Grammica"]] + 
@@ -3375,7 +3502,7 @@ top_positions_b.Carotene_Grammica <- boxplot_positions_b.Carotene_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__b.Car.Car"]])[["Letters"]])
+cbd_b.Carotene_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__b.Car.Car"]])[["Letters"]])
 colnames(cbd_b.Carotene_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_b.Carotene_Grammica, keep.rownames = "Tissue.code")
@@ -3453,7 +3580,7 @@ top_positions_b.Carotene_C_purpurata <- boxplot_positions_b.Carotene_C_purpurata
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["C_purpurata__b.Car.Car"]])[["Letters"]])
+cbd_b.Carotene_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__b.Car.Car"]])[["Letters"]])
 colnames(cbd_b.Carotene_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_b.Carotene_C_purpurata, keep.rownames = "Tissue.code")
@@ -3544,7 +3671,7 @@ top_positions_Tot.Car_Monogynella <- boxplot_positions_Tot.Car_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_Monogynella, keep.rownames = "Tissue.code")
@@ -3601,7 +3728,7 @@ top_positions_Tot.Car_Cuscuta <- boxplot_positions_Tot.Car_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Cuscuta__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_Cuscuta, keep.rownames = "Tissue.code")
@@ -3659,7 +3786,7 @@ top_positions_Tot.Car_Grammica <- boxplot_positions_Tot.Car_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_Grammica, keep.rownames = "Tissue.code")
@@ -3862,7 +3989,7 @@ top_positions_NVZ.Car_C_purpurata <- boxplot_positions_NVZ.Car_C_purpurata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NVZ.Car_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["C_purpurata__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_purpurata, keep.rownames = "Tissue.code")
@@ -4271,7 +4398,7 @@ top_positions_Chl.a_C_cephalanthii <- boxplot_positions_Chl.a_C_cephalanthii[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__Chl.a"]])[["Letters"]])
+cbd_Chl.a_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Chl.a"]])[["Letters"]])
 colnames(cbd_Chl.a_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -4342,7 +4469,7 @@ top_positions_Chl.a_C_tasmanica <- boxplot_positions_Chl.a_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__Chl.a"]])[["Letters"]])
+cbd_Chl.a_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Chl.a"]])[["Letters"]])
 colnames(cbd_Chl.a_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a_C_tasmanica, keep.rownames = "Tissue.code")
@@ -4399,7 +4526,7 @@ top_positions_Chl.a_C_costaricensis <- boxplot_positions_Chl.a_C_costaricensis[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__Chl.a"]])[["Letters"]])
+cbd_Chl.a_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Chl.a"]])[["Letters"]])
 colnames(cbd_Chl.a_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a_C_costaricensis, keep.rownames = "Tissue.code")
@@ -4477,7 +4604,7 @@ top_positions_Chl.a_C_indecora <- boxplot_positions_Chl.a_C_indecora[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__Chl.a"]])[["Letters"]])
+cbd_Chl.a_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Chl.a"]])[["Letters"]])
 colnames(cbd_Chl.a_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a_C_indecora, keep.rownames = "Tissue.code")
@@ -4584,7 +4711,7 @@ top_positions_Chl.b_C_sandwichiana <- boxplot_positions_Chl.b_C_sandwichiana[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_sandwichiana__Chl.b"]])[["Letters"]])
+cbd_Chl.b_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_sandwichiana__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_C_sandwichiana)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_C_sandwichiana, keep.rownames = "Tissue.code")
@@ -4642,7 +4769,7 @@ top_positions_Chl.b_C_californica <- boxplot_positions_Chl.b_C_californica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_C_californica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_californica__Chl.b"]])[["Letters"]])
+cbd_Chl.b_C_californica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_californica__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_C_californica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_C_californica, keep.rownames = "Tissue.code")
@@ -4701,7 +4828,7 @@ top_positions_Chl.b_C_compacta <- boxplot_positions_Chl.b_C_compacta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_compacta__Chl.b"]])[["Letters"]])
+cbd_Chl.b_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_C_compacta, keep.rownames = "Tissue.code")
@@ -4758,7 +4885,7 @@ top_positions_Chl.b_C_cephalanthii <- boxplot_positions_Chl.b_C_cephalanthii[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__Chl.b"]])[["Letters"]])
+cbd_Chl.b_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -4816,7 +4943,7 @@ top_positions_Chl.b_C_denticulata <- boxplot_positions_Chl.b_C_denticulata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_denticulata__Chl.b"]])[["Letters"]])
+cbd_Chl.b_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_denticulata__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_C_denticulata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_C_denticulata, keep.rownames = "Tissue.code")
@@ -4874,7 +5001,7 @@ top_positions_Chl.b_C_tasmanica <- boxplot_positions_Chl.b_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__Chl.b"]])[["Letters"]])
+cbd_Chl.b_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_C_tasmanica, keep.rownames = "Tissue.code")
@@ -4931,7 +5058,7 @@ top_positions_Chl.b_C_costaricensis <- boxplot_positions_Chl.b_C_costaricensis[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__Chl.b"]])[["Letters"]])
+cbd_Chl.b_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_C_costaricensis, keep.rownames = "Tissue.code")
@@ -5009,7 +5136,7 @@ top_positions_Chl.b_C_indecora <- boxplot_positions_Chl.b_C_indecora[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.b_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__Chl.b"]])[["Letters"]])
+cbd_Chl.b_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Chl.b"]])[["Letters"]])
 colnames(cbd_Chl.b_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.b_C_indecora, keep.rownames = "Tissue.code")
@@ -5129,7 +5256,7 @@ top_positions_Tot.Chl_C_californica <- boxplot_positions_Tot.Chl_C_californica[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_C_californica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_californica__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_C_californica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_californica__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_C_californica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_C_californica, keep.rownames = "Tissue.code")
@@ -5188,7 +5315,7 @@ top_positions_Tot.Chl_C_compacta <- boxplot_positions_Tot.Chl_C_compacta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_compacta__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_C_compacta, keep.rownames = "Tissue.code")
@@ -5245,7 +5372,7 @@ top_positions_Tot.Chl_C_cephalanthii <- boxplot_positions_Tot.Chl_C_cephalanthii
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -5319,7 +5446,7 @@ top_positions_Tot.Chl_C_tasmanica <- boxplot_positions_Tot.Chl_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_C_tasmanica, keep.rownames = "Tissue.code")
@@ -5376,7 +5503,7 @@ top_positions_Tot.Chl_C_costaricensis <- boxplot_positions_Tot.Chl_C_costaricens
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_C_costaricensis, keep.rownames = "Tissue.code")
@@ -5454,7 +5581,7 @@ top_positions_Tot.Chl_C_indecora <- boxplot_positions_Tot.Chl_C_indecora[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Chl_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__Tot.Chl"]])[["Letters"]])
+cbd_Tot.Chl_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Tot.Chl"]])[["Letters"]])
 colnames(cbd_Tot.Chl_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Chl_C_indecora, keep.rownames = "Tissue.code")
@@ -5610,7 +5737,7 @@ top_positions_Chl.a.b_C_cephalanthii <- boxplot_positions_Chl.a.b_C_cephalanthii
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a.b_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__Chl.a.b"]])[["Letters"]])
+cbd_Chl.a.b_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Chl.a.b"]])[["Letters"]])
 colnames(cbd_Chl.a.b_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a.b_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -5684,7 +5811,7 @@ top_positions_Chl.a.b_C_tasmanica <- boxplot_positions_Chl.a.b_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a.b_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__Chl.a.b"]])[["Letters"]])
+cbd_Chl.a.b_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Chl.a.b"]])[["Letters"]])
 colnames(cbd_Chl.a.b_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a.b_C_tasmanica, keep.rownames = "Tissue.code")
@@ -5741,7 +5868,7 @@ top_positions_Chl.a.b_C_costaricensis <- boxplot_positions_Chl.a.b_C_costaricens
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a.b_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__Chl.a.b"]])[["Letters"]])
+cbd_Chl.a.b_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Chl.a.b"]])[["Letters"]])
 colnames(cbd_Chl.a.b_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a.b_C_costaricensis, keep.rownames = "Tissue.code")
@@ -5818,7 +5945,7 @@ top_positions_Chl.a.b_C_indecora <- boxplot_positions_Chl.a.b_C_indecora[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Chl.a.b_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__Chl.a.b"]])[["Letters"]])
+cbd_Chl.a.b_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Chl.a.b"]])[["Letters"]])
 colnames(cbd_Chl.a.b_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Chl.a.b_C_indecora, keep.rownames = "Tissue.code")
@@ -6332,7 +6459,7 @@ top_positions_VAZ.Car_C_sandwichiana <- boxplot_positions_VAZ.Car_C_sandwichiana
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_sandwichiana__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_sandwichiana__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_C_sandwichiana)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_C_sandwichiana, keep.rownames = "Tissue.code")
@@ -6389,7 +6516,7 @@ top_positions_VAZ.Car_C_californica <- boxplot_positions_VAZ.Car_C_californica[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_C_californica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_californica__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_C_californica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_californica__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_C_californica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_C_californica, keep.rownames = "Tissue.code")
@@ -6446,7 +6573,7 @@ top_positions_VAZ.Car_C_compacta <- boxplot_positions_VAZ.Car_C_compacta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_compacta__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_C_compacta, keep.rownames = "Tissue.code")
@@ -6503,7 +6630,7 @@ top_positions_VAZ.Car_C_cephalanthii <- boxplot_positions_VAZ.Car_C_cephalanthii
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -6560,7 +6687,7 @@ top_positions_VAZ.Car_C_denticulata <- boxplot_positions_VAZ.Car_C_denticulata[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_denticulata__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_denticulata__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_C_denticulata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_C_denticulata, keep.rownames = "Tissue.code")
@@ -6617,7 +6744,7 @@ top_positions_VAZ.Car_C_tasmanica <- boxplot_positions_VAZ.Car_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_C_tasmanica, keep.rownames = "Tissue.code")
@@ -6674,7 +6801,7 @@ top_positions_VAZ.Car_C_costaricensis <- boxplot_positions_VAZ.Car_C_costaricens
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_C_costaricensis, keep.rownames = "Tissue.code")
@@ -6752,7 +6879,7 @@ top_positions_VAZ.Car_C_indecora <- boxplot_positions_VAZ.Car_C_indecora[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_VAZ.Car_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__VAZ.Car"]])[["Letters"]])
+cbd_VAZ.Car_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__VAZ.Car"]])[["Letters"]])
 colnames(cbd_VAZ.Car_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_VAZ.Car_C_indecora, keep.rownames = "Tissue.code")
@@ -6880,7 +7007,7 @@ top_positions_Neoxanthin_C_cephalanthii <- boxplot_positions_Neoxanthin_C_cephal
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Neoxanthin_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__Neo.Car"]])[["Letters"]])
+cbd_Neoxanthin_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Neo.Car"]])[["Letters"]])
 colnames(cbd_Neoxanthin_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Neoxanthin_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -7080,7 +7207,7 @@ top_positions_Lutein.epoxide_C_cephalanthii <- boxplot_positions_Lutein.epoxide_
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein.epoxide_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__Lut.epo.Car"]])[["Letters"]])
+cbd_Lutein.epoxide_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Lut.epo.Car"]])[["Letters"]])
 colnames(cbd_Lutein.epoxide_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein.epoxide_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -7151,12 +7278,12 @@ top_positions_Lutein.epoxide_C_tasmanica <- boxplot_positions_Lutein.epoxide_C_t
 
 
 # #add pairwise significance letter groups (compact letter display; CLD)
-# cbd_Lutein.epoxide_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__Lut.epo.Car"]])[["Letters"]])
+# cbd_Lutein.epoxide_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Lut.epo.Car"]])[["Letters"]])
 # colnames(cbd_Lutein.epoxide_C_tasmanica)[1] <- "Letter"
 # # turn rownames into first column for Tissue.code
 # setDT(cbd_Lutein.epoxide_C_tasmanica, keep.rownames = "Tissue.code")
 
-wilcox_list_Grammica[["C_tasmanica__Lutein.epoxide"]]
+dunn_list_Grammica[["C_tasmanica__Lutein.epoxide"]]
 
 # Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
 # 
@@ -7264,12 +7391,12 @@ top_positions_Lutein.epoxide_C_indecora <- boxplot_positions_Lutein.epoxide_C_in
 
 
 # #add pairwise significance letter groups (compact letter display; CLD)
-# cbd_Lutein.epoxide_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__Lut.epo.Car"]])[["Letters"]])
+# cbd_Lutein.epoxide_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Lut.epo.Car"]])[["Letters"]])
 # colnames(cbd_Lutein.epoxide_C_indecora)[1] <- "Letter"
 # # turn rownames into first column for Tissue.code
 # setDT(cbd_Lutein.epoxide_C_indecora, keep.rownames = "Tissue.code")
 
-wilcox_list_Grammica[["C_indecora__Lutein.epoxide"]]
+dunn_list_Grammica[["C_indecora__Lutein.epoxide"]]
 
 # Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
 # 
@@ -7376,7 +7503,7 @@ top_positions_Lutein_C_polygonorum <- boxplot_positions_Lutein_C_polygonorum[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_polygonorum__Lut.Car"]])[["Letters"]])
+cbd_Lutein_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_polygonorum__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_C_polygonorum)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_C_polygonorum, keep.rownames = "Tissue.code")
@@ -7434,7 +7561,7 @@ top_positions_Lutein_C_sandwichiana <- boxplot_positions_Lutein_C_sandwichiana[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_sandwichiana__Lut.Car"]])[["Letters"]])
+cbd_Lutein_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_sandwichiana__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_C_sandwichiana)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_C_sandwichiana, keep.rownames = "Tissue.code")
@@ -7493,7 +7620,7 @@ top_positions_Lutein_C_californica <- boxplot_positions_Lutein_C_californica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_californica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_californica__Lut.Car"]])[["Letters"]])
+cbd_Lutein_C_californica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_californica__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_C_californica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_C_californica, keep.rownames = "Tissue.code")
@@ -7552,7 +7679,7 @@ top_positions_Lutein_C_compacta <- boxplot_positions_Lutein_C_compacta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_compacta__Lut.Car"]])[["Letters"]])
+cbd_Lutein_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_C_compacta, keep.rownames = "Tissue.code")
@@ -7609,7 +7736,7 @@ top_positions_Lutein_C_cephalanthii <- boxplot_positions_Lutein_C_cephalanthii[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__Lut.Car"]])[["Letters"]])
+cbd_Lutein_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -7681,7 +7808,7 @@ top_positions_Lutein_C_tasmanica <- boxplot_positions_Lutein_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__Lut.Car"]])[["Letters"]])
+cbd_Lutein_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_C_tasmanica, keep.rownames = "Tissue.code")
@@ -7738,7 +7865,7 @@ top_positions_Lutein_C_costaricensis <- boxplot_positions_Lutein_C_costaricensis
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__Lut.Car"]])[["Letters"]])
+cbd_Lutein_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_C_costaricensis, keep.rownames = "Tissue.code")
@@ -7816,7 +7943,7 @@ top_positions_Lutein_C_indecora <- boxplot_positions_Lutein_C_indecora[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__Lut.Car"]])[["Letters"]])
+cbd_Lutein_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Lut.Car"]])[["Letters"]])
 colnames(cbd_Lutein_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Lutein_C_indecora, keep.rownames = "Tissue.code")
@@ -7953,7 +8080,7 @@ top_positions_a.Carotene_C_compacta <- boxplot_positions_a.Carotene_C_compacta[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_compacta__a.Car.Car"]])[["Letters"]])
+cbd_a.Carotene_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__a.Car.Car"]])[["Letters"]])
 colnames(cbd_a.Carotene_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_a.Carotene_C_compacta, keep.rownames = "Tissue.code")
@@ -8010,7 +8137,7 @@ top_positions_a.Carotene_C_cephalanthii <- boxplot_positions_a.Carotene_C_cephal
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__a.Car.Car"]])[["Letters"]])
+cbd_a.Carotene_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__a.Car.Car"]])[["Letters"]])
 colnames(cbd_a.Carotene_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_a.Carotene_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -8095,7 +8222,7 @@ top_positions_a.Carotene_C_costaricensis <- boxplot_positions_a.Carotene_C_costa
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__a.Car.Car"]])[["Letters"]])
+cbd_a.Carotene_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__a.Car.Car"]])[["Letters"]])
 colnames(cbd_a.Carotene_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_a.Carotene_C_costaricensis, keep.rownames = "Tissue.code")
@@ -8221,7 +8348,7 @@ top_positions_b.Carotene_C_polygonorum <- boxplot_positions_b.Carotene_C_polygon
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_polygonorum__b.Car.Car"]])[["Letters"]])
+cbd_b.Carotene_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_polygonorum__b.Car.Car"]])[["Letters"]])
 colnames(cbd_b.Carotene_C_polygonorum)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_b.Carotene_C_polygonorum, keep.rownames = "Tissue.code")
@@ -8309,7 +8436,7 @@ top_positions_b.Carotene_C_compacta <- boxplot_positions_b.Carotene_C_compacta[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_compacta__b.Car.Car"]])[["Letters"]])
+cbd_b.Carotene_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__b.Car.Car"]])[["Letters"]])
 colnames(cbd_b.Carotene_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_b.Carotene_C_compacta, keep.rownames = "Tissue.code")
@@ -8366,7 +8493,7 @@ top_positions_b.Carotene_C_cephalanthii <- boxplot_positions_b.Carotene_C_cephal
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__b.Car.Car"]])[["Letters"]])
+cbd_b.Carotene_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__b.Car.Car"]])[["Letters"]])
 colnames(cbd_b.Carotene_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_b.Carotene_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -8439,7 +8566,7 @@ top_positions_b.Carotene_C_tasmanica <- boxplot_positions_b.Carotene_C_tasmanica
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__b.Car.Car"]])[["Letters"]])
+cbd_b.Carotene_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__b.Car.Car"]])[["Letters"]])
 colnames(cbd_b.Carotene_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_b.Carotene_C_tasmanica, keep.rownames = "Tissue.code")
@@ -8496,7 +8623,7 @@ top_positions_b.Carotene_C_costaricensis <- boxplot_positions_b.Carotene_C_costa
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__b.Car.Car"]])[["Letters"]])
+cbd_b.Carotene_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__b.Car.Car"]])[["Letters"]])
 colnames(cbd_b.Carotene_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_b.Carotene_C_costaricensis, keep.rownames = "Tissue.code")
@@ -8623,7 +8750,7 @@ top_positions_Tot.Car_C_polygonorum <- boxplot_positions_Tot.Car_C_polygonorum[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_polygonorum__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_polygonorum__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_C_polygonorum)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_C_polygonorum, keep.rownames = "Tissue.code")
@@ -8682,7 +8809,7 @@ top_positions_Tot.Car_C_sandwichiana <- boxplot_positions_Tot.Car_C_sandwichiana
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_sandwichiana__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_sandwichiana__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_C_sandwichiana)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_C_sandwichiana, keep.rownames = "Tissue.code")
@@ -8740,7 +8867,7 @@ top_positions_Tot.Car_C_californica <- boxplot_positions_Tot.Car_C_californica[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_C_californica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_californica__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_C_californica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_californica__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_C_californica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_C_californica, keep.rownames = "Tissue.code")
@@ -8799,7 +8926,7 @@ top_positions_Tot.Car_C_compacta <- boxplot_positions_Tot.Car_C_compacta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_compacta__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_C_compacta, keep.rownames = "Tissue.code")
@@ -8856,7 +8983,7 @@ top_positions_Tot.Car_C_cephalanthii <- boxplot_positions_Tot.Car_C_cephalanthii
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -8913,7 +9040,7 @@ top_positions_Tot.Car_C_denticulata <- boxplot_positions_Tot.Car_C_denticulata[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_denticulata__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_denticulata__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_C_denticulata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_C_denticulata, keep.rownames = "Tissue.code")
@@ -8972,7 +9099,7 @@ top_positions_Tot.Car_C_tasmanica <- boxplot_positions_Tot.Car_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_C_tasmanica, keep.rownames = "Tissue.code")
@@ -9029,7 +9156,7 @@ top_positions_Tot.Car_C_costaricensis <- boxplot_positions_Tot.Car_C_costaricens
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Tot.Car_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__Tot.Car"]])[["Letters"]])
+cbd_Tot.Car_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Tot.Car"]])[["Letters"]])
 colnames(cbd_Tot.Car_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Tot.Car_C_costaricensis, keep.rownames = "Tissue.code")
@@ -9156,7 +9283,7 @@ top_positions_NVZ.Car_C_polygonorum <- boxplot_positions_NVZ.Car_C_polygonorum[5
 
 
 #add pairwise significance letter groups (polygonorum letter display; CLD)
-cbd_NVZ.Car_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_polygonorum__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_polygonorum__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_polygonorum)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_polygonorum, keep.rownames = "Tissue.code")
@@ -9214,7 +9341,7 @@ top_positions_NVZ.Car_C_sandwichiana <- boxplot_positions_NVZ.Car_C_sandwichiana
 
 
 #add pairwise significance letter groups (polygonorum letter display; CLD)
-cbd_NVZ.Car_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_sandwichiana__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_sandwichiana__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_sandwichiana)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_sandwichiana, keep.rownames = "Tissue.code")
@@ -9272,7 +9399,7 @@ top_positions_NVZ.Car_C_californica <- boxplot_positions_NVZ.Car_C_californica[5
 
 
 #add pairwise significance letter groups (polygonorum letter display; CLD)
-cbd_NVZ.Car_C_californica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_californica__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_californica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_californica__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_californica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_californica, keep.rownames = "Tissue.code")
@@ -9329,7 +9456,7 @@ top_positions_NVZ.Car_C_compacta <- boxplot_positions_NVZ.Car_C_compacta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NVZ.Car_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_compacta__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_compacta, keep.rownames = "Tissue.code")
@@ -9386,7 +9513,7 @@ top_positions_NVZ.Car_C_cephalanthii <- boxplot_positions_NVZ.Car_C_cephalanthii
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NVZ.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -9444,7 +9571,7 @@ top_positions_NVZ.Car_C_denticulata <- boxplot_positions_NVZ.Car_C_denticulata[5
 
 
 #add pairwise significance letter groups (polygonorum letter display; CLD)
-cbd_NVZ.Car_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_denticulata__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_denticulata__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_denticulata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_denticulata, keep.rownames = "Tissue.code")
@@ -9501,7 +9628,7 @@ top_positions_NVZ.Car_C_tasmanica <- boxplot_positions_NVZ.Car_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NVZ.Car_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_tasmanica, keep.rownames = "Tissue.code")
@@ -9558,7 +9685,7 @@ top_positions_NVZ.Car_C_costaricensis <- boxplot_positions_NVZ.Car_C_costaricens
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_NVZ.Car_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_costaricensis, keep.rownames = "Tissue.code")
@@ -9635,7 +9762,7 @@ top_positions_NVZ.Car_C_indecora <- boxplot_positions_NVZ.Car_C_indecora[5,]
 
 
 #add pairwise significance letter groups (polygonorum letter display; CLD)
-cbd_NVZ.Car_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__NVZ.Car"]])[["Letters"]])
+cbd_NVZ.Car_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__NVZ.Car"]])[["Letters"]])
 colnames(cbd_NVZ.Car_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_NVZ.Car_C_indecora, keep.rownames = "Tissue.code")
@@ -9815,7 +9942,7 @@ top_positions_Car.Chl31_ipomoea <- boxplot_positions_Car.Chl31_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Ipomoea_nil__Car.Chl31"]])[["Letters"]])
+cbd_Car.Chl31_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Car.Chl31"]])[["Letters"]])
 colnames(cbd_Car.Chl31_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Car.Chl31_ipomoea, keep.rownames = "Tissue.code")
@@ -9905,7 +10032,7 @@ top_positions_Car.Chl31_Monogynella <- boxplot_positions_Car.Chl31_Monogynella[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Monogynella__Car.Chl31"]])[["Letters"]])
+cbd_Car.Chl31_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Car.Chl31"]])[["Letters"]])
 colnames(cbd_Car.Chl31_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Car.Chl31_Monogynella, keep.rownames = "Tissue.code")
@@ -10017,7 +10144,7 @@ top_positions_Car.Chl31_Grammica <- boxplot_positions_Car.Chl31_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_Grammica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list[["Grammica__Car.Chl31"]])[["Letters"]])
+cbd_Car.Chl31_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Car.Chl31"]])[["Letters"]])
 colnames(cbd_Car.Chl31_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Car.Chl31_Grammica, keep.rownames = "Tissue.code")
@@ -10223,7 +10350,7 @@ top_positions_Car.Chl31_C_cephalanthii <- boxplot_positions_Car.Chl31_C_cephalan
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_cephalanthii__Car.Chl31"]])[["Letters"]])
+cbd_Car.Chl31_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Car.Chl31"]])[["Letters"]])
 colnames(cbd_Car.Chl31_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Car.Chl31_C_cephalanthii, keep.rownames = "Tissue.code")
@@ -10297,7 +10424,7 @@ top_positions_Car.Chl31_C_tasmanica <- boxplot_positions_Car.Chl31_C_tasmanica[5
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_tasmanica__Car.Chl31"]])[["Letters"]])
+cbd_Car.Chl31_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Car.Chl31"]])[["Letters"]])
 colnames(cbd_Car.Chl31_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Car.Chl31_C_tasmanica, keep.rownames = "Tissue.code")
@@ -10354,7 +10481,7 @@ top_positions_Car.Chl31_C_costaricensis <- boxplot_positions_Car.Chl31_C_costari
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_costaricensis__Car.Chl31"]])[["Letters"]])
+cbd_Car.Chl31_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Car.Chl31"]])[["Letters"]])
 colnames(cbd_Car.Chl31_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Car.Chl31_C_costaricensis, keep.rownames = "Tissue.code")
@@ -10432,7 +10559,7 @@ top_positions_Car.Chl31_C_indecora <- boxplot_positions_Car.Chl31_C_indecora[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(wilcox_list_Grammica[["C_indecora__Car.Chl31"]])[["Letters"]])
+cbd_Car.Chl31_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Car.Chl31"]])[["Letters"]])
 colnames(cbd_Car.Chl31_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
 setDT(cbd_Car.Chl31_C_indecora, keep.rownames = "Tissue.code")
