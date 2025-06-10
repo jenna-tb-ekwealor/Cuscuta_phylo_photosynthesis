@@ -277,7 +277,7 @@ for(pig in pigment_list) {
 }
 
 # export only plotted pigments
-plotted_pigs <- c("Chl.a", "Chl.b", "Tot.Chl", "Chl.a.b", "VAZ", "Neoxanthin", "Lutein.epoxide", "Lutein", "a.Carotene", "b.Carotene", "Tot.Car", "NVZ.Car")
+plotted_pigs <- c("Chl.a", "Chl.b", "Tot.Chl", "Chl.a.b", "VAZ.Car", "Neo.Car", "Lut.epo.Car", "Lut.Car", "a.Car.Car", "b.Car.Car", "Tot.Car", "NVZ.Car")
 
 excel_list <- list()
 for(pig in plotted_pigs) {
@@ -325,7 +325,7 @@ for(pig in plotted_pigs) {
 
 # save pairwise posthoc results to a separate tab of an excel file each
 # Define output file path
-output_file <- "../output/stat_results/pairwise_allpigsxtissues.xlsx"
+output_file <- "../output/stat_results/dataset_S4_p-values-pigments.xlsx"
 
 # Create a new workbook
 wb <- createWorkbook()
@@ -343,34 +343,50 @@ saveWorkbook(wb, file = output_file, overwrite = TRUE)
 
 
 #### stats to be used for all pigment plots ####
+# limit to plotted pigs + others (not duplicating plotted pigs)
+plotted_pigs
+# [1] "Chl.a"       "Chl.b"       "Tot.Chl"     "Chl.a.b"     "VAZ.Car"     "Neo.Car"     "Lut.epo.Car" "Lut.Car"     "a.Car.Car"  
+# [10] "b.Car.Car"   "Tot.Car"     "NVZ.Car"  
+
+# add: a.Tocopherol cis.B.carotene  VAZ.Chl DEPS
+stats_pigs <- c(plotted_pigs, "a.Tocopherol", "cis.B.carotene", "VAZ.Chl", "DEPS")
 
 # some pigs were causing an error because it is 0 across all tissues in this species
 # i identified them manually with:
-data_long_calcs %>% group_by(Pigment, Subgenus) %>% dplyr::summarize(mean = mean(FW.norm)) %>% filter(mean == 0) -> test_means
-# # A tibble: 5 × 3
-# # Groups:   Pigment [3]
+data_long_calcs %>% 
+  dplyr::filter(Pigment %in% stats_pigs) %>% 
+  group_by(Pigment, Subgenus) %>% 
+  dplyr::summarize(mean = mean(FW.norm)) %>% 
+  dplyr::filter(mean == 0) -> test_means
+test_means
+# # A tibble: 3 × 3
+# # Groups:   Pigment [2]
 # Pigment      Subgenus     mean
 # <fct>        <chr>       <dbl>
 #   1 a.Tocopherol Monogynella     0
-# 2 Neoxanthin   C_purpurata     0
-# 3 Neoxanthin   Cuscuta         0
-# 4 Neo.Car      C_purpurata     0
-# 5 Neo.Car      Cuscuta         0
+# 2 Neo.Car      C_purpurata     0
+# 3 Neo.Car      Cuscuta         0
 
 # some pigs were causing an error because in that pigment x subgenus combo there was only 1 tissue
 # i identified them manually with:
-data_long_calcs %>% na.omit() %>% group_by(Pigment, Subgenus, Tissue.code) %>% summarize(mean = mean(FW.norm)) %>% dplyr::summarize(n = n()) %>% filter(n == 1) -> test_tissues
+data_long_calcs %>% 
+  na.omit() %>% 
+  dplyr::filter(Pigment %in% stats_pigs) %>% 
+  group_by(Pigment, Subgenus, Tissue.code) %>% 
+  summarize(mean = mean(FW.norm)) %>% 
+  dplyr::summarize(n = n()) %>% 
+  filter(n == 1) -> test_tissues
+test_tissues
 # Chl.a.b	C_purpurata	1
 
 # shapiro test for normality per pigment per subgenus
 # removing those combos with all 0s
 data_long_calcs %>% ungroup() %>% 
-  filter(!(Pigment == "a.Tocopherol" & Subgenus == "Monogynella")) %>% 
-  filter(!(Pigment == "Neoxanthin" & Subgenus == "C_purpurata")) %>% 
-  filter(!(Pigment == "Neoxanthin" & Subgenus == "Cuscuta")) %>% 
-  filter(!(Pigment == "Neo.Car" & Subgenus == "C_purpurata")) %>% 
-  filter(!(Pigment == "Neo.Car" & Subgenus == "Cuscuta")) %>% 
-  filter(!(Pigment == "Chl.a.b" & Subgenus == "C_purpurata")) %>% 
+  dplyr::filter(Pigment %in% stats_pigs) %>% 
+  dplyr::filter(!(Pigment == "a.Tocopherol" & Subgenus == "Monogynella")) %>% 
+  dplyr::filter(!(Pigment == "Neo.Car" & Subgenus == "C_purpurata")) %>% 
+  dplyr::filter(!(Pigment == "Neo.Car" & Subgenus == "Cuscuta")) %>% 
+  dplyr::filter(!(Pigment == "Chl.a.b" & Subgenus == "C_purpurata")) %>% 
   group_by(Pigment, Subgenus) %>% 
   rstatix::shapiro_test(FW.norm, data = .) -> shapiro_pig_sub
 shapiro_pig_sub %>%   add_significance("p") -> shapiro_pig_sub
@@ -379,6 +395,7 @@ shapiro_pig_sub
 
 # kruskal wallace per pigment per subgenus
 data_long_calcs %>% ungroup() %>% 
+  dplyr::filter(Pigment %in% stats_pigs) %>% 
   filter(!(Pigment == "a.Tocopherol" & Subgenus == "Monogynella")) %>% 
   filter(!(Pigment == "Neoxanthin" & Subgenus == "C_purpurata")) %>% 
   filter(!(Pigment == "Neoxanthin" & Subgenus == "Cuscuta")) %>% 
@@ -514,7 +531,7 @@ Grammica <- c("C_australis",
               "C_gracilima",
               "C_indecora")
 
-data_long_calcs_Grammica_plot <- dplyr::filter(data_long_calcs, Species %in% Grammica )
+data_long_calcs_Grammica_plot <- dplyr::filter(data_long_calcs, Species %in% Grammica ) %>% dplyr::filter(Pigment %in% stats_pigs) 
 
 # identify species with n = 1
 summary_accession_Grammica <- dplyr::filter(summary_accession, Species %in% Grammica )
@@ -549,18 +566,15 @@ data_long_calcs_Grammica_plot$Species <- factor(data_long_calcs_Grammica_plot$Sp
 
 # some pigs were causing an error because it is 0 across all tissues in this species
 # i identified them manually with:
-data_long_calcs_Grammica_plot %>% group_by(Pigment, Species) %>% dplyr::summarize(mean = mean(FW.norm)) %>% dplyr::filter(mean == 0) -> test_means_Grammica
+data_long_calcs_Grammica_plot %>% 
+  group_by(Pigment, Species) %>% 
+  dplyr::summarize(mean = mean(FW.norm)) %>% 
+  dplyr::filter(mean == 0) -> test_means_Grammica
+test_means_Grammica
 # # A tibble: 7 x 3
 # # Groups:   Pigment [1]
 # Pigment    Species          mean
 # <fct>      <fct>           <dbl>
-# 1 Neoxanthin C_sandwichiana      0
-# 2 Neoxanthin C_californica       0
-# 3 Neoxanthin C_compacta          0
-# 4 Neoxanthin C_denticulata       0
-# 5 Neoxanthin C_tasmanica         0
-# 6 Neoxanthin C_costaricensis     0
-# 7 Neoxanthin C_indecora          0
 # 8 Neo.Car    C_sandwichiana      0
 # 9 Neo.Car    C_californica       0
 # 10 Neo.Car    C_compacta          0
@@ -572,13 +586,6 @@ data_long_calcs_Grammica_plot %>% group_by(Pigment, Species) %>% dplyr::summariz
 # shapiro test for normality per pigment per species in Grammica only
 data_long_calcs_Grammica_plot %>% ungroup() %>% 
   dplyr::filter(., Subgenus == "Grammica") %>%
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_sandwichiana")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_californica")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_compacta")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_denticulata")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_tasmanica")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_costaricensis")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_indecora")) %>%
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_sandwichiana")) %>% 
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_californica")) %>% 
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_compacta")) %>% 
@@ -596,13 +603,6 @@ shapiro_pig_spe_Grammica
 # kruskal wallace per pigment per species in Grammica only
 data_long_calcs_Grammica_plot %>% ungroup() %>%
   dplyr::filter(., Subgenus == "Grammica") %>%
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_sandwichiana")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_californica")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_compacta")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_denticulata")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_tasmanica")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_costaricensis")) %>% 
-  dplyr::filter(!(Pigment == "Neoxanthin" & Species == "C_indecora")) %>%
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_sandwichiana")) %>% 
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_californica")) %>% 
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_compacta")) %>% 

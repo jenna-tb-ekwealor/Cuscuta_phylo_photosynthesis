@@ -44,30 +44,41 @@ dunn_list_before_Grammica <- readRDS("../output/stat_results/dunn_list_Grammica.
 # wilcox_list_Grammica <- readRDS("../output/stat_results/wilcox_list_Grammica.RData")
 
 
-# Convert dunn_list to Wilcoxon-style structure with only lower triangle filled
 dunn_formatting <- function(name, dunn_obj, data_name = "dunn_data") {
   dunn_df <- dunn_obj[[name]]$res
   comps <- strsplit(dunn_df$Comparison, " - ")
   
-  # Build list of groups only used as LHS (i.e., rows in Wilcoxon)
-  row_groups <- sapply(comps, function(x) x[2])  # second element = row
-  col_groups <- sapply(comps, function(x) x[1])  # first element = col
-  row_levels <- unique(row_groups)
-  col_levels <- unique(col_groups)
+  # Preferred order of tissues
+  desired_order <- c("l", "sdlg", "y", "o", "h", "f", "s")
   
-  # Init matrix with NA, only rows > cols
-  pmat <- matrix(NA, nrow = length(row_levels), ncol = length(col_levels),
-                 dimnames = list(row_levels, col_levels))
+  # Identify groups present in this comparison
+  all_groups <- unique(unlist(comps))
+  ordered_groups <- desired_order[desired_order %in% all_groups]
   
+  # Initialize matrix with NA
+  pmat <- matrix(NA, nrow = length(ordered_groups), ncol = length(ordered_groups),
+                 dimnames = list(ordered_groups, ordered_groups))
+  
+  # Fill lower triangle with adjusted p-values
   for (i in seq_along(comps)) {
     g1 <- comps[[i]][1]
     g2 <- comps[[i]][2]
     pval <- dunn_df$P.adj[i]
-    
-    if (g2 %in% row_levels && g1 %in% col_levels) {
-      pmat[g2, g1] <- pval  # match Wilcoxon: rows > columns
+    if (g1 %in% ordered_groups && g2 %in% ordered_groups) {
+      if (which(ordered_groups == g1) > which(ordered_groups == g2)) {
+        pmat[g1, g2] <- pval
+      } else {
+        pmat[g2, g1] <- pval
+      }
     }
   }
+  
+  diag(pmat) <- NA
+  
+  # Remove rows/cols with only NA — these break make_letter_assignments()
+  keep_rows <- rowSums(!is.na(pmat)) > 0
+  keep_cols <- colSums(!is.na(pmat)) > 0
+  pmat <- pmat[keep_rows, keep_cols, drop = FALSE]
   
   structure(list(
     method = "Dunn test with BH correction",
@@ -75,6 +86,8 @@ dunn_formatting <- function(name, dunn_obj, data_name = "dunn_data") {
     p.value = pmat
   ), class = "pairwise.htest")
 }
+
+
 
 dunn_list_Grammica <- list()
 for (name in names(dunn_list_before_Grammica)) {
@@ -98,7 +111,7 @@ data_ipomoea_Chl.a <- dplyr::filter(data_ipomoea, Pigment == "Chl.a")
 
 
 Chl.a_ipomoea_boxplot <- ggplot(data_ipomoea_Chl.a, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -125,7 +138,7 @@ Chl.a_ipomoea_boxplot <- ggplot(data_ipomoea_Chl.a, aes(x=Tissue.code, y=logFW.n
 
 Chl.a_ipomoea_boxplot 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 box.rslt_Chl.a_ipomoea <- with(data_ipomoea_Chl.a, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
 str(box.rslt_Chl.a_ipomoea)
 boxplot_positions_Chl.a_ipomoea <- as.data.frame(box.rslt_Chl.a_ipomoea$stats)
@@ -175,7 +188,7 @@ data_ipomoea_Chl.b <- dplyr::filter(data_ipomoea, Pigment == "Chl.b")
 
 
 Chl.b_ipomoea_boxplot <- ggplot(data_ipomoea_Chl.b, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -200,7 +213,7 @@ Chl.b_ipomoea_boxplot <- ggplot(data_ipomoea_Chl.b, aes(x=Tissue.code, y=logFW.n
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 box.rslt_Chl.b_ipomoea <- with(data_ipomoea_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
 str(box.rslt_Chl.b_ipomoea)
 boxplot_positions_Chl.b_ipomoea <- as.data.frame(box.rslt_Chl.b_ipomoea$stats)
@@ -251,7 +264,7 @@ data_ipomoea_Tot.Chl <- dplyr::filter(data_ipomoea, Pigment == "Tot.Chl")
 
 
 Tot.Chl_ipomoea_boxplot <- ggplot(data_ipomoea_Tot.Chl, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -278,7 +291,7 @@ Tot.Chl_ipomoea_boxplot <- ggplot(data_ipomoea_Tot.Chl, aes(x=Tissue.code, y=log
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 box.rslt_Tot.Chl_ipomoea <- with(data_ipomoea_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
 str(box.rslt_Tot.Chl_ipomoea)
 boxplot_positions_Tot.Chl_ipomoea <- as.data.frame(box.rslt_Tot.Chl_ipomoea$stats)
@@ -328,7 +341,7 @@ data_ipomoea_Chl.a.b <- dplyr::filter(data_ipomoea, Pigment == "Chl.a.b")
 
 
 Chl.a.b_ipomoea_boxplot <- ggplot(data_ipomoea_Chl.a.b, aes(x=Tissue.code, y=FW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -355,7 +368,7 @@ Chl.a.b_ipomoea_boxplot <- ggplot(data_ipomoea_Chl.a.b, aes(x=Tissue.code, y=FW.
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 box.rslt_Chl.a.b_ipomoea <- with(data_ipomoea_Chl.a.b, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
 str(box.rslt_Chl.a.b_ipomoea)
 boxplot_positions_Chl.a.b_ipomoea <- as.data.frame(box.rslt_Chl.a.b_ipomoea$stats)
@@ -414,7 +427,7 @@ for (sub in (loop_subgenera)) {
   
   data_loop <- dplyr::filter(data_Chl.a_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -445,7 +458,7 @@ plot_list_Cuscuta_Chl.a[["Monogynella"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a_Monogynella_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Monogynella_Chl.a <- dplyr::filter(data_Chl.a_plots_cuscutasub, Subgenus == "Monogynella")
 
 box.rslt_Chl.a_Monogynella <- with(data_Monogynella_Chl.a, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -503,7 +516,7 @@ plot_list_Cuscuta_Chl.a[["Cuscuta"]] +
     nudge_y = -.5, parse = TRUE) -> Chl.a_Cuscuta_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Cuscuta_Chl.a <- dplyr::filter(data_Chl.a_plots_cuscutasub, Subgenus == "Cuscuta")
 
 box.rslt_Chl.a_Cuscuta <- with(data_Cuscuta_Chl.a, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -563,7 +576,7 @@ plot_list_Cuscuta_Chl.a[["Grammica"]] +
     nudge_y = -.5, parse = TRUE) -> Chl.a_Grammica_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Grammica_Chl.a <- dplyr::filter(data_Chl.a_plots_cuscutasub, Subgenus == "Grammica")
 
 box.rslt_Chl.a_Grammica <- with(data_Grammica_Chl.a, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -613,7 +626,7 @@ Chl.a_Grammica_boxplot
 data_grammica_Chl.a <- dplyr::filter(data_Chl.a_plots_cuscutasub, Subgenus == "C_purpurata")
 
 Chl.a_C_purpurata_boxplot <- ggplot(data_grammica_Chl.a, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -641,7 +654,7 @@ Chl.a_C_purpurata_boxplot <- ggplot(data_grammica_Chl.a, aes(x=Tissue.code, y=lo
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_purpurata_Chl.a <- dplyr::filter(data_Chl.a_plots_cuscutasub, Subgenus == "C_purpurata")
 
 box.rslt_Chl.a_C_purpurata <- with(data_C_purpurata_Chl.a, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -702,7 +715,7 @@ for (sub in (loop_subgenera)) {
   
   data_loop <- dplyr::filter(data_Chl.b_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -735,7 +748,7 @@ plot_list_Cuscuta_Chl.b[["Monogynella"]] +
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Monogynella_Chl.b <- dplyr::filter(data_Chl.b_plots_cuscutasub, Subgenus == "Monogynella")
 
 box.rslt_Chl.b_Monogynella <- with(data_Monogynella_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -792,7 +805,7 @@ plot_list_Cuscuta_Chl.b[["Cuscuta"]] +
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Cuscuta_Chl.b <- dplyr::filter(data_Chl.b_plots_cuscutasub, Subgenus == "Cuscuta")
 
 box.rslt_Chl.b_Cuscuta <- with(data_Cuscuta_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -848,7 +861,7 @@ plot_list_Cuscuta_Chl.b[["Grammica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.b_Grammica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Grammica_Chl.b <- dplyr::filter(data_Chl.b_plots_cuscutasub, Subgenus == "Grammica")
 
 box.rslt_Chl.b_Grammica <- with(data_Grammica_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -900,7 +913,7 @@ Chl.b_Grammica_boxplot
 data_C_purpurata_Chl.b <- dplyr::filter(data_Chl.b_plots_cuscutasub, Subgenus == "C_purpurata")
 
 Chl.b_C_purpurata_boxplot <- ggplot(data_C_purpurata_Chl.b, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -945,7 +958,7 @@ for (sub in (loop_subgenera)) {
   
   data_loop <- dplyr::filter(data_Tot.Chl_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -975,7 +988,7 @@ plot_list_Cuscuta_Tot.Chl[["Monogynella"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Chl_Monogynella_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Monogynella_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_cuscutasub, Subgenus == "Monogynella")
 
 box.rslt_Tot.Chl_Monogynella <- with(data_Monogynella_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -1032,7 +1045,7 @@ plot_list_Cuscuta_Tot.Chl[["Cuscuta"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Chl_Cuscuta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Cuscuta_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_cuscutasub, Subgenus == "Cuscuta")
 
 box.rslt_Tot.Chl_Cuscuta <- with(data_Cuscuta_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -1090,7 +1103,7 @@ plot_list_Cuscuta_Tot.Chl[["Grammica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Chl_Grammica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Grammica_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_cuscutasub, Subgenus == "Grammica")
 
 box.rslt_Tot.Chl_Grammica <- with(data_Grammica_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -1143,7 +1156,7 @@ Tot.Chl_Grammica_boxplot
 data_C_purpurata_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_cuscutasub, Subgenus == "C_purpurata")
 
 Tot.Chl_C_purpurata_boxplot <- ggplot(data_C_purpurata_Tot.Chl, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1170,7 +1183,7 @@ Tot.Chl_C_purpurata_boxplot <- ggplot(data_C_purpurata_Tot.Chl, aes(x=Tissue.cod
 
 Tot.Chl_C_purpurata_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_purpurata_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_cuscutasub, Subgenus == "C_purpurata")
 
 box.rslt_Tot.Chl_C_purpurata <- with(data_C_purpurata_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -1233,7 +1246,7 @@ for (sub in (loop_subgenera)) {
   
   data_loop <- dplyr::filter(data_Chl.a.b_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=FW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1263,7 +1276,7 @@ plot_list_Cuscuta_Chl.a.b[["Monogynella"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a.b_Monogynella_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Monogynella_Chl.a.b <- dplyr::filter(data_Chl.a.b_plots_cuscutasub, Subgenus == "Monogynella")
 
 box.rslt_Chl.a.b_Monogynella <- with(data_Monogynella_Chl.a.b, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -1320,7 +1333,7 @@ plot_list_Cuscuta_Chl.a.b[["Cuscuta"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a.b_Cuscuta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Cuscuta_Chl.a.b <- dplyr::filter(data_Chl.a.b_plots_cuscutasub, Subgenus == "Cuscuta")
 
 box.rslt_Chl.a.b_Cuscuta <- with(data_Cuscuta_Chl.a.b, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -1377,7 +1390,7 @@ plot_list_Cuscuta_Chl.a.b[["Grammica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a.b_Grammica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Grammica_Chl.a.b <- dplyr::filter(data_Chl.a.b_plots_cuscutasub, Subgenus == "Grammica")
 
 box.rslt_Chl.a.b_Grammica <- with(data_Grammica_Chl.a.b, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -1429,7 +1442,7 @@ Chl.a.b_Grammica_boxplot
 data_C_purpurata_Chl.a.b <- dplyr::filter(data_Chl.a.b_plots_cuscutasub, Subgenus == "C_purpurata")
 
 Chl.a.b_C_purpurata_boxplot <- ggplot(data_C_purpurata_Chl.a.b, aes(x=Tissue.code, y=FW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1483,7 +1496,7 @@ wrap_elements(gridtext::richtext_grob('Total chlorophyll', rot = 90, hjust = 0.5
 
 chlorophyll_boxplot_new 
 
-pdf("../output/boxplots/chlorophyll_boxplot_new.pdf", width=7,height=7) 
+pdf("../output/boxplots/fig_4_chlorophyll_boxplot.pdf", width=7,height=7) 
 chlorophyll_boxplot_new
 dev.off()
 
@@ -1498,7 +1511,7 @@ data_ipomoea_VAZ.Car <- dplyr::filter(data_ipomoea, Pigment == "VAZ.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
 
 VAZ.Car_ipomoea_boxplot <- ggplot(data_ipomoea_VAZ.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1525,7 +1538,7 @@ VAZ.Car_ipomoea_boxplot <- ggplot(data_ipomoea_VAZ.Car, aes(x=Tissue.code, y=(FW
 
 VAZ.Car_ipomoea_boxplot 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 box.rslt_VAZ.Car_ipomoea <- with(data_ipomoea_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
 str(box.rslt_VAZ.Car_ipomoea)
 boxplot_positions_VAZ.Car_ipomoea <- as.data.frame(box.rslt_VAZ.Car_ipomoea$stats)
@@ -1569,12 +1582,12 @@ VAZ.Car_ipomoea_boxplot +
 VAZ.Car_ipomoea_boxplot
 
 
-#### Neoxanthin Ipomoea_nil ####
-data_ipomoea_Neoxanthin <- dplyr::filter(data_ipomoea, Pigment == "Neo.Car")
+#### Neo.Car Ipomoea_nil ####
+data_ipomoea_Neo.Car <- dplyr::filter(data_ipomoea, Pigment == "Neo.Car")
 
 
-Neoxanthin_ipomoea_boxplot <- ggplot(data_ipomoea_Neoxanthin, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+Neo.Car_ipomoea_boxplot <- ggplot(data_ipomoea_Neo.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1599,58 +1612,58 @@ Neoxanthin_ipomoea_boxplot <- ggplot(data_ipomoea_Neoxanthin, aes(x=Tissue.code,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
-# use base R boxplot to get the coordinates of the boxes
-box.rslt_Neoxanthin_ipomoea <- with(data_ipomoea_Neoxanthin, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Neoxanthin_ipomoea)
-boxplot_positions_Neoxanthin_ipomoea <- as.data.frame(box.rslt_Neoxanthin_ipomoea$stats)
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+box.rslt_Neo.Car_ipomoea <- with(data_ipomoea_Neo.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Neo.Car_ipomoea)
+boxplot_positions_Neo.Car_ipomoea <- as.data.frame(box.rslt_Neo.Car_ipomoea$stats)
 
 # what are these column tissue codes?
-tissues_Neoxanthin_ipomoea <- levels(data_ipomoea_Neoxanthin$Tissue.code)
+tissues_Neo.Car_ipomoea <- levels(data_ipomoea_Neo.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Neoxanthin_ipomoea) <- tissues_Neoxanthin_ipomoea
+colnames(boxplot_positions_Neo.Car_ipomoea) <- tissues_Neo.Car_ipomoea
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Neoxanthin_ipomoea <- boxplot_positions_Neoxanthin_ipomoea[5,]
+top_positions_Neo.Car_ipomoea <- boxplot_positions_Neo.Car_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Neoxanthin_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Neo.Car"]])[["Letters"]])
-colnames(cbd_Neoxanthin_ipomoea)[1] <- "Letter"
+cbd_Neo.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Neo.Car"]])[["Letters"]])
+colnames(cbd_Neo.Car_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Neoxanthin_ipomoea, keep.rownames = "Tissue.code")
+setDT(cbd_Neo.Car_ipomoea, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Neoxanthin_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_Neoxanthin_ipomoea
+top_positions_Neo.Car_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_Neo.Car_ipomoea
 # now join these positions to cbd
-left_join(cbd_Neoxanthin_ipomoea, top_positions_Neoxanthin_ipomoea, by = "Tissue.code") -> cbd_Neoxanthin_ipomoea
+left_join(cbd_Neo.Car_ipomoea, top_positions_Neo.Car_ipomoea, by = "Tissue.code") -> cbd_Neo.Car_ipomoea
 
 # calculate how much to nudge
-data_ipomoea_Neoxanthin %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Neoxanthin_ipomoea
-cbd_Neoxanthin_ipomoea$nudged <- max_Neoxanthin_ipomoea$max * 1.05
+data_ipomoea_Neo.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Neo.Car_ipomoea
+cbd_Neo.Car_ipomoea$nudged <- max_Neo.Car_ipomoea$max * 1.05
 
 
 
 # add CLDs to plot
-Neoxanthin_ipomoea_boxplot + 
+Neo.Car_ipomoea_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_Neoxanthin_ipomoea,
+    data    = cbd_Neo.Car_ipomoea,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Neoxanthin_ipomoea_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Neo.Car_ipomoea_boxplot
 
 
-Neoxanthin_ipomoea_boxplot
+Neo.Car_ipomoea_boxplot
 
 
-#### Lutein.epoxide Ipomoea_nil ####
-data_ipomoea_Lutein.epoxide <- dplyr::filter(data_ipomoea, Pigment == "Lut.epo.Car")
+#### Lut.Car.epoxide Ipomoea_nil ####
+data_ipomoea_Lut.Car.epoxide <- dplyr::filter(data_ipomoea, Pigment == "Lut.epo.Car")
 
 
-Lutein.epoxide_ipomoea_boxplot <- ggplot(data_ipomoea_Lutein.epoxide, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+Lut.Car.epoxide_ipomoea_boxplot <- ggplot(data_ipomoea_Lut.Car.epoxide, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1678,16 +1691,16 @@ Lutein.epoxide_ipomoea_boxplot <- ggplot(data_ipomoea_Lutein.epoxide, aes(x=Tiss
 
 # KW not significant so no post hoc
 
-Lutein.epoxide_ipomoea_boxplot
+Lut.Car.epoxide_ipomoea_boxplot
 
 
 
-#### Lutein Ipomoea_nil ####
-data_ipomoea_Lutein <- dplyr::filter(data_ipomoea, Pigment == "Lut.Car")
+#### Lut.Car Ipomoea_nil ####
+data_ipomoea_Lut.Car <- dplyr::filter(data_ipomoea, Pigment == "Lut.Car")
 
 
-Lutein_ipomoea_boxplot <- ggplot(data_ipomoea_Lutein, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+Lut.Car_ipomoea_boxplot <- ggplot(data_ipomoea_Lut.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1714,59 +1727,59 @@ Lutein_ipomoea_boxplot <- ggplot(data_ipomoea_Lutein, aes(x=Tissue.code, y=(FW.n
 
 
 
-# use base R boxplot to get the coordinates of the boxes
-box.rslt_Lutein_ipomoea <- with(data_ipomoea_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_ipomoea)
-boxplot_positions_Lutein_ipomoea <- as.data.frame(box.rslt_Lutein_ipomoea$stats)
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+box.rslt_Lut.Car_ipomoea <- with(data_ipomoea_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_ipomoea)
+boxplot_positions_Lut.Car_ipomoea <- as.data.frame(box.rslt_Lut.Car_ipomoea$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_ipomoea <- levels(data_ipomoea_Lutein$Tissue.code)
+tissues_Lut.Car_ipomoea <- levels(data_ipomoea_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_ipomoea) <- tissues_Lutein_ipomoea
+colnames(boxplot_positions_Lut.Car_ipomoea) <- tissues_Lut.Car_ipomoea
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_ipomoea <- boxplot_positions_Lutein_ipomoea[5,]
+top_positions_Lut.Car_ipomoea <- boxplot_positions_Lut.Car_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_ipomoea)[1] <- "Letter"
+cbd_Lut.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_ipomoea, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_ipomoea, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_ipomoea
+top_positions_Lut.Car_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_ipomoea
 # now join these positions to cbd
-left_join(cbd_Lutein_ipomoea, top_positions_Lutein_ipomoea, by = "Tissue.code") -> cbd_Lutein_ipomoea
+left_join(cbd_Lut.Car_ipomoea, top_positions_Lut.Car_ipomoea, by = "Tissue.code") -> cbd_Lut.Car_ipomoea
 
 # calculate how much to nudge
-data_ipomoea_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_ipomoea
-cbd_Lutein_ipomoea$nudged <- max_Lutein_ipomoea$max * 1.05
+data_ipomoea_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_ipomoea
+cbd_Lut.Car_ipomoea$nudged <- max_Lut.Car_ipomoea$max * 1.05
 
 
 # add CLDs to plot
-Lutein_ipomoea_boxplot + 
+Lut.Car_ipomoea_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_Lutein_ipomoea,
+    data    = cbd_Lut.Car_ipomoea,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_ipomoea_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_ipomoea_boxplot
 
 
-Lutein_ipomoea_boxplot
+Lut.Car_ipomoea_boxplot
 
 
 
 
-#### a.Carotene Ipomoea_nil ####
-data_ipomoea_a.Carotene <- dplyr::filter(data_ipomoea, Pigment == "a.Car.Car")
+#### a.Car.Car Ipomoea_nil ####
+data_ipomoea_a.Car.Car <- dplyr::filter(data_ipomoea, Pigment == "a.Car.Car")
 
 
-a.Carotene_ipomoea_boxplot <- ggplot(data_ipomoea_a.Carotene, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+a.Car.Car_ipomoea_boxplot <- ggplot(data_ipomoea_a.Car.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1793,58 +1806,58 @@ a.Carotene_ipomoea_boxplot <- ggplot(data_ipomoea_a.Carotene, aes(x=Tissue.code,
 
 
 
-# use base R boxplot to get the coordinates of the boxes
-box.rslt_a.Carotene_ipomoea <- with(data_ipomoea_a.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_a.Carotene_ipomoea)
-boxplot_positions_a.Carotene_ipomoea <- as.data.frame(box.rslt_a.Carotene_ipomoea$stats)
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+box.rslt_a.Car.Car_ipomoea <- with(data_ipomoea_a.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_a.Car.Car_ipomoea)
+boxplot_positions_a.Car.Car_ipomoea <- as.data.frame(box.rslt_a.Car.Car_ipomoea$stats)
 
 # what are these column tissue codes?
-tissues_a.Carotene_ipomoea <- levels(data_ipomoea_a.Carotene$Tissue.code)
+tissues_a.Car.Car_ipomoea <- levels(data_ipomoea_a.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_a.Carotene_ipomoea) <- tissues_a.Carotene_ipomoea
+colnames(boxplot_positions_a.Car.Car_ipomoea) <- tissues_a.Car.Car_ipomoea
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_a.Carotene_ipomoea <- boxplot_positions_a.Carotene_ipomoea[5,]
+top_positions_a.Car.Car_ipomoea <- boxplot_positions_a.Car.Car_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__a.Car.Car"]])[["Letters"]])
-colnames(cbd_a.Carotene_ipomoea)[1] <- "Letter"
+cbd_a.Car.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__a.Car.Car"]])[["Letters"]])
+colnames(cbd_a.Car.Car_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_a.Carotene_ipomoea, keep.rownames = "Tissue.code")
+setDT(cbd_a.Car.Car_ipomoea, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_a.Carotene_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_a.Carotene_ipomoea
+top_positions_a.Car.Car_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_a.Car.Car_ipomoea
 # now join these positions to cbd
-left_join(cbd_a.Carotene_ipomoea, top_positions_a.Carotene_ipomoea, by = "Tissue.code") -> cbd_a.Carotene_ipomoea
+left_join(cbd_a.Car.Car_ipomoea, top_positions_a.Car.Car_ipomoea, by = "Tissue.code") -> cbd_a.Car.Car_ipomoea
 
 # calculate how much to nudge
-data_ipomoea_a.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Carotene_ipomoea
-cbd_a.Carotene_ipomoea$nudged <-( max_a.Carotene_ipomoea$max + 0.01) * 1.05
+data_ipomoea_a.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Car.Car_ipomoea
+cbd_a.Car.Car_ipomoea$nudged <-( max_a.Car.Car_ipomoea$max + 0.01) * 1.05
 
 
 # add CLDs to plot
-a.Carotene_ipomoea_boxplot + 
+a.Car.Car_ipomoea_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_a.Carotene_ipomoea,
+    data    = cbd_a.Car.Car_ipomoea,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Carotene_ipomoea_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Car.Car_ipomoea_boxplot
 
 
-a.Carotene_ipomoea_boxplot
+a.Car.Car_ipomoea_boxplot
 
 
 
-#### b.Carotene Ipomoea_nil ####
-data_ipomoea_b.Carotene <- dplyr::filter(data_ipomoea, Pigment == "b.Car.Car")
+#### b.Car.Car Ipomoea_nil ####
+data_ipomoea_b.Car.Car <- dplyr::filter(data_ipomoea, Pigment == "b.Car.Car")
 
 
-b.Carotene_ipomoea_boxplot <- ggplot(data_ipomoea_b.Carotene, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+b.Car.Car_ipomoea_boxplot <- ggplot(data_ipomoea_b.Car.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1871,49 +1884,49 @@ b.Carotene_ipomoea_boxplot <- ggplot(data_ipomoea_b.Carotene, aes(x=Tissue.code,
 
 
 
-# use base R boxplot to get the coordinates of the boxes
-box.rslt_b.Carotene_ipomoea <- with(data_ipomoea_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_ipomoea)
-boxplot_positions_b.Carotene_ipomoea <- as.data.frame(box.rslt_b.Carotene_ipomoea$stats)
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+box.rslt_b.Car.Car_ipomoea <- with(data_ipomoea_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_ipomoea)
+boxplot_positions_b.Car.Car_ipomoea <- as.data.frame(box.rslt_b.Car.Car_ipomoea$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_ipomoea <- levels(data_ipomoea_b.Carotene$Tissue.code)
+tissues_b.Car.Car_ipomoea <- levels(data_ipomoea_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_ipomoea) <- tissues_b.Carotene_ipomoea
+colnames(boxplot_positions_b.Car.Car_ipomoea) <- tissues_b.Car.Car_ipomoea
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_ipomoea <- boxplot_positions_b.Carotene_ipomoea[5,]
+top_positions_b.Car.Car_ipomoea <- boxplot_positions_b.Car.Car_ipomoea[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_ipomoea)[1] <- "Letter"
+cbd_b.Car.Car_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_ipomoea)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_ipomoea, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_ipomoea, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_ipomoea
+top_positions_b.Car.Car_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_ipomoea
 # now join these positions to cbd
-left_join(cbd_b.Carotene_ipomoea, top_positions_b.Carotene_ipomoea, by = "Tissue.code") -> cbd_b.Carotene_ipomoea
+left_join(cbd_b.Car.Car_ipomoea, top_positions_b.Car.Car_ipomoea, by = "Tissue.code") -> cbd_b.Car.Car_ipomoea
 
 # calculate how much to nudge
-data_ipomoea_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_ipomoea
-cbd_b.Carotene_ipomoea$nudged <- max_b.Carotene_ipomoea$max * 1.05
+data_ipomoea_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_ipomoea
+cbd_b.Car.Car_ipomoea$nudged <- max_b.Car.Car_ipomoea$max * 1.05
 
 
 # add CLDs to plot
-b.Carotene_ipomoea_boxplot + 
+b.Car.Car_ipomoea_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_b.Carotene_ipomoea,
+    data    = cbd_b.Car.Car_ipomoea,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_ipomoea_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_ipomoea_boxplot
 
 
-b.Carotene_ipomoea_boxplot
+b.Car.Car_ipomoea_boxplot
 
 
 #### Tot.Car Ipomoea_nil ####
@@ -1921,7 +1934,7 @@ data_ipomoea_Tot.Car <- dplyr::filter(data_ipomoea, Pigment == "Tot.Car")
 # this one is normalized by FW
 
 Tot.Car_ipomoea_boxplot <- ggplot(data_ipomoea_Tot.Car, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -1948,7 +1961,7 @@ Tot.Car_ipomoea_boxplot <- ggplot(data_ipomoea_Tot.Car, aes(x=Tissue.code, y=log
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 box.rslt_Tot.Car_ipomoea <- with(data_ipomoea_Tot.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
 str(box.rslt_Tot.Car_ipomoea)
 boxplot_positions_Tot.Car_ipomoea <- as.data.frame(box.rslt_Tot.Car_ipomoea$stats)
@@ -1998,7 +2011,7 @@ data_ipomoea_NVZ.Car <- dplyr::filter(data_ipomoea, Pigment == "NVZ.Car")
 
 
 NVZ.Car_ipomoea_boxplot <- ggplot(data_ipomoea_NVZ.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -2026,7 +2039,7 @@ NVZ.Car_ipomoea_boxplot <- ggplot(data_ipomoea_NVZ.Car, aes(x=Tissue.code, y=(FW
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 box.rslt_NVZ.Car_ipomoea <- with(data_ipomoea_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
 str(box.rslt_NVZ.Car_ipomoea)
 boxplot_positions_NVZ.Car_ipomoea <- as.data.frame(box.rslt_NVZ.Car_ipomoea$stats)
@@ -2085,7 +2098,7 @@ for (sub in (loop_subgenera)) {
   
   data_loop <- dplyr::filter(data_VAZ.Car_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -2116,7 +2129,7 @@ plot_list_Cuscuta_VAZ.Car[["Monogynella"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_Monogynella_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Monogynella_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_cuscutasub, Subgenus == "Monogynella")
 
 box.rslt_VAZ.Car_Monogynella <- with(data_Monogynella_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -2174,7 +2187,7 @@ plot_list_Cuscuta_VAZ.Car[["Cuscuta"]] +
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_Cuscuta_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Cuscuta_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_cuscutasub, Subgenus == "Cuscuta")
 
 box.rslt_VAZ.Car_Cuscuta <- with(data_Cuscuta_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -2234,7 +2247,7 @@ plot_list_Cuscuta_VAZ.Car[["Grammica"]] +
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_Grammica_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Grammica_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_cuscutasub, Subgenus == "Grammica")
 
 box.rslt_VAZ.Car_Grammica <- with(data_Grammica_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -2284,7 +2297,7 @@ VAZ.Car_Grammica_boxplot
 data_grammica_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
 VAZ.Car_C_purpurata_boxplot <- ggplot(data_grammica_VAZ.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -2312,7 +2325,7 @@ VAZ.Car_C_purpurata_boxplot <- ggplot(data_grammica_VAZ.Car, aes(x=Tissue.code, 
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_purpurata_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
 box.rslt_VAZ.Car_C_purpurata <- with(data_C_purpurata_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -2359,21 +2372,21 @@ VAZ.Car_C_purpurata_boxplot
 
 
 
-#### Neoxanthin loop through Monogynella, Cuscuta, and Grammica ####
+#### Neo.Car loop through Monogynella, Cuscuta, and Grammica ####
 loop_subgenera <- c("Monogynella","Cuscuta", "Grammica")
-# dplyr::filter for Neoxanthin
-data_Neoxanthin_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "Neo.Car")
+# dplyr::filter for Neo.Car
+data_Neo.Car_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "Neo.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_Neoxanthin_plots_cuscutasub$Tissue.code <- factor(data_Neoxanthin_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_Neo.Car_plots_cuscutasub$Tissue.code <- factor(data_Neo.Car_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Cuscuta_Neoxanthin = list()
+plot_list_Cuscuta_Neo.Car = list()
 
 for (sub in (loop_subgenera)) {
   
-  data_loop <- dplyr::filter(data_Neoxanthin_plots_cuscutasub, Subgenus == sub)
+  data_loop <- dplyr::filter(data_Neo.Car_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -2389,128 +2402,139 @@ for (sub in (loop_subgenera)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100)) 
-  plot_list_Cuscuta_Neoxanthin[[sub]] = p
+  plot_list_Cuscuta_Neo.Car[[sub]] = p
   
 }
 
 
-#### Neoxanthin Monogynella ####
-plot_list_Cuscuta_Neoxanthin[["Monogynella"]] + 
+#### Neo.Car Monogynella ####
+plot_list_Cuscuta_Neo.Car[["Monogynella"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Neo.Car" & Subgenus == "Monogynella"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Neoxanthin_Monogynella_boxplot
+    nudge_y = -.5, parse = TRUE) -> Neo.Car_Monogynella_boxplot
 
 
 
-# use base R boxplot to get the coordinates of the boxes
-data_Monogynella_Neoxanthin <- dplyr::filter(data_Neoxanthin_plots_cuscutasub, Subgenus == "Monogynella")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Monogynella_Neo.Car <- dplyr::filter(data_Neo.Car_plots_cuscutasub, Subgenus == "Monogynella")
 
-box.rslt_Neoxanthin_Monogynella <- with(data_Monogynella_Neoxanthin, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Neoxanthin_Monogynella)
-boxplot_positions_Neoxanthin_Monogynella <- as.data.frame(box.rslt_Neoxanthin_Monogynella$stats)
+box.rslt_Neo.Car_Monogynella <- with(data_Monogynella_Neo.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Neo.Car_Monogynella)
+boxplot_positions_Neo.Car_Monogynella <- as.data.frame(box.rslt_Neo.Car_Monogynella$stats)
 
 # what are these column tissue codes?
-tissues_Neoxanthin_Monogynella <- levels(data_Monogynella_Neoxanthin$Tissue.code)
+tissues_Neo.Car_Monogynella <- levels(data_Monogynella_Neo.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Neoxanthin_Monogynella) <- tissues_Neoxanthin_Monogynella
+colnames(boxplot_positions_Neo.Car_Monogynella) <- tissues_Neo.Car_Monogynella
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Neoxanthin_Monogynella <- boxplot_positions_Neoxanthin_Monogynella[5,]
+top_positions_Neo.Car_Monogynella <- boxplot_positions_Neo.Car_Monogynella[5,]
 
 
-# # add pairwise significance letter groups (compact letter display; CLD)
-# dunn_list[["Monogynella__Neo.Car"]]
-# cbd_Neoxanthin_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Neo.Car"]])[["Letters"]])
-# colnames(cbd_Neoxanthin_Monogynella)[1] <- "Letter"
-# # turn rownames into first column for Tissue.code
-# setDT(cbd_Neoxanthin_Monogynella, keep.rownames = "Tissue.code")
-
-
-# Monogynella Neoxanthin was causing a problem in this pipeline because of the exact matches.. 
+# add pairwise significance letter groups (compact letter display; CLD)
 dunn_list[["Monogynella__Neo.Car"]]
-# QsRutils::make_letter_assignments(dunn_list[["Monogynella__Neo.Car"]])
-
-# create letter groups manually 
-
-# # Pairwise comparisons using Wilcoxon rank sum exact test 
-# 
-# data:  data_loop_wilcox$FW.norm and data_loop_wilcox$Tissue.code 
-# 
-#     sdlg   y      o h
-#   y 0.0014 -      - -
-#   o 0.0014 0.0014 - -
-#   h 0.0038 0.0038 - -
-#   f 0.0446 0.0446 - -
-#   
-#   P value adjustment method: BH 
-
-# sdlg diff from everyone
-# sdlg a 
-# y diff from o, h, f
-# y = b
-# o, h, f not compared but exact match = c
-
-# make df
-cbd_Neoxanthin_Monogynella_Tissue.code <- c("sdlg", "y", "o", "h", "f")
-cbd_Neoxanthin_Monogynella_Letters <- c("a", "b", "c", "c", "c")
-cbd_Neoxanthin_Monogynella <- data.frame("Tissue.code" = cbd_Neoxanthin_Monogynella_Tissue.code, "Letter" = cbd_Neoxanthin_Monogynella_Letters)
+cbd_Neo.Car_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Neo.Car"]])[["Letters"]])
+colnames(cbd_Neo.Car_Monogynella)[1] <- "Letter"
+# turn rownames into first column for Tissue.code
+setDT(cbd_Neo.Car_Monogynella, keep.rownames = "Tissue.code")
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Neoxanthin_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_Neoxanthin_Monogynella
+top_positions_Neo.Car_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_Neo.Car_Monogynella
 # now join these positions to cbd
-left_join(cbd_Neoxanthin_Monogynella, top_positions_Neoxanthin_Monogynella, by = "Tissue.code") -> cbd_Neoxanthin_Monogynella
+left_join(cbd_Neo.Car_Monogynella, top_positions_Neo.Car_Monogynella, by = "Tissue.code") -> cbd_Neo.Car_Monogynella
 
 # calculate how much to nudge
-data_Monogynella_Neoxanthin %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Neoxanthin_Monogynella
-cbd_Neoxanthin_Monogynella$nudged <- (max_Neoxanthin_Monogynella$max + 0.01) * 1.05
+data_Monogynella_Neo.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Neo.Car_Monogynella
+cbd_Neo.Car_Monogynella$nudged <- (max_Neo.Car_Monogynella$max + 0.01) * 1.05
 
 # add CLDs to plot
-Neoxanthin_Monogynella_boxplot + 
+Neo.Car_Monogynella_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_Neoxanthin_Monogynella,
+    data    = cbd_Neo.Car_Monogynella,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0))-> Neoxanthin_Monogynella_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0))-> Neo.Car_Monogynella_boxplot
 
-Neoxanthin_Monogynella_boxplot
+Neo.Car_Monogynella_boxplot
 
 
-#### Neoxanthin Cuscuta ####
-plot_list_Cuscuta_Neoxanthin[["Cuscuta"]]  -> Neoxanthin_Cuscuta_boxplot
+#### Neo.Car Cuscuta ####
+plot_list_Cuscuta_Neo.Car[["Cuscuta"]]  -> Neo.Car_Cuscuta_boxplot
 
 
 # no KW and no posthoc
 
-Neoxanthin_Cuscuta_boxplot
+Neo.Car_Cuscuta_boxplot
 
 
-#### Neoxanthin Grammica ####
-# no KW and no Post hoc
-plot_list_Cuscuta_Neoxanthin[["Grammica"]]+ 
+#### Neo.Car Grammica ####
+plot_list_Cuscuta_Neo.Car[["Grammica"]]+ 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Neo.Car" & Subgenus == "Grammica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE)  -> Neoxanthin_Grammica_boxplot
+    nudge_y = -.5, parse = TRUE)  -> Neo.Car_Grammica_boxplot
+
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Grammica_Neo.Car <- dplyr::filter(data_Neo.Car_plots_cuscutasub, Subgenus == "Grammica")
+
+box.rslt_Neo.Car_Grammica <- with(data_Grammica_Neo.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Neo.Car_Grammica)
+boxplot_positions_Neo.Car_Grammica <- as.data.frame(box.rslt_Neo.Car_Grammica$stats)
+
+# what are these column tissue codes?
+tissues_Neo.Car_Grammica <- levels(data_Grammica_Neo.Car$Tissue.code)
+# add appropriate tissues to position df
+colnames(boxplot_positions_Neo.Car_Grammica) <- tissues_Neo.Car_Grammica
+
+# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+top_positions_Neo.Car_Grammica <- boxplot_positions_Neo.Car_Grammica[5,]
 
 
+#add pairwise significance letter groups (compact letter display; CLD)
+cbd_Neo.Car_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Lut.epo.Car"]])[["Letters"]])
+colnames(cbd_Neo.Car_Grammica)[1] <- "Letter"
+# turn rownames into first column for Tissue.code
+setDT(cbd_Neo.Car_Grammica, keep.rownames = "Tissue.code")
 
 
+# add a column y.position taken from top_positions based on mtaching up Tissue.code
+# first reshape top_positions so that colnames are a column called Tissue.code
+top_positions_Neo.Car_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_Neo.Car_Grammica
+# now join these positions to cbd
+left_join(cbd_Neo.Car_Grammica, top_positions_Neo.Car_Grammica, by = "Tissue.code") -> cbd_Neo.Car_Grammica
 
-#### Neoxanthin C_purpurata alone ####
+# calculate how much to nudge
+data_Grammica_Neo.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Neo.Car_Grammica
+cbd_Neo.Car_Grammica$nudged <- (max_Neo.Car_Grammica$max + 0.01) * 1.05
 
-data_C_purpurata_Neoxanthin <- dplyr::filter(data_Neoxanthin_plots_cuscutasub, Subgenus == "C_purpurata")
 
-Neoxanthin_C_purpurata_boxplot <- ggplot(data_C_purpurata_Neoxanthin, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+# add CLDs to plot
+Neo.Car_Grammica_boxplot + 
+  geom_text(
+    size    = 2,
+    color = "black",
+    data    = cbd_Neo.Car_Grammica,
+    inherit.aes = T,
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Neo.Car_Grammica_boxplot
+
+
+Neo.Car_Grammica_boxplot
+
+#### Neo.Car C_purpurata alone ####
+
+data_C_purpurata_Neo.Car <- dplyr::filter(data_Neo.Car_plots_cuscutasub, Subgenus == "C_purpurata")
+
+Neo.Car_C_purpurata_boxplot <- ggplot(data_C_purpurata_Neo.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -2527,7 +2551,7 @@ Neoxanthin_C_purpurata_boxplot <- ggplot(data_C_purpurata_Neoxanthin, aes(x=Tiss
   ylab("% of Carotenoids") +
   guides(colour = guide_legend(nrow = 1)) +
   scale_y_continuous(position = "right", limits = c(0, 100)) 
-Neoxanthin_C_purpurata_boxplot
+Neo.Car_C_purpurata_boxplot
 
 # not sig
 
@@ -2535,21 +2559,21 @@ Neoxanthin_C_purpurata_boxplot
 
 
 
-#### Lutein.epoxide loop through Monogynella, Cuscuta, and Grammica ####
+#### Lut.Car.epoxide loop through Monogynella, Cuscuta, and Grammica ####
 loop_subgenera <- c("Monogynella","Cuscuta", "Grammica")
-# dplyr::filter for Lutein.epoxide
-data_Lutein.epoxide_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "Lut.epo.Car")
+# dplyr::filter for Lut.Car.epoxide
+data_Lut.Car.epoxide_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "Lut.epo.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_Lutein.epoxide_plots_cuscutasub$Tissue.code <- factor(data_Lutein.epoxide_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_Lut.Car.epoxide_plots_cuscutasub$Tissue.code <- factor(data_Lut.Car.epoxide_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Cuscuta_Lutein.epoxide = list()
+plot_list_Cuscuta_Lut.Car.epoxide = list()
 
 for (sub in (loop_subgenera)) {
   
-  data_loop <- dplyr::filter(data_Lutein.epoxide_plots_cuscutasub, Subgenus == sub)
+  data_loop <- dplyr::filter(data_Lut.Car.epoxide_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -2565,143 +2589,143 @@ for (sub in (loop_subgenera)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100))
-  plot_list_Cuscuta_Lutein.epoxide[[sub]] = p
+  plot_list_Cuscuta_Lut.Car.epoxide[[sub]] = p
   
 }
 
-#### Lutein.epoxide. Monogynella ####
-plot_list_Cuscuta_Lutein.epoxide[["Monogynella"]] + 
+#### Lut.Car.epoxide. Monogynella ####
+plot_list_Cuscuta_Lut.Car.epoxide[["Monogynella"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Lut.epo.Car" & Subgenus == "Monogynella"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_Monogynella_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_Monogynella_boxplot
 
-Lutein.epoxide_Monogynella_boxplot
+Lut.Car.epoxide_Monogynella_boxplot
 # not sig
 
-#### Lutein.epoxide Cuscuta ####
-plot_list_Cuscuta_Lutein.epoxide[["Cuscuta"]] + 
+#### Lut.Car.epoxide Cuscuta ####
+plot_list_Cuscuta_Lut.Car.epoxide[["Cuscuta"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Lut.epo.Car" & Subgenus == "Cuscuta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_Cuscuta_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_Cuscuta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Cuscuta_Lutein.epoxide <- dplyr::filter(data_Lutein.epoxide_plots_cuscutasub, Subgenus == "Cuscuta")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Cuscuta_Lut.Car.epoxide <- dplyr::filter(data_Lut.Car.epoxide_plots_cuscutasub, Subgenus == "Cuscuta")
 
-box.rslt_Lutein.epoxide_Cuscuta <- with(data_Cuscuta_Lutein.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein.epoxide_Cuscuta)
-boxplot_positions_Lutein.epoxide_Cuscuta <- as.data.frame(box.rslt_Lutein.epoxide_Cuscuta$stats)
+box.rslt_Lut.Car.epoxide_Cuscuta <- with(data_Cuscuta_Lut.Car.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car.epoxide_Cuscuta)
+boxplot_positions_Lut.Car.epoxide_Cuscuta <- as.data.frame(box.rslt_Lut.Car.epoxide_Cuscuta$stats)
 
 # what are these column tissue codes?
-tissues_Lutein.epoxide_Cuscuta <- levels(data_Cuscuta_Lutein.epoxide$Tissue.code)
+tissues_Lut.Car.epoxide_Cuscuta <- levels(data_Cuscuta_Lut.Car.epoxide$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein.epoxide_Cuscuta) <- tissues_Lutein.epoxide_Cuscuta
+colnames(boxplot_positions_Lut.Car.epoxide_Cuscuta) <- tissues_Lut.Car.epoxide_Cuscuta
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein.epoxide_Cuscuta <- boxplot_positions_Lutein.epoxide_Cuscuta[5,]
+top_positions_Lut.Car.epoxide_Cuscuta <- boxplot_positions_Lut.Car.epoxide_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein.epoxide_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Lut.epo.Car"]])[["Letters"]])
-colnames(cbd_Lutein.epoxide_Cuscuta)[1] <- "Letter"
+cbd_Lut.Car.epoxide_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Lut.epo.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car.epoxide_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein.epoxide_Cuscuta, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car.epoxide_Cuscuta, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein.epoxide_Cuscuta %>% gather(., Tissue.code, y.position) -> top_positions_Lutein.epoxide_Cuscuta
+top_positions_Lut.Car.epoxide_Cuscuta %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car.epoxide_Cuscuta
 # now join these positions to cbd
-left_join(cbd_Lutein.epoxide_Cuscuta, top_positions_Lutein.epoxide_Cuscuta, by = "Tissue.code") -> cbd_Lutein.epoxide_Cuscuta
+left_join(cbd_Lut.Car.epoxide_Cuscuta, top_positions_Lut.Car.epoxide_Cuscuta, by = "Tissue.code") -> cbd_Lut.Car.epoxide_Cuscuta
 
 # calculate how much to nudge
-data_Cuscuta_Lutein.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein.epoxide_Cuscuta
-cbd_Lutein.epoxide_Cuscuta$nudged <- (max_Lutein.epoxide_Cuscuta$max + 0.01) * 1.05
+data_Cuscuta_Lut.Car.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car.epoxide_Cuscuta
+cbd_Lut.Car.epoxide_Cuscuta$nudged <- (max_Lut.Car.epoxide_Cuscuta$max + 0.01) * 1.05
 
 
 # add CLDs to plot
-Lutein.epoxide_Cuscuta_boxplot + 
+Lut.Car.epoxide_Cuscuta_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_Lutein.epoxide_Cuscuta,
+    data    = cbd_Lut.Car.epoxide_Cuscuta,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein.epoxide_Cuscuta_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car.epoxide_Cuscuta_boxplot
 
 
-Lutein.epoxide_Cuscuta_boxplot
+Lut.Car.epoxide_Cuscuta_boxplot
 
 
 
-#### Lutein.epoxide Grammica ####
-plot_list_Cuscuta_Lutein.epoxide[["Grammica"]] + 
+#### Lut.Car.epoxide Grammica ####
+plot_list_Cuscuta_Lut.Car.epoxide[["Grammica"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Lut.epo.Car" & Subgenus == "Grammica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_Grammica_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_Grammica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Grammica_Lutein.epoxide <- dplyr::filter(data_Lutein.epoxide_plots_cuscutasub, Subgenus == "Grammica")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Grammica_Lut.Car.epoxide <- dplyr::filter(data_Lut.Car.epoxide_plots_cuscutasub, Subgenus == "Grammica")
 
-box.rslt_Lutein.epoxide_Grammica <- with(data_Grammica_Lutein.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein.epoxide_Grammica)
-boxplot_positions_Lutein.epoxide_Grammica <- as.data.frame(box.rslt_Lutein.epoxide_Grammica$stats)
+box.rslt_Lut.Car.epoxide_Grammica <- with(data_Grammica_Lut.Car.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car.epoxide_Grammica)
+boxplot_positions_Lut.Car.epoxide_Grammica <- as.data.frame(box.rslt_Lut.Car.epoxide_Grammica$stats)
 
 # what are these column tissue codes?
-tissues_Lutein.epoxide_Grammica <- levels(data_Grammica_Lutein.epoxide$Tissue.code)
+tissues_Lut.Car.epoxide_Grammica <- levels(data_Grammica_Lut.Car.epoxide$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein.epoxide_Grammica) <- tissues_Lutein.epoxide_Grammica
+colnames(boxplot_positions_Lut.Car.epoxide_Grammica) <- tissues_Lut.Car.epoxide_Grammica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein.epoxide_Grammica <- boxplot_positions_Lutein.epoxide_Grammica[5,]
+top_positions_Lut.Car.epoxide_Grammica <- boxplot_positions_Lut.Car.epoxide_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein.epoxide_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Lut.epo.Car"]])[["Letters"]])
-colnames(cbd_Lutein.epoxide_Grammica)[1] <- "Letter"
+cbd_Lut.Car.epoxide_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Lut.epo.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car.epoxide_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein.epoxide_Grammica, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car.epoxide_Grammica, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein.epoxide_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_Lutein.epoxide_Grammica
+top_positions_Lut.Car.epoxide_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car.epoxide_Grammica
 # now join these positions to cbd
-left_join(cbd_Lutein.epoxide_Grammica, top_positions_Lutein.epoxide_Grammica, by = "Tissue.code") -> cbd_Lutein.epoxide_Grammica
+left_join(cbd_Lut.Car.epoxide_Grammica, top_positions_Lut.Car.epoxide_Grammica, by = "Tissue.code") -> cbd_Lut.Car.epoxide_Grammica
 
 # calculate how much to nudge
-data_Grammica_Lutein.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein.epoxide_Grammica
-cbd_Lutein.epoxide_Grammica$nudged <- (max_Lutein.epoxide_Grammica$max + 0.01) * 1.05
+data_Grammica_Lut.Car.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car.epoxide_Grammica
+cbd_Lut.Car.epoxide_Grammica$nudged <- (max_Lut.Car.epoxide_Grammica$max + 0.01) * 1.05
 
 
 # add CLDs to plot
-Lutein.epoxide_Grammica_boxplot + 
+Lut.Car.epoxide_Grammica_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_Lutein.epoxide_Grammica,
+    data    = cbd_Lut.Car.epoxide_Grammica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein.epoxide_Grammica_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car.epoxide_Grammica_boxplot
 
-Lutein.epoxide_Grammica_boxplot
+Lut.Car.epoxide_Grammica_boxplot
 
 
-#### Lutein.epoxide C_purpurata alone ####
+#### Lut.Car.epoxide C_purpurata alone ####
 
-data_C_purpurata_Lutein.epoxide <- dplyr::filter(data_Lutein.epoxide_plots_cuscutasub, Subgenus == "C_purpurata")
+data_C_purpurata_Lut.Car.epoxide <- dplyr::filter(data_Lut.Car.epoxide_plots_cuscutasub, Subgenus == "C_purpurata")
 
-Lutein.epoxide_C_purpurata_boxplot <- ggplot(data_C_purpurata_Lutein.epoxide, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+Lut.Car.epoxide_C_purpurata_boxplot <- ggplot(data_C_purpurata_Lut.Car.epoxide, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -2726,26 +2750,26 @@ Lutein.epoxide_C_purpurata_boxplot <- ggplot(data_C_purpurata_Lutein.epoxide, ae
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
-Lutein.epoxide_C_purpurata_boxplot
+Lut.Car.epoxide_C_purpurata_boxplot
 
 # not sig
 
 
-#### Lutein loop through Monogynella, Cuscuta, and Grammica ####
+#### Lut.Car loop through Monogynella, Cuscuta, and Grammica ####
 loop_subgenera <- c("Monogynella","Cuscuta", "Grammica")
-# dplyr::filter for Lutein
-data_Lutein_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "Lut.Car")
+# dplyr::filter for Lut.Car
+data_Lut.Car_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "Lut.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_Lutein_plots_cuscutasub$Tissue.code <- factor(data_Lutein_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_Lut.Car_plots_cuscutasub$Tissue.code <- factor(data_Lut.Car_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Cuscuta_Lutein = list()
+plot_list_Cuscuta_Lut.Car = list()
 
 for (sub in (loop_subgenera)) {
   
-  data_loop <- dplyr::filter(data_Lutein_plots_cuscutasub, Subgenus == sub)
+  data_loop <- dplyr::filter(data_Lut.Car_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -2761,189 +2785,189 @@ for (sub in (loop_subgenera)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100))
-  plot_list_Cuscuta_Lutein[[sub]] = p
+  plot_list_Cuscuta_Lut.Car[[sub]] = p
   
 }
 
-#### Lutein. Monogynella ####
-plot_list_Cuscuta_Lutein[["Monogynella"]] + 
+#### Lut.Car. Monogynella ####
+plot_list_Cuscuta_Lut.Car[["Monogynella"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Lut.Car" & Subgenus == "Monogynella"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_Monogynella_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_Monogynella_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Monogynella_Lutein <- dplyr::filter(data_Lutein_plots_cuscutasub, Subgenus == "Monogynella")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Monogynella_Lut.Car <- dplyr::filter(data_Lut.Car_plots_cuscutasub, Subgenus == "Monogynella")
 
-box.rslt_Lutein_Monogynella <- with(data_Monogynella_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_Monogynella)
-boxplot_positions_Lutein_Monogynella <- as.data.frame(box.rslt_Lutein_Monogynella$stats)
+box.rslt_Lut.Car_Monogynella <- with(data_Monogynella_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_Monogynella)
+boxplot_positions_Lut.Car_Monogynella <- as.data.frame(box.rslt_Lut.Car_Monogynella$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_Monogynella <- levels(data_Monogynella_Lutein$Tissue.code)
+tissues_Lut.Car_Monogynella <- levels(data_Monogynella_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_Monogynella) <- tissues_Lutein_Monogynella
+colnames(boxplot_positions_Lut.Car_Monogynella) <- tissues_Lut.Car_Monogynella
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_Monogynella <- boxplot_positions_Lutein_Monogynella[5,]
+top_positions_Lut.Car_Monogynella <- boxplot_positions_Lut.Car_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_Monogynella)[1] <- "Letter"
+cbd_Lut.Car_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_Monogynella, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_Monogynella, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_Monogynella
+top_positions_Lut.Car_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_Monogynella
 # now join these positions to cbd
-left_join(cbd_Lutein_Monogynella, top_positions_Lutein_Monogynella, by = "Tissue.code") -> cbd_Lutein_Monogynella
+left_join(cbd_Lut.Car_Monogynella, top_positions_Lut.Car_Monogynella, by = "Tissue.code") -> cbd_Lut.Car_Monogynella
 
 # calculate how much to nudge
-data_Monogynella_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_Monogynella
-cbd_Lutein_Monogynella$nudged <- (max_Lutein_Monogynella$max + 0.01) * 1.05
+data_Monogynella_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_Monogynella
+cbd_Lut.Car_Monogynella$nudged <- (max_Lut.Car_Monogynella$max + 0.01) * 1.05
 
 
 # add CLDs to plot
-Lutein_Monogynella_boxplot + 
+Lut.Car_Monogynella_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_Lutein_Monogynella,
+    data    = cbd_Lut.Car_Monogynella,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_Monogynella_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_Monogynella_boxplot
 
 
-Lutein_Monogynella_boxplot
+Lut.Car_Monogynella_boxplot
 
 
-#### Lutein Cuscuta ####
-plot_list_Cuscuta_Lutein[["Cuscuta"]] + 
+#### Lut.Car Cuscuta ####
+plot_list_Cuscuta_Lut.Car[["Cuscuta"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Lut.Car" & Subgenus == "Cuscuta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_Cuscuta_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_Cuscuta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Cuscuta_Lutein <- dplyr::filter(data_Lutein_plots_cuscutasub, Subgenus == "Cuscuta")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Cuscuta_Lut.Car <- dplyr::filter(data_Lut.Car_plots_cuscutasub, Subgenus == "Cuscuta")
 
-box.rslt_Lutein_Cuscuta <- with(data_Cuscuta_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_Cuscuta)
-boxplot_positions_Lutein_Cuscuta <- as.data.frame(box.rslt_Lutein_Cuscuta$stats)
+box.rslt_Lut.Car_Cuscuta <- with(data_Cuscuta_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_Cuscuta)
+boxplot_positions_Lut.Car_Cuscuta <- as.data.frame(box.rslt_Lut.Car_Cuscuta$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_Cuscuta <- levels(data_Cuscuta_Lutein$Tissue.code)
+tissues_Lut.Car_Cuscuta <- levels(data_Cuscuta_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_Cuscuta) <- tissues_Lutein_Cuscuta
+colnames(boxplot_positions_Lut.Car_Cuscuta) <- tissues_Lut.Car_Cuscuta
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_Cuscuta <- boxplot_positions_Lutein_Cuscuta[5,]
+top_positions_Lut.Car_Cuscuta <- boxplot_positions_Lut.Car_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_Cuscuta)[1] <- "Letter"
+cbd_Lut.Car_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_Cuscuta, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_Cuscuta, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_Cuscuta %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_Cuscuta
+top_positions_Lut.Car_Cuscuta %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_Cuscuta
 # now join these positions to cbd
-left_join(cbd_Lutein_Cuscuta, top_positions_Lutein_Cuscuta, by = "Tissue.code") -> cbd_Lutein_Cuscuta
+left_join(cbd_Lut.Car_Cuscuta, top_positions_Lut.Car_Cuscuta, by = "Tissue.code") -> cbd_Lut.Car_Cuscuta
 
 # calculate how much to nudge
-data_Cuscuta_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_Cuscuta
-cbd_Lutein_Cuscuta$nudged <- (max_Lutein_Cuscuta$max + 0.01) * 1.05
+data_Cuscuta_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_Cuscuta
+cbd_Lut.Car_Cuscuta$nudged <- (max_Lut.Car_Cuscuta$max + 0.01) * 1.05
 
 
 # add CLDs to plot
-Lutein_Cuscuta_boxplot + 
+Lut.Car_Cuscuta_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_Lutein_Cuscuta,
+    data    = cbd_Lut.Car_Cuscuta,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_Cuscuta_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_Cuscuta_boxplot
 
 
-Lutein_Cuscuta_boxplot
+Lut.Car_Cuscuta_boxplot
 
 
 
-#### Lutein Grammica ####
-plot_list_Cuscuta_Lutein[["Grammica"]] + 
+#### Lut.Car Grammica ####
+plot_list_Cuscuta_Lut.Car[["Grammica"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Lut.Car" & Subgenus == "Grammica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_Grammica_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_Grammica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Grammica_Lutein <- dplyr::filter(data_Lutein_plots_cuscutasub, Subgenus == "Grammica")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Grammica_Lut.Car <- dplyr::filter(data_Lut.Car_plots_cuscutasub, Subgenus == "Grammica")
 
-box.rslt_Lutein_Grammica <- with(data_Grammica_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_Grammica)
-boxplot_positions_Lutein_Grammica <- as.data.frame(box.rslt_Lutein_Grammica$stats)
+box.rslt_Lut.Car_Grammica <- with(data_Grammica_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_Grammica)
+boxplot_positions_Lut.Car_Grammica <- as.data.frame(box.rslt_Lut.Car_Grammica$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_Grammica <- levels(data_Grammica_Lutein$Tissue.code)
+tissues_Lut.Car_Grammica <- levels(data_Grammica_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_Grammica) <- tissues_Lutein_Grammica
+colnames(boxplot_positions_Lut.Car_Grammica) <- tissues_Lut.Car_Grammica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_Grammica <- boxplot_positions_Lutein_Grammica[5,]
+top_positions_Lut.Car_Grammica <- boxplot_positions_Lut.Car_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_Grammica)[1] <- "Letter"
+cbd_Lut.Car_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_Grammica, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_Grammica, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_Grammica
+top_positions_Lut.Car_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_Grammica
 # now join these positions to cbd
-left_join(cbd_Lutein_Grammica, top_positions_Lutein_Grammica, by = "Tissue.code") -> cbd_Lutein_Grammica
+left_join(cbd_Lut.Car_Grammica, top_positions_Lut.Car_Grammica, by = "Tissue.code") -> cbd_Lut.Car_Grammica
 
 # calculate how much to nudge
-data_Grammica_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_Grammica
-cbd_Lutein_Grammica$nudged <- (max_Lutein_Grammica$max + 0.01) * 1.05
+data_Grammica_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_Grammica
+cbd_Lut.Car_Grammica$nudged <- (max_Lut.Car_Grammica$max + 0.01) * 1.05
 
 # add CLDs to plot
-Lutein_Grammica_boxplot + 
+Lut.Car_Grammica_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_Lutein_Grammica,
+    data    = cbd_Lut.Car_Grammica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_Grammica_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_Grammica_boxplot
 
 
-Lutein_Grammica_boxplot
+Lut.Car_Grammica_boxplot
 
 
 
 
-#### Lutein C_purpurata alone ####
+#### Lut.Car C_purpurata alone ####
 
-data_C_purpurata_Lutein <- dplyr::filter(data_Lutein_plots_cuscutasub, Subgenus == "C_purpurata")
+data_C_purpurata_Lut.Car <- dplyr::filter(data_Lut.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
-Lutein_C_purpurata_boxplot <- ggplot(data_C_purpurata_Lutein, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+Lut.Car_C_purpurata_boxplot <- ggplot(data_C_purpurata_Lut.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -2968,73 +2992,73 @@ Lutein_C_purpurata_boxplot <- ggplot(data_C_purpurata_Lutein, aes(x=Tissue.code,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
-Lutein_C_purpurata_boxplot
+Lut.Car_C_purpurata_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_purpurata_Lutein <- dplyr::filter(data_Lutein_plots_cuscutasub, Subgenus == "C_purpurata")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_purpurata_Lut.Car <- dplyr::filter(data_Lut.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
-box.rslt_Lutein_C_purpurata <- with(data_C_purpurata_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_C_purpurata)
-boxplot_positions_Lutein_C_purpurata <- as.data.frame(box.rslt_Lutein_C_purpurata$stats)
+box.rslt_Lut.Car_C_purpurata <- with(data_C_purpurata_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_C_purpurata)
+boxplot_positions_Lut.Car_C_purpurata <- as.data.frame(box.rslt_Lut.Car_C_purpurata$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_C_purpurata <- levels(data_C_purpurata_Lutein$Tissue.code)
+tissues_Lut.Car_C_purpurata <- levels(data_C_purpurata_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_C_purpurata) <- tissues_Lutein_C_purpurata
+colnames(boxplot_positions_Lut.Car_C_purpurata) <- tissues_Lut.Car_C_purpurata
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_C_purpurata <- boxplot_positions_Lutein_C_purpurata[5,]
+top_positions_Lut.Car_C_purpurata <- boxplot_positions_Lut.Car_C_purpurata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_C_purpurata)[1] <- "Letter"
+cbd_Lut.Car_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_C_purpurata, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_C_purpurata, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_C_purpurata %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_C_purpurata
+top_positions_Lut.Car_C_purpurata %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_C_purpurata
 # now join these positions to cbd
-left_join(cbd_Lutein_C_purpurata, top_positions_Lutein_C_purpurata, by = "Tissue.code") -> cbd_Lutein_C_purpurata
+left_join(cbd_Lut.Car_C_purpurata, top_positions_Lut.Car_C_purpurata, by = "Tissue.code") -> cbd_Lut.Car_C_purpurata
 
 # calculate how much to nudge
-data_C_purpurata_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_C_purpurata
-cbd_Lutein_C_purpurata$nudged <- (max_Lutein_C_purpurata$max + 0.01) * 1.05
+data_C_purpurata_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_C_purpurata
+cbd_Lut.Car_C_purpurata$nudged <- (max_Lut.Car_C_purpurata$max + 0.01) * 1.05
 
 # add CLDs to plot
-Lutein_C_purpurata_boxplot + 
+Lut.Car_C_purpurata_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_Lutein_C_purpurata,
+    data    = cbd_Lut.Car_C_purpurata,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_C_purpurata_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_C_purpurata_boxplot
 
 
-Lutein_C_purpurata_boxplot
-
-
-
+Lut.Car_C_purpurata_boxplot
 
 
 
-#### a.Carotene loop through Monogynella, Cuscuta, and Grammica ####
+
+
+
+#### a.Car.Car loop through Monogynella, Cuscuta, and Grammica ####
 loop_subgenera <- c("Monogynella","Cuscuta", "Grammica")
-# dplyr::filter for a.Carotene
-data_a.Carotene_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "a.Car.Car")
+# dplyr::filter for a.Car.Car
+data_a.Car.Car_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "a.Car.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_a.Carotene_plots_cuscutasub$Tissue.code <- factor(data_a.Carotene_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_a.Car.Car_plots_cuscutasub$Tissue.code <- factor(data_a.Car.Car_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Cuscuta_a.Carotene = list()
+plot_list_Cuscuta_a.Car.Car = list()
 
 for (sub in (loop_subgenera)) {
   
-  data_loop <- dplyr::filter(data_a.Carotene_plots_cuscutasub, Subgenus == sub)
+  data_loop <- dplyr::filter(data_a.Car.Car_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -3050,100 +3074,100 @@ for (sub in (loop_subgenera)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100))
-  plot_list_Cuscuta_a.Carotene[[sub]] = p
+  plot_list_Cuscuta_a.Car.Car[[sub]] = p
   
 }
 
-#### a.Carotene. Monogynella ####
-plot_list_Cuscuta_a.Carotene[["Monogynella"]] + 
+#### a.Car.Car. Monogynella ####
+plot_list_Cuscuta_a.Car.Car[["Monogynella"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "a.Car.Car" & Subgenus == "Monogynella"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_Monogynella_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_Monogynella_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Monogynella_a.Carotene <- dplyr::filter(data_a.Carotene_plots_cuscutasub, Subgenus == "Monogynella")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Monogynella_a.Car.Car <- dplyr::filter(data_a.Car.Car_plots_cuscutasub, Subgenus == "Monogynella")
 
-box.rslt_a.Carotene_Monogynella <- with(data_Monogynella_a.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_a.Carotene_Monogynella)
-boxplot_positions_a.Carotene_Monogynella <- as.data.frame(box.rslt_a.Carotene_Monogynella$stats)
+box.rslt_a.Car.Car_Monogynella <- with(data_Monogynella_a.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_a.Car.Car_Monogynella)
+boxplot_positions_a.Car.Car_Monogynella <- as.data.frame(box.rslt_a.Car.Car_Monogynella$stats)
 
 # what are these column tissue codes?
-tissues_a.Carotene_Monogynella <- levels(data_Monogynella_a.Carotene$Tissue.code)
+tissues_a.Car.Car_Monogynella <- levels(data_Monogynella_a.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_a.Carotene_Monogynella) <- tissues_a.Carotene_Monogynella
+colnames(boxplot_positions_a.Car.Car_Monogynella) <- tissues_a.Car.Car_Monogynella
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_a.Carotene_Monogynella <- boxplot_positions_a.Carotene_Monogynella[5,]
+top_positions_a.Car.Car_Monogynella <- boxplot_positions_a.Car.Car_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__a.Car.Car"]])[["Letters"]])
-colnames(cbd_a.Carotene_Monogynella)[1] <- "Letter"
+cbd_a.Car.Car_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__a.Car.Car"]])[["Letters"]])
+colnames(cbd_a.Car.Car_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_a.Carotene_Monogynella, keep.rownames = "Tissue.code")
+setDT(cbd_a.Car.Car_Monogynella, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_a.Carotene_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_a.Carotene_Monogynella
+top_positions_a.Car.Car_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_a.Car.Car_Monogynella
 # now join these positions to cbd
-left_join(cbd_a.Carotene_Monogynella, top_positions_a.Carotene_Monogynella, by = "Tissue.code") -> cbd_a.Carotene_Monogynella
+left_join(cbd_a.Car.Car_Monogynella, top_positions_a.Car.Car_Monogynella, by = "Tissue.code") -> cbd_a.Car.Car_Monogynella
 
 # calculate how much to nudge
-data_Monogynella_a.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Carotene_Monogynella
-cbd_a.Carotene_Monogynella$nudged <- max_a.Carotene_Monogynella$max * 1.05
+data_Monogynella_a.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Car.Car_Monogynella
+cbd_a.Car.Car_Monogynella$nudged <- max_a.Car.Car_Monogynella$max * 1.05
 
 # add CLDs to plot
-a.Carotene_Monogynella_boxplot + 
+a.Car.Car_Monogynella_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_a.Carotene_Monogynella,
+    data    = cbd_a.Car.Car_Monogynella,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Carotene_Monogynella_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Car.Car_Monogynella_boxplot
 
 
-a.Carotene_Monogynella_boxplot
+a.Car.Car_Monogynella_boxplot
 
 
-#### a.Carotene Cuscuta ####
-plot_list_Cuscuta_a.Carotene[["Cuscuta"]] + 
+#### a.Car.Car Cuscuta ####
+plot_list_Cuscuta_a.Car.Car[["Cuscuta"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "a.Car.Car" & Subgenus == "Cuscuta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_Cuscuta_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_Cuscuta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Cuscuta_a.Carotene <- dplyr::filter(data_a.Carotene_plots_cuscutasub, Subgenus == "Cuscuta")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Cuscuta_a.Car.Car <- dplyr::filter(data_a.Car.Car_plots_cuscutasub, Subgenus == "Cuscuta")
 
-box.rslt_a.Carotene_Cuscuta <- with(data_Cuscuta_a.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_a.Carotene_Cuscuta)
-boxplot_positions_a.Carotene_Cuscuta <- as.data.frame(box.rslt_a.Carotene_Cuscuta$stats)
+box.rslt_a.Car.Car_Cuscuta <- with(data_Cuscuta_a.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_a.Car.Car_Cuscuta)
+boxplot_positions_a.Car.Car_Cuscuta <- as.data.frame(box.rslt_a.Car.Car_Cuscuta$stats)
 
 # what are these column tissue codes?
-tissues_a.Carotene_Cuscuta <- levels(data_Cuscuta_a.Carotene$Tissue.code)
+tissues_a.Car.Car_Cuscuta <- levels(data_Cuscuta_a.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_a.Carotene_Cuscuta) <- tissues_a.Carotene_Cuscuta
+colnames(boxplot_positions_a.Car.Car_Cuscuta) <- tissues_a.Car.Car_Cuscuta
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_a.Carotene_Cuscuta <- boxplot_positions_a.Carotene_Cuscuta[5,]
+top_positions_a.Car.Car_Cuscuta <- boxplot_positions_a.Car.Car_Cuscuta[5,]
 
 
 # #add pairwise significance letter groups (compact letter display; CLD)
-# cbd_a.Carotene_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__a.Car.Car"]])[["Letters"]])
-# colnames(cbd_a.Carotene_Cuscuta)[1] <- "Letter"
+# cbd_a.Car.Car_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__a.Car.Car"]])[["Letters"]])
+# colnames(cbd_a.Car.Car_Cuscuta)[1] <- "Letter"
 # # turn rownames into first column for Tissue.code
-# setDT(cbd_a.Carotene_Cuscuta, keep.rownames = "Tissue.code")
+# setDT(cbd_a.Car.Car_Cuscuta, keep.rownames = "Tissue.code")
 
 
-# Cuscuta a.Carotene was causing a problem in this pipeline because of the exact matches.. 
+# Cuscuta a.Car.Car was causing a problem in this pipeline because of the exact matches.. 
 dunn_list[["Cuscuta__a.Car.Car"]]
 # QsRutils::make_letter_assignments(dunn_list[["Cuscuta__a.Car.Car"]])
 
@@ -3164,100 +3188,100 @@ dunn_list[["Cuscuta__a.Car.Car"]]
 # h same as y = a
 
 # make df
-cbd_a.Carotene_Cuscuta_Tissue.code <- c("y", "o", "h")
-cbd_a.Carotene_Cuscuta_Letters <- c("a", "a", "a")
-cbd_a.Carotene_Cuscuta <- data.frame("Tissue.code" = cbd_a.Carotene_Cuscuta_Tissue.code, "Letter" = cbd_a.Carotene_Cuscuta_Letters)
+cbd_a.Car.Car_Cuscuta_Tissue.code <- c("y", "o", "h")
+cbd_a.Car.Car_Cuscuta_Letters <- c("a", "a", "a")
+cbd_a.Car.Car_Cuscuta <- data.frame("Tissue.code" = cbd_a.Car.Car_Cuscuta_Tissue.code, "Letter" = cbd_a.Car.Car_Cuscuta_Letters)
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_a.Carotene_Cuscuta %>% gather(., Tissue.code, y.position) -> top_positions_a.Carotene_Cuscuta
+top_positions_a.Car.Car_Cuscuta %>% gather(., Tissue.code, y.position) -> top_positions_a.Car.Car_Cuscuta
 # now join these positions to cbd
-left_join(cbd_a.Carotene_Cuscuta, top_positions_a.Carotene_Cuscuta, by = "Tissue.code") -> cbd_a.Carotene_Cuscuta
+left_join(cbd_a.Car.Car_Cuscuta, top_positions_a.Car.Car_Cuscuta, by = "Tissue.code") -> cbd_a.Car.Car_Cuscuta
 
 # calculate how much to nudge
-data_Cuscuta_a.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Carotene_Cuscuta
-cbd_a.Carotene_Cuscuta$nudged <- (max_a.Carotene_Cuscuta$max + 0.01) * 1.05
+data_Cuscuta_a.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Car.Car_Cuscuta
+cbd_a.Car.Car_Cuscuta$nudged <- (max_a.Car.Car_Cuscuta$max + 0.01) * 1.05
 
 
 # add CLDs to plot
-a.Carotene_Cuscuta_boxplot + 
+a.Car.Car_Cuscuta_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_a.Carotene_Cuscuta,
+    data    = cbd_a.Car.Car_Cuscuta,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Carotene_Cuscuta_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Car.Car_Cuscuta_boxplot
 
 
-a.Carotene_Cuscuta_boxplot
+a.Car.Car_Cuscuta_boxplot
 
 
 
-#### a.Carotene Grammica ####
-plot_list_Cuscuta_a.Carotene[["Grammica"]] + 
+#### a.Car.Car Grammica ####
+plot_list_Cuscuta_a.Car.Car[["Grammica"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "a.Car.Car" & Subgenus == "Grammica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_Grammica_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_Grammica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Grammica_a.Carotene <- dplyr::filter(data_a.Carotene_plots_cuscutasub, Subgenus == "Grammica")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Grammica_a.Car.Car <- dplyr::filter(data_a.Car.Car_plots_cuscutasub, Subgenus == "Grammica")
 
-box.rslt_a.Carotene_Grammica <- with(data_Grammica_a.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_a.Carotene_Grammica)
-boxplot_positions_a.Carotene_Grammica <- as.data.frame(box.rslt_a.Carotene_Grammica$stats)
+box.rslt_a.Car.Car_Grammica <- with(data_Grammica_a.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_a.Car.Car_Grammica)
+boxplot_positions_a.Car.Car_Grammica <- as.data.frame(box.rslt_a.Car.Car_Grammica$stats)
 
 # what are these column tissue codes?
-tissues_a.Carotene_Grammica <- levels(data_Grammica_a.Carotene$Tissue.code)
+tissues_a.Car.Car_Grammica <- levels(data_Grammica_a.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_a.Carotene_Grammica) <- tissues_a.Carotene_Grammica
+colnames(boxplot_positions_a.Car.Car_Grammica) <- tissues_a.Car.Car_Grammica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_a.Carotene_Grammica <- boxplot_positions_a.Carotene_Grammica[5,]
+top_positions_a.Car.Car_Grammica <- boxplot_positions_a.Car.Car_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__a.Car.Car"]])[["Letters"]])
-colnames(cbd_a.Carotene_Grammica)[1] <- "Letter"
+cbd_a.Car.Car_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__a.Car.Car"]])[["Letters"]])
+colnames(cbd_a.Car.Car_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_a.Carotene_Grammica, keep.rownames = "Tissue.code")
+setDT(cbd_a.Car.Car_Grammica, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_a.Carotene_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_a.Carotene_Grammica
+top_positions_a.Car.Car_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_a.Car.Car_Grammica
 # now join these positions to cbd
-left_join(cbd_a.Carotene_Grammica, top_positions_a.Carotene_Grammica, by = "Tissue.code") -> cbd_a.Carotene_Grammica
+left_join(cbd_a.Car.Car_Grammica, top_positions_a.Car.Car_Grammica, by = "Tissue.code") -> cbd_a.Car.Car_Grammica
 
 # calculate how much to nudge
-data_Grammica_a.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Carotene_Grammica
-cbd_a.Carotene_Grammica$nudged <- (max_a.Carotene_Grammica$max + 0.01) * 1.05
+data_Grammica_a.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Car.Car_Grammica
+cbd_a.Car.Car_Grammica$nudged <- (max_a.Car.Car_Grammica$max + 0.01) * 1.05
 
 # add CLDs to plot
-a.Carotene_Grammica_boxplot + 
+a.Car.Car_Grammica_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_a.Carotene_Grammica,
+    data    = cbd_a.Car.Car_Grammica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Carotene_Grammica_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Car.Car_Grammica_boxplot
 
 
-a.Carotene_Grammica_boxplot
+a.Car.Car_Grammica_boxplot
 
 
 
 
-#### a.Carotene C_purpurata alone ####
+#### a.Car.Car C_purpurata alone ####
 
-data_C_purpurata_a.Carotene <- dplyr::filter(data_a.Carotene_plots_cuscutasub, Subgenus == "C_purpurata")
+data_C_purpurata_a.Car.Car <- dplyr::filter(data_a.Car.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
-a.Carotene_C_purpurata_boxplot <- ggplot(data_C_purpurata_a.Carotene, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+a.Car.Car_C_purpurata_boxplot <- ggplot(data_C_purpurata_a.Car.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -3282,70 +3306,70 @@ a.Carotene_C_purpurata_boxplot <- ggplot(data_C_purpurata_a.Carotene, aes(x=Tiss
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
-a.Carotene_C_purpurata_boxplot
+a.Car.Car_C_purpurata_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_purpurata_a.Carotene <- dplyr::filter(data_a.Carotene_plots_cuscutasub, Subgenus == "C_purpurata")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_purpurata_a.Car.Car <- dplyr::filter(data_a.Car.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
-box.rslt_a.Carotene_C_purpurata <- with(data_C_purpurata_a.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_a.Carotene_C_purpurata)
-boxplot_positions_a.Carotene_C_purpurata <- as.data.frame(box.rslt_a.Carotene_C_purpurata$stats)
+box.rslt_a.Car.Car_C_purpurata <- with(data_C_purpurata_a.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_a.Car.Car_C_purpurata)
+boxplot_positions_a.Car.Car_C_purpurata <- as.data.frame(box.rslt_a.Car.Car_C_purpurata$stats)
 
 # what are these column tissue codes?
-tissues_a.Carotene_C_purpurata <- levels(data_C_purpurata_a.Carotene$Tissue.code)
+tissues_a.Car.Car_C_purpurata <- levels(data_C_purpurata_a.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_a.Carotene_C_purpurata) <- tissues_a.Carotene_C_purpurata
+colnames(boxplot_positions_a.Car.Car_C_purpurata) <- tissues_a.Car.Car_C_purpurata
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_a.Carotene_C_purpurata <- boxplot_positions_a.Carotene_C_purpurata[5,]
+top_positions_a.Car.Car_C_purpurata <- boxplot_positions_a.Car.Car_C_purpurata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__a.Car.Car"]])[["Letters"]])
-colnames(cbd_a.Carotene_C_purpurata)[1] <- "Letter"
+cbd_a.Car.Car_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__a.Car.Car"]])[["Letters"]])
+colnames(cbd_a.Car.Car_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_a.Carotene_C_purpurata, keep.rownames = "Tissue.code")
+setDT(cbd_a.Car.Car_C_purpurata, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_a.Carotene_C_purpurata %>% gather(., Tissue.code, y.position) -> top_positions_a.Carotene_C_purpurata
+top_positions_a.Car.Car_C_purpurata %>% gather(., Tissue.code, y.position) -> top_positions_a.Car.Car_C_purpurata
 # now join these positions to cbd
-left_join(cbd_a.Carotene_C_purpurata, top_positions_a.Carotene_C_purpurata, by = "Tissue.code") -> cbd_a.Carotene_C_purpurata
+left_join(cbd_a.Car.Car_C_purpurata, top_positions_a.Car.Car_C_purpurata, by = "Tissue.code") -> cbd_a.Car.Car_C_purpurata
 
 # calculate how much to nudge
-data_C_purpurata_a.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Carotene_C_purpurata
-cbd_a.Carotene_C_purpurata$nudged <- max_a.Carotene_C_purpurata$max * 1.05
+data_C_purpurata_a.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Car.Car_C_purpurata
+cbd_a.Car.Car_C_purpurata$nudged <- max_a.Car.Car_C_purpurata$max * 1.05
 
 # add CLDs to plot
-a.Carotene_C_purpurata_boxplot + 
+a.Car.Car_C_purpurata_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_a.Carotene_C_purpurata,
+    data    = cbd_a.Car.Car_C_purpurata,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Carotene_C_purpurata_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Car.Car_C_purpurata_boxplot
 
 
-a.Carotene_C_purpurata_boxplot
+a.Car.Car_C_purpurata_boxplot
 
 
 
 
-#### b.Carotene loop through Monogynella, Cuscuta, and Grammica ####
+#### b.Car.Car loop through Monogynella, Cuscuta, and Grammica ####
 loop_subgenera <- c("Monogynella","Cuscuta", "Grammica")
-# dplyr::filter for b.Carotene
-data_b.Carotene_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "b.Car.Car")
+# dplyr::filter for b.Car.Car
+data_b.Car.Car_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "b.Car.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_b.Carotene_plots_cuscutasub$Tissue.code <- factor(data_b.Carotene_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_b.Car.Car_plots_cuscutasub$Tissue.code <- factor(data_b.Car.Car_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
-plot_list_Cuscuta_b.Carotene = list()
+plot_list_Cuscuta_b.Car.Car = list()
 
 for (sub in (loop_subgenera)) {
   
-  data_loop <- dplyr::filter(data_b.Carotene_plots_cuscutasub, Subgenus == sub)
+  data_loop <- dplyr::filter(data_b.Car.Car_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -3361,184 +3385,184 @@ for (sub in (loop_subgenera)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100))
-  plot_list_Cuscuta_b.Carotene[[sub]] = p
+  plot_list_Cuscuta_b.Car.Car[[sub]] = p
   
 }
 
-#### b.Carotene. Monogynella ####
-plot_list_Cuscuta_b.Carotene[["Monogynella"]] + 
+#### b.Car.Car. Monogynella ####
+plot_list_Cuscuta_b.Car.Car[["Monogynella"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "b.Car.Car" & Subgenus == "Monogynella"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_Monogynella_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_Monogynella_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Monogynella_b.Carotene <- dplyr::filter(data_b.Carotene_plots_cuscutasub, Subgenus == "Monogynella")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Monogynella_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_cuscutasub, Subgenus == "Monogynella")
 
-box.rslt_b.Carotene_Monogynella <- with(data_Monogynella_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_Monogynella)
-boxplot_positions_b.Carotene_Monogynella <- as.data.frame(box.rslt_b.Carotene_Monogynella$stats)
+box.rslt_b.Car.Car_Monogynella <- with(data_Monogynella_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_Monogynella)
+boxplot_positions_b.Car.Car_Monogynella <- as.data.frame(box.rslt_b.Car.Car_Monogynella$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_Monogynella <- levels(data_Monogynella_b.Carotene$Tissue.code)
+tissues_b.Car.Car_Monogynella <- levels(data_Monogynella_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_Monogynella) <- tissues_b.Carotene_Monogynella
+colnames(boxplot_positions_b.Car.Car_Monogynella) <- tissues_b.Car.Car_Monogynella
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_Monogynella <- boxplot_positions_b.Carotene_Monogynella[5,]
+top_positions_b.Car.Car_Monogynella <- boxplot_positions_b.Car.Car_Monogynella[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_Monogynella)[1] <- "Letter"
+cbd_b.Car.Car_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_Monogynella)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_Monogynella, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_Monogynella, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_Monogynella
+top_positions_b.Car.Car_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_Monogynella
 # now join these positions to cbd
-left_join(cbd_b.Carotene_Monogynella, top_positions_b.Carotene_Monogynella, by = "Tissue.code") -> cbd_b.Carotene_Monogynella
+left_join(cbd_b.Car.Car_Monogynella, top_positions_b.Car.Car_Monogynella, by = "Tissue.code") -> cbd_b.Car.Car_Monogynella
 
 # calculate how much to nudge
-data_Monogynella_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_Monogynella
-cbd_b.Carotene_Monogynella$nudged <- (max_b.Carotene_Monogynella$max + 0.01) * 1.05
+data_Monogynella_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_Monogynella
+cbd_b.Car.Car_Monogynella$nudged <- (max_b.Car.Car_Monogynella$max + 0.01) * 1.05
 
 
 # add CLDs to plot
-b.Carotene_Monogynella_boxplot + 
+b.Car.Car_Monogynella_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_b.Carotene_Monogynella,
+    data    = cbd_b.Car.Car_Monogynella,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_Monogynella_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_Monogynella_boxplot
 
-b.Carotene_Monogynella_boxplot
+b.Car.Car_Monogynella_boxplot
 
 
-#### b.Carotene Cuscuta ####
-plot_list_Cuscuta_b.Carotene[["Cuscuta"]] + 
+#### b.Car.Car Cuscuta ####
+plot_list_Cuscuta_b.Car.Car[["Cuscuta"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "b.Car.Car" & Subgenus == "Cuscuta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_Cuscuta_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_Cuscuta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Cuscuta_b.Carotene <- dplyr::filter(data_b.Carotene_plots_cuscutasub, Subgenus == "Cuscuta")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Cuscuta_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_cuscutasub, Subgenus == "Cuscuta")
 
-box.rslt_b.Carotene_Cuscuta <- with(data_Cuscuta_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_Cuscuta)
-boxplot_positions_b.Carotene_Cuscuta <- as.data.frame(box.rslt_b.Carotene_Cuscuta$stats)
+box.rslt_b.Car.Car_Cuscuta <- with(data_Cuscuta_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_Cuscuta)
+boxplot_positions_b.Car.Car_Cuscuta <- as.data.frame(box.rslt_b.Car.Car_Cuscuta$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_Cuscuta <- levels(data_Cuscuta_b.Carotene$Tissue.code)
+tissues_b.Car.Car_Cuscuta <- levels(data_Cuscuta_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_Cuscuta) <- tissues_b.Carotene_Cuscuta
+colnames(boxplot_positions_b.Car.Car_Cuscuta) <- tissues_b.Car.Car_Cuscuta
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_Cuscuta <- boxplot_positions_b.Carotene_Cuscuta[5,]
+top_positions_b.Car.Car_Cuscuta <- boxplot_positions_b.Car.Car_Cuscuta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_Cuscuta)[1] <- "Letter"
+cbd_b.Car.Car_Cuscuta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Cuscuta__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_Cuscuta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_Cuscuta, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_Cuscuta, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_Cuscuta %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_Cuscuta
+top_positions_b.Car.Car_Cuscuta %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_Cuscuta
 # now join these positions to cbd
-left_join(cbd_b.Carotene_Cuscuta, top_positions_b.Carotene_Cuscuta, by = "Tissue.code") -> cbd_b.Carotene_Cuscuta
+left_join(cbd_b.Car.Car_Cuscuta, top_positions_b.Car.Car_Cuscuta, by = "Tissue.code") -> cbd_b.Car.Car_Cuscuta
 
 # calculate how much to nudge
-data_Cuscuta_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_Cuscuta
-cbd_b.Carotene_Cuscuta$nudged <- (max_b.Carotene_Cuscuta$max + 0.01) * 1.05
+data_Cuscuta_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_Cuscuta
+cbd_b.Car.Car_Cuscuta$nudged <- (max_b.Car.Car_Cuscuta$max + 0.01) * 1.05
 
 # add CLDs to plot
-b.Carotene_Cuscuta_boxplot + 
+b.Car.Car_Cuscuta_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_b.Carotene_Cuscuta,
+    data    = cbd_b.Car.Car_Cuscuta,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_Cuscuta_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_Cuscuta_boxplot
 
-b.Carotene_Cuscuta_boxplot
+b.Car.Car_Cuscuta_boxplot
 
-#### b.Carotene Grammica ####
-plot_list_Cuscuta_b.Carotene[["Grammica"]] + 
+#### b.Car.Car Grammica ####
+plot_list_Cuscuta_b.Car.Car[["Grammica"]] + 
   geom_text(
     size    = 2,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "b.Car.Car" & Subgenus == "Grammica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_Grammica_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_Grammica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_Grammica_b.Carotene <- dplyr::filter(data_b.Carotene_plots_cuscutasub, Subgenus == "Grammica")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_Grammica_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_cuscutasub, Subgenus == "Grammica")
 
-box.rslt_b.Carotene_Grammica <- with(data_Grammica_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_Grammica)
-boxplot_positions_b.Carotene_Grammica <- as.data.frame(box.rslt_b.Carotene_Grammica$stats)
+box.rslt_b.Car.Car_Grammica <- with(data_Grammica_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_Grammica)
+boxplot_positions_b.Car.Car_Grammica <- as.data.frame(box.rslt_b.Car.Car_Grammica$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_Grammica <- levels(data_Grammica_b.Carotene$Tissue.code)
+tissues_b.Car.Car_Grammica <- levels(data_Grammica_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_Grammica) <- tissues_b.Carotene_Grammica
+colnames(boxplot_positions_b.Car.Car_Grammica) <- tissues_b.Car.Car_Grammica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_Grammica <- boxplot_positions_b.Carotene_Grammica[5,]
+top_positions_b.Car.Car_Grammica <- boxplot_positions_b.Car.Car_Grammica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_Grammica)[1] <- "Letter"
+cbd_b.Car.Car_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_Grammica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_Grammica, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_Grammica, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_Grammica
+top_positions_b.Car.Car_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_Grammica
 # now join these positions to cbd
-left_join(cbd_b.Carotene_Grammica, top_positions_b.Carotene_Grammica, by = "Tissue.code") -> cbd_b.Carotene_Grammica
+left_join(cbd_b.Car.Car_Grammica, top_positions_b.Car.Car_Grammica, by = "Tissue.code") -> cbd_b.Car.Car_Grammica
 
 # calculate how much to nudge
-data_Grammica_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_Grammica
-cbd_b.Carotene_Grammica$nudged <- max_b.Carotene_Grammica$max * 1.05
+data_Grammica_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_Grammica
+cbd_b.Car.Car_Grammica$nudged <- max_b.Car.Car_Grammica$max * 1.05
 
 # add CLDs to plot
-b.Carotene_Grammica_boxplot + 
+b.Car.Car_Grammica_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_b.Carotene_Grammica,
+    data    = cbd_b.Car.Car_Grammica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_Grammica_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_Grammica_boxplot
 
 
-b.Carotene_Grammica_boxplot
+b.Car.Car_Grammica_boxplot
 
 
 
 
-#### b.Carotene C_purpurata alone ####
+#### b.Car.Car C_purpurata alone ####
 
-data_C_purpurata_b.Carotene <- dplyr::filter(data_b.Carotene_plots_cuscutasub, Subgenus == "C_purpurata")
+data_C_purpurata_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
-b.Carotene_C_purpurata_boxplot <- ggplot(data_C_purpurata_b.Carotene, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+b.Car.Car_C_purpurata_boxplot <- ggplot(data_C_purpurata_b.Car.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -3563,50 +3587,50 @@ b.Carotene_C_purpurata_boxplot <- ggplot(data_C_purpurata_b.Carotene, aes(x=Tiss
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_purpurata_b.Carotene <- dplyr::filter(data_b.Carotene_plots_cuscutasub, Subgenus == "C_purpurata")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_purpurata_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
-box.rslt_b.Carotene_C_purpurata <- with(data_C_purpurata_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_C_purpurata)
-boxplot_positions_b.Carotene_C_purpurata <- as.data.frame(box.rslt_b.Carotene_C_purpurata$stats)
+box.rslt_b.Car.Car_C_purpurata <- with(data_C_purpurata_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_C_purpurata)
+boxplot_positions_b.Car.Car_C_purpurata <- as.data.frame(box.rslt_b.Car.Car_C_purpurata$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_C_purpurata <- levels(data_C_purpurata_b.Carotene$Tissue.code)
+tissues_b.Car.Car_C_purpurata <- levels(data_C_purpurata_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_C_purpurata) <- tissues_b.Carotene_C_purpurata
+colnames(boxplot_positions_b.Car.Car_C_purpurata) <- tissues_b.Car.Car_C_purpurata
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_C_purpurata <- boxplot_positions_b.Carotene_C_purpurata[5,]
+top_positions_b.Car.Car_C_purpurata <- boxplot_positions_b.Car.Car_C_purpurata[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_C_purpurata)[1] <- "Letter"
+cbd_b.Car.Car_C_purpurata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["C_purpurata__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_C_purpurata)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_C_purpurata, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_C_purpurata, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_C_purpurata %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_C_purpurata
+top_positions_b.Car.Car_C_purpurata %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_C_purpurata
 # now join these positions to cbd
-left_join(cbd_b.Carotene_C_purpurata, top_positions_b.Carotene_C_purpurata, by = "Tissue.code") -> cbd_b.Carotene_C_purpurata
+left_join(cbd_b.Car.Car_C_purpurata, top_positions_b.Car.Car_C_purpurata, by = "Tissue.code") -> cbd_b.Car.Car_C_purpurata
 
 # calculate how much to nudge
-data_C_purpurata_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_C_purpurata
-cbd_b.Carotene_C_purpurata$nudged <- max_b.Carotene_C_purpurata$max * 1.05
+data_C_purpurata_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_C_purpurata
+cbd_b.Car.Car_C_purpurata$nudged <- max_b.Car.Car_C_purpurata$max * 1.05
 
 # add CLDs to plot
-b.Carotene_C_purpurata_boxplot + 
+b.Car.Car_C_purpurata_boxplot + 
   geom_text(
     size    = 2,
     color = "black",
-    data    = cbd_b.Carotene_C_purpurata,
+    data    = cbd_b.Car.Car_C_purpurata,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_C_purpurata_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_C_purpurata_boxplot
 
 
-b.Carotene_C_purpurata_boxplot
+b.Car.Car_C_purpurata_boxplot
 
 
 
@@ -3624,7 +3648,7 @@ for (sub in (loop_subgenera)) {
   
   data_loop <- dplyr::filter(data_Tot.Car_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -3654,7 +3678,7 @@ plot_list_Cuscuta_Tot.Car[["Monogynella"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Car_Monogynella_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Monogynella_Tot.Car <- dplyr::filter(data_Tot.Car_plots_cuscutasub, Subgenus == "Monogynella")
 
 box.rslt_Tot.Car_Monogynella <- with(data_Monogynella_Tot.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -3711,7 +3735,7 @@ plot_list_Cuscuta_Tot.Car[["Cuscuta"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Car_Cuscuta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Cuscuta_Tot.Car <- dplyr::filter(data_Tot.Car_plots_cuscutasub, Subgenus == "Cuscuta")
 
 box.rslt_Tot.Car_Cuscuta <- with(data_Cuscuta_Tot.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -3769,7 +3793,7 @@ plot_list_Cuscuta_Tot.Car[["Grammica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Car_Grammica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_Grammica_Tot.Car <- dplyr::filter(data_Tot.Car_plots_cuscutasub, Subgenus == "Grammica")
 
 box.rslt_Tot.Car_Grammica <- with(data_Grammica_Tot.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -3823,7 +3847,7 @@ Tot.Car_Grammica_boxplot
 data_C_purpurata_Tot.Car <- dplyr::filter(data_Tot.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
 Tot.Car_C_purpurata_boxplot <- ggplot(data_C_purpurata_Tot.Car, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -3872,7 +3896,7 @@ for (sub in (loop_subgenera)) {
   
   data_loop <- dplyr::filter(data_NVZ.Car_plots_cuscutasub, Subgenus == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -3945,7 +3969,7 @@ NVZ.Car_Grammica_boxplot
 data_C_purpurata_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
 NVZ.Car_C_purpurata_boxplot <- ggplot(data_C_purpurata_NVZ.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -3972,7 +3996,7 @@ NVZ.Car_C_purpurata_boxplot <- ggplot(data_C_purpurata_NVZ.Car, aes(x=Tissue.cod
 
 NVZ.Car_C_purpurata_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_purpurata_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_cuscutasub, Subgenus == "C_purpurata")
 
 box.rslt_NVZ.Car_C_purpurata <- with(data_C_purpurata_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -4041,11 +4065,11 @@ Subgenus_carotenoid_absent_list
 # [1] "absent"
 # 
 # 
-# $Neoxanthin
-# $Neoxanthin$C_purpurata
+# $Neo.Car
+# $Neo.Car$C_purpurata
 # [1] "absent"
 # 
-# $Neoxanthin$Cuscuta
+# $Neo.Car$Cuscuta
 # [1] "absent"
 
 
@@ -4074,40 +4098,40 @@ wrap_elements(gridtext::richtext_grob('Total carotenoids', rot = 90, hjust = 0.5
   # NVZ.Car_Cuscuta_boxplot + 
   # NVZ.Car_Grammica_boxplot +
   # NVZ.Car_C_purpurata_boxplot +
-  wrap_elements(gridtext::richtext_grob('Neoxanthin', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) +
-  Neoxanthin_ipomoea_boxplot +
-  Neoxanthin_Monogynella_boxplot +
-  Neoxanthin_Cuscuta_boxplot + geom_text(size    = 2, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
-  Neoxanthin_Grammica_boxplot +
-  Neoxanthin_C_purpurata_boxplot + geom_text(size    = 2, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
-  wrap_elements(gridtext::richtext_grob('Lutein', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
-  Lutein_ipomoea_boxplot + 
-  Lutein_Monogynella_boxplot +  
-  Lutein_Cuscuta_boxplot + 
-  Lutein_Grammica_boxplot + 
-  Lutein_C_purpurata_boxplot + 
-  wrap_elements(gridtext::richtext_grob('Lutein epoxide', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
-  Lutein.epoxide_ipomoea_boxplot + 
-  Lutein.epoxide_Monogynella_boxplot +  
-  Lutein.epoxide_Cuscuta_boxplot + 
-  Lutein.epoxide_Grammica_boxplot + 
-  Lutein.epoxide_C_purpurata_boxplot + 
+  wrap_elements(gridtext::richtext_grob('Neo.Car', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) +
+  Neo.Car_ipomoea_boxplot +
+  Neo.Car_Monogynella_boxplot +
+  Neo.Car_Cuscuta_boxplot + geom_text(size    = 2, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
+  Neo.Car_Grammica_boxplot +
+  Neo.Car_C_purpurata_boxplot + geom_text(size    = 2, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
+  wrap_elements(gridtext::richtext_grob('Lut.Car', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
+  Lut.Car_ipomoea_boxplot + 
+  Lut.Car_Monogynella_boxplot +  
+  Lut.Car_Cuscuta_boxplot + 
+  Lut.Car_Grammica_boxplot + 
+  Lut.Car_C_purpurata_boxplot + 
+  wrap_elements(gridtext::richtext_grob('Lut.Car epoxide', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
+  Lut.Car.epoxide_ipomoea_boxplot + 
+  Lut.Car.epoxide_Monogynella_boxplot +  
+  Lut.Car.epoxide_Cuscuta_boxplot + 
+  Lut.Car.epoxide_Grammica_boxplot + 
+  Lut.Car.epoxide_C_purpurata_boxplot + 
   wrap_elements(gridtext::richtext_grob('*a*-Carotene', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
-  a.Carotene_ipomoea_boxplot +
-  a.Carotene_Monogynella_boxplot +  
-  a.Carotene_Cuscuta_boxplot + 
-  a.Carotene_Grammica_boxplot + 
-  a.Carotene_C_purpurata_boxplot + 
+  a.Car.Car_ipomoea_boxplot +
+  a.Car.Car_Monogynella_boxplot +  
+  a.Car.Car_Cuscuta_boxplot + 
+  a.Car.Car_Grammica_boxplot + 
+  a.Car.Car_C_purpurata_boxplot + 
   wrap_elements(gridtext::richtext_grob('*b*-Carotene', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
-  b.Carotene_ipomoea_boxplot +
-  b.Carotene_Monogynella_boxplot +  
-  b.Carotene_Cuscuta_boxplot + 
-  b.Carotene_Grammica_boxplot + 
-  b.Carotene_C_purpurata_boxplot + plot_layout(nrow = 7, byrow = T) -> carotenoid_boxplot_new
+  b.Car.Car_ipomoea_boxplot +
+  b.Car.Car_Monogynella_boxplot +  
+  b.Car.Car_Cuscuta_boxplot + 
+  b.Car.Car_Grammica_boxplot + 
+  b.Car.Car_C_purpurata_boxplot + plot_layout(nrow = 7, byrow = T) -> carotenoid_boxplot_new
 
 carotenoid_boxplot_new 
 
-pdf("../output/boxplots/carotenoid_boxplot_new.pdf", width=7,height=8) 
+pdf("../output/boxplots/fig_5_carotenoid_boxplot.pdf", width=7,height=8) 
 carotenoid_boxplot_new
 dev.off()
 
@@ -4137,7 +4161,7 @@ data_C_australis_Chl.a <- dplyr::filter(data_C_australis, Pigment == "Chl.a")
 data_C_australis$Tissue.code <- factor(data_C_australis$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 Chl.a_C_australis_boxplot <- ggplot(data_C_australis_Chl.a, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -4174,7 +4198,7 @@ data_C_australis_Chl.b <- dplyr::filter(data_C_australis, Pigment == "Chl.b")
 
 
 Chl.b_C_australis_boxplot <- ggplot(data_C_australis_Chl.b, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -4209,7 +4233,7 @@ data_C_australis_Tot.Chl <- dplyr::filter(data_C_australis, Pigment == "Tot.Chl"
 
 
 Tot.Chl_C_australis_boxplot <- ggplot(data_C_australis_Tot.Chl, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -4246,7 +4270,7 @@ data_C_australis_Chl.a.b <- dplyr::filter(data_C_australis, Pigment == "Chl.a.b"
 
 
 Chl.a.b_C_australis_boxplot <- ggplot(data_C_australis_Chl.a.b, aes(x=Tissue.code, y=FW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -4292,7 +4316,7 @@ for (sub in (loop_species)) {
   
   data_loop <- dplyr::filter(data_Chl.a_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -4381,7 +4405,7 @@ plot_list_Grammica_Chl.a[["C_cephalanthii"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_cephalanthii_Chl.a <- dplyr::filter(data_Chl.a_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_Chl.a_C_cephalanthii <- with(data_C_cephalanthii_Chl.a, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -4452,7 +4476,7 @@ plot_list_Grammica_Chl.a[["C_tasmanica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_tasmanica_Chl.a <- dplyr::filter(data_Chl.a_plots_grammicaspe, Species == "C_tasmanica")
 
 box.rslt_Chl.a_C_tasmanica <- with(data_C_tasmanica_Chl.a, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -4509,7 +4533,7 @@ plot_list_Grammica_Chl.a[["C_costaricensis"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_costaricensis_Chl.a <- dplyr::filter(data_Chl.a_plots_grammicaspe, Species == "C_costaricensis")
 
 box.rslt_Chl.a_C_costaricensis <- with(data_C_costaricensis_Chl.a, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -4561,7 +4585,7 @@ Chl.a_C_costaricensis_boxplot
 data_Grammica_Chl.a <- dplyr::filter(data_Chl.a_plots_grammicaspe, Species == "C_indecora")
 
 Chl.a_C_indecora_boxplot <- ggplot(data_Grammica_Chl.a, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -4587,7 +4611,7 @@ Chl.a_C_indecora_boxplot <- ggplot(data_Grammica_Chl.a, aes(x=Tissue.code, y=log
     nudge_y = -.5, parse = TRUE) 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_indecora_Chl.a <- dplyr::filter(data_Chl.a_plots_grammicaspe, Species == "C_indecora")
 
 box.rslt_Chl.a_C_indecora <- with(data_C_indecora_Chl.a, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -4648,7 +4672,7 @@ for (sub in (loop_species)) {
   
   data_loop <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -4694,7 +4718,7 @@ plot_list_Grammica_Chl.b[["C_sandwichiana"]] +
     nudge_y = -.5, parse = TRUE) -> Chl.b_C_sandwichiana_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_sandwichiana_Chl.b <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == "C_sandwichiana")
 
 box.rslt_Chl.b_C_sandwichiana <- with(data_C_sandwichiana_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -4752,7 +4776,7 @@ plot_list_Grammica_Chl.b[["C_californica"]] +
     nudge_y = -.5, parse = TRUE) -> Chl.b_C_californica_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_californica_Chl.b <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == "C_californica")
 
 box.rslt_Chl.b_C_californica <- with(data_C_californica_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -4811,7 +4835,7 @@ plot_list_Grammica_Chl.b[["C_compacta"]] +
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_compacta_Chl.b <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == "C_compacta")
 
 box.rslt_Chl.b_C_compacta <- with(data_C_compacta_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -4868,7 +4892,7 @@ plot_list_Grammica_Chl.b[["C_cephalanthii"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.b_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_cephalanthii_Chl.b <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_Chl.b_C_cephalanthii <- with(data_C_cephalanthii_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -4926,7 +4950,7 @@ plot_list_Grammica_Chl.b[["C_denticulata"]] +
     nudge_y = -.5, parse = TRUE) -> Chl.b_C_denticulata_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_denticulata_Chl.b <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == "C_denticulata")
 
 box.rslt_Chl.b_C_denticulata <- with(data_C_denticulata_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -4984,7 +5008,7 @@ plot_list_Grammica_Chl.b[["C_tasmanica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.b_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_tasmanica_Chl.b <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == "C_tasmanica")
 
 box.rslt_Chl.b_C_tasmanica <- with(data_C_tasmanica_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -5041,7 +5065,7 @@ plot_list_Grammica_Chl.b[["C_costaricensis"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.b_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_costaricensis_Chl.b <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == "C_costaricensis")
 
 box.rslt_Chl.b_C_costaricensis <- with(data_C_costaricensis_Chl.b, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -5093,7 +5117,7 @@ Chl.b_C_costaricensis_boxplot
 data_Grammica_Chl.b <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == "C_indecora")
 
 Chl.b_C_indecora_boxplot <- ggplot(data_Grammica_Chl.b, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -5119,7 +5143,7 @@ Chl.b_C_indecora_boxplot <- ggplot(data_Grammica_Chl.b, aes(x=Tissue.code, y=log
     nudge_y = -.5, parse = TRUE) 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_indecora_Chl.b <- dplyr::filter(data_Chl.b_plots_grammicaspe, Species == "C_indecora")
 
 box.rslt_Chl.b_C_indecora <- with(data_C_indecora_Chl.b, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -5179,7 +5203,7 @@ for (sub in (loop_species)) {
   
   data_loop <- dplyr::filter(data_Tot.Chl_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -5239,7 +5263,7 @@ plot_list_Grammica_Tot.Chl[["C_californica"]] +
     nudge_y = -.5, parse = TRUE) -> Tot.Chl_C_californica_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_californica_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_grammicaspe, Species == "C_californica")
 
 box.rslt_Tot.Chl_C_californica <- with(data_C_californica_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -5298,7 +5322,7 @@ plot_list_Grammica_Tot.Chl[["C_compacta"]] +
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_compacta_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_grammicaspe, Species == "C_compacta")
 
 box.rslt_Tot.Chl_C_compacta <- with(data_C_compacta_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -5355,7 +5379,7 @@ plot_list_Grammica_Tot.Chl[["C_cephalanthii"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Chl_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_cephalanthii_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_Tot.Chl_C_cephalanthii <- with(data_C_cephalanthii_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -5429,7 +5453,7 @@ plot_list_Grammica_Tot.Chl[["C_tasmanica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Chl_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_tasmanica_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_grammicaspe, Species == "C_tasmanica")
 
 box.rslt_Tot.Chl_C_tasmanica <- with(data_C_tasmanica_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -5486,7 +5510,7 @@ plot_list_Grammica_Tot.Chl[["C_costaricensis"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Chl_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_costaricensis_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_grammicaspe, Species == "C_costaricensis")
 
 box.rslt_Tot.Chl_C_costaricensis <- with(data_C_costaricensis_Tot.Chl, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -5538,7 +5562,7 @@ Tot.Chl_C_costaricensis_boxplot
 data_Grammica_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_grammicaspe, Species == "C_indecora")
 
 Tot.Chl_C_indecora_boxplot <- ggplot(data_Grammica_Tot.Chl, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -5564,7 +5588,7 @@ Tot.Chl_C_indecora_boxplot <- ggplot(data_Grammica_Tot.Chl, aes(x=Tissue.code, y
     nudge_y = -.5, parse = TRUE) 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_indecora_Tot.Chl <- dplyr::filter(data_Tot.Chl_plots_grammicaspe, Species == "C_indecora")
 
 box.rslt_Tot.Chl_C_indecora <- with(data_C_indecora_Tot.Chl, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -5628,7 +5652,7 @@ for (sub in (loop_species)) {
   
   data_loop <- dplyr::filter(data_Chl.a.b_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=FW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -5720,7 +5744,7 @@ plot_list_Grammica_Chl.a.b[["C_cephalanthii"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a.b_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_cephalanthii_Chl.a.b <- dplyr::filter(data_Chl.a.b_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_Chl.a.b_C_cephalanthii <- with(data_C_cephalanthii_Chl.a.b, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -5794,7 +5818,7 @@ plot_list_Grammica_Chl.a.b[["C_tasmanica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a.b_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_tasmanica_Chl.a.b <- dplyr::filter(data_Chl.a.b_plots_grammicaspe, Species == "C_tasmanica")
 
 box.rslt_Chl.a.b_C_tasmanica <- with(data_C_tasmanica_Chl.a.b, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -5851,7 +5875,7 @@ plot_list_Grammica_Chl.a.b[["C_costaricensis"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Chl.a.b_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_costaricensis_Chl.a.b <- dplyr::filter(data_Chl.a.b_plots_grammicaspe, Species == "C_costaricensis")
 
 box.rslt_Chl.a.b_C_costaricensis <- with(data_C_costaricensis_Chl.a.b, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -5903,7 +5927,7 @@ Chl.a.b_C_costaricensis_boxplot
 data_Grammica_Chl.a.b <- dplyr::filter(data_Chl.a.b_plots_grammicaspe, Species == "C_indecora")
 
 Chl.a.b_C_indecora_boxplot <- ggplot(data_Grammica_Chl.a.b, aes(x=Tissue.code, y=FW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -5928,7 +5952,7 @@ Chl.a.b_C_indecora_boxplot <- ggplot(data_Grammica_Chl.a.b, aes(x=Tissue.code, y
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_indecora_Chl.a.b <- dplyr::filter(data_Chl.a.b_plots_grammicaspe, Species == "C_indecora")
 
 box.rslt_Chl.a.b_C_indecora <- with(data_C_indecora_Chl.a.b, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -5992,26 +6016,26 @@ for (species in Species_list_Grammica) {
     }}}
 
 # 
-# $Neoxanthin
-# $Neoxanthin$C_sandwichiana
+# $Neo.Car
+# $Neo.Car$C_sandwichiana
 # [1] "absent"
 # 
-# $Neoxanthin$C_compacta
+# $Neo.Car$C_compacta
 # [1] "absent"
 # 
-# $Neoxanthin$C_costaricensis
+# $Neo.Car$C_costaricensis
 # [1] "absent"
 # 
-# $Neoxanthin$C_tasmanica
+# $Neo.Car$C_tasmanica
 # [1] "absent"
 # 
-# $Neoxanthin$C_californica
+# $Neo.Car$C_californica
 # [1] "absent"
 # 
-# $Neoxanthin$C_indecora
+# $Neo.Car$C_indecora
 # [1] "absent"
 # 
-# $Neoxanthin$C_denticulata
+# $Neo.Car$C_denticulata
 # [1] "absent"
 
 # add the following geom_text to the above plots
@@ -6070,7 +6094,7 @@ wrap_elements(gridtext::richtext_grob('Chlorophyll *a*', rot = 90, hjust = 0.5, 
 
 chlorophyll_boxplot_Grammica_new 
 
-pdf("../output/boxplots/chlorophyll_boxplot_Grammica_new.pdf", width=9,height=5.5) 
+pdf("../output/boxplots/fig_S2_chlorophyll_boxplot_Grammica.pdf", width=9,height=5.5) 
 chlorophyll_boxplot_Grammica_new
 dev.off()
 
@@ -6089,7 +6113,7 @@ data_C_australis_VAZ.Car <- dplyr::filter(data_C_australis, Pigment == "VAZ.Car"
 data_C_australis$Tissue.code <- factor(data_C_australis$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 VAZ.Car_C_australis_boxplot <- ggplot(data_C_australis_VAZ.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6121,12 +6145,12 @@ VAZ.Car_C_australis_boxplot
 
 
 
-#### Neoxanthin C_australis ####
-data_C_australis_Neoxanthin <- dplyr::filter(data_C_australis, Pigment == "Neo.Car")
+#### Neo.Car C_australis ####
+data_C_australis_Neo.Car <- dplyr::filter(data_C_australis, Pigment == "Neo.Car")
 
 
-Neoxanthin_C_australis_boxplot <- ggplot(data_C_australis_Neoxanthin, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+Neo.Car_C_australis_boxplot <- ggplot(data_C_australis_Neo.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6153,15 +6177,15 @@ Neoxanthin_C_australis_boxplot <- ggplot(data_C_australis_Neoxanthin, aes(x=Tiss
 
 # KW not sig so no post hoc
 
-Neoxanthin_C_australis_boxplot
+Neo.Car_C_australis_boxplot
 
 
-#### Lutein.epoxide C_australis ####
-data_C_australis_Lutein.epoxide <- dplyr::filter(data_C_australis, Pigment == "Lut.epo.Car")
+#### Lut.Car.epoxide C_australis ####
+data_C_australis_Lut.Car.epoxide <- dplyr::filter(data_C_australis, Pigment == "Lut.epo.Car")
 
 
-Lutein.epoxide_C_australis_boxplot <- ggplot(data_C_australis_Lutein.epoxide, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+Lut.Car.epoxide_C_australis_boxplot <- ggplot(data_C_australis_Lut.Car.epoxide, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6190,16 +6214,16 @@ Lutein.epoxide_C_australis_boxplot <- ggplot(data_C_australis_Lutein.epoxide, ae
 
 # KW not sig so no post hoc
 
-Lutein.epoxide_C_australis_boxplot
+Lut.Car.epoxide_C_australis_boxplot
 
 
 
-#### Lutein C_australis ####
-data_C_australis_Lutein <- dplyr::filter(data_C_australis, Pigment == "Lut.Car")
+#### Lut.Car C_australis ####
+data_C_australis_Lut.Car <- dplyr::filter(data_C_australis, Pigment == "Lut.Car")
 
 
-Lutein_C_australis_boxplot <- ggplot(data_C_australis_Lutein, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+Lut.Car_C_australis_boxplot <- ggplot(data_C_australis_Lut.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6228,17 +6252,17 @@ Lutein_C_australis_boxplot <- ggplot(data_C_australis_Lutein, aes(x=Tissue.code,
 
 # KW not sig so no post hoc
 
-Lutein_C_australis_boxplot
+Lut.Car_C_australis_boxplot
 
 
 
 
-#### a.Carotene C_australis ####
-data_C_australis_a.Carotene <- dplyr::filter(data_C_australis, Pigment == "a.Car.Car")
+#### a.Car.Car C_australis ####
+data_C_australis_a.Car.Car <- dplyr::filter(data_C_australis, Pigment == "a.Car.Car")
 
 
-a.Carotene_C_australis_boxplot <- ggplot(data_C_australis_a.Carotene, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+a.Car.Car_C_australis_boxplot <- ggplot(data_C_australis_a.Car.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6267,17 +6291,17 @@ a.Carotene_C_australis_boxplot <- ggplot(data_C_australis_a.Carotene, aes(x=Tiss
 
 # KW not sig so no post hoc
 
-a.Carotene_C_australis_boxplot
+a.Car.Car_C_australis_boxplot
 
 
 
 
-#### b.Carotene C_australis ####
-data_C_australis_b.Carotene <- dplyr::filter(data_C_australis, Pigment == "b.Car.Car")
+#### b.Car.Car C_australis ####
+data_C_australis_b.Car.Car <- dplyr::filter(data_C_australis, Pigment == "b.Car.Car")
 
 
-b.Carotene_C_australis_boxplot <- ggplot(data_C_australis_b.Carotene, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+b.Car.Car_C_australis_boxplot <- ggplot(data_C_australis_b.Car.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6306,7 +6330,7 @@ b.Carotene_C_australis_boxplot <- ggplot(data_C_australis_b.Carotene, aes(x=Tiss
 
 # KW not sig so no post hoc
 
-b.Carotene_C_australis_boxplot
+b.Car.Car_C_australis_boxplot
 
 
 
@@ -6316,7 +6340,7 @@ data_C_australis_Tot.Car <- dplyr::filter(data_C_australis, Pigment == "Tot.Car"
 
 
 Tot.Car_C_australis_boxplot <- ggplot(data_C_australis_Tot.Car, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6353,7 +6377,7 @@ data_C_australis_NVZ.Car <- dplyr::filter(data_C_australis, Pigment == "NVZ.Car"
 
 
 NVZ.Car_C_australis_boxplot <- ggplot(data_C_australis_NVZ.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6398,7 +6422,7 @@ for (sub in (loop_species)) {
   
   data_loop <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6442,7 +6466,7 @@ plot_list_Grammica_VAZ.Car[["C_sandwichiana"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_C_sandwichiana_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_sandwichiana_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == "C_sandwichiana")
 
 box.rslt_VAZ.Car_C_sandwichiana <- with(data_C_sandwichiana_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -6499,7 +6523,7 @@ plot_list_Grammica_VAZ.Car[["C_californica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_C_californica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_californica_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == "C_californica")
 
 box.rslt_VAZ.Car_C_californica <- with(data_C_californica_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -6556,7 +6580,7 @@ plot_list_Grammica_VAZ.Car[["C_compacta"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_C_compacta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_compacta_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == "C_compacta")
 
 box.rslt_VAZ.Car_C_compacta <- with(data_C_compacta_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -6613,7 +6637,7 @@ plot_list_Grammica_VAZ.Car[["C_cephalanthii"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_cephalanthii_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_VAZ.Car_C_cephalanthii <- with(data_C_cephalanthii_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -6670,7 +6694,7 @@ plot_list_Grammica_VAZ.Car[["C_denticulata"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_C_denticulata_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_denticulata_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == "C_denticulata")
 
 box.rslt_VAZ.Car_C_denticulata <- with(data_C_denticulata_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -6727,7 +6751,7 @@ plot_list_Grammica_VAZ.Car[["C_tasmanica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_tasmanica_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == "C_tasmanica")
 
 box.rslt_VAZ.Car_C_tasmanica <- with(data_C_tasmanica_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -6784,7 +6808,7 @@ plot_list_Grammica_VAZ.Car[["C_costaricensis"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> VAZ.Car_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_costaricensis_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == "C_costaricensis")
 
 box.rslt_VAZ.Car_C_costaricensis <- with(data_C_costaricensis_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -6836,7 +6860,7 @@ VAZ.Car_C_costaricensis_boxplot
 data_Grammica_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == "C_indecora")
 
 VAZ.Car_C_indecora_boxplot <- ggplot(data_Grammica_VAZ.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6862,7 +6886,7 @@ VAZ.Car_C_indecora_boxplot <- ggplot(data_Grammica_VAZ.Car, aes(x=Tissue.code, y
     nudge_y = -.5, parse = TRUE) 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_indecora_VAZ.Car <- dplyr::filter(data_VAZ.Car_plots_grammicaspe, Species == "C_indecora")
 
 box.rslt_VAZ.Car_C_indecora <- with(data_C_indecora_VAZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -6910,21 +6934,21 @@ VAZ.Car_C_indecora_boxplot
 
 
 
-#### Neoxanthin loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
+#### Neo.Car loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
 loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
-# dplyr::filter for Neoxanthin
-data_Neoxanthin_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "Neo.Car")
+# dplyr::filter for Neo.Car
+data_Neo.Car_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "Neo.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_Neoxanthin_plots_grammicaspe$Tissue.code <- factor(data_Neoxanthin_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_Neo.Car_plots_grammicaspe$Tissue.code <- factor(data_Neo.Car_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Grammica_Neoxanthin = list()
+plot_list_Grammica_Neo.Car = list()
 
 for (sub in (loop_species)) {
   
-  data_loop <- dplyr::filter(data_Neoxanthin_plots_grammicaspe, Species == sub)
+  data_loop <- dplyr::filter(data_Neo.Car_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -6940,132 +6964,132 @@ for (sub in (loop_species)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100)) 
-  plot_list_Grammica_Neoxanthin[[sub]] = p
+  plot_list_Grammica_Neo.Car[[sub]] = p
   
 }
 
 
-#### Neoxanthin C_polygonorum ####
-plot_list_Grammica_Neoxanthin[["C_polygonorum"]] + 
+#### Neo.Car C_polygonorum ####
+plot_list_Grammica_Neo.Car[["C_polygonorum"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Neo.Car" & Species == "C_polygonorum"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Neoxanthin_C_polygonorum_boxplot
+    nudge_y = -.5, parse = TRUE) -> Neo.Car_C_polygonorum_boxplot
 
 # KW not sig so no post hoc
-Neoxanthin_C_polygonorum_boxplot
+Neo.Car_C_polygonorum_boxplot
 
 
-#### Neoxanthin C_sandwichiana ####
-plot_list_Grammica_Neoxanthin[["C_sandwichiana"]] -> Neoxanthin_C_sandwichiana_boxplot
-
-# no KW and no post hoc
-Neoxanthin_C_sandwichiana_boxplot
-
-
-#### Neoxanthin C_californica ####
-plot_list_Grammica_Neoxanthin[["C_californica"]] -> Neoxanthin_C_californica_boxplot
+#### Neo.Car C_sandwichiana ####
+plot_list_Grammica_Neo.Car[["C_sandwichiana"]] -> Neo.Car_C_sandwichiana_boxplot
 
 # no KW and no post hoc
-Neoxanthin_C_californica_boxplot
+Neo.Car_C_sandwichiana_boxplot
 
 
-#### Neoxanthin C_compacta ####
-plot_list_Grammica_Neoxanthin[["C_compacta"]] -> Neoxanthin_C_compacta_boxplot
+#### Neo.Car C_californica ####
+plot_list_Grammica_Neo.Car[["C_californica"]] -> Neo.Car_C_californica_boxplot
 
 # no KW and no post hoc
-Neoxanthin_C_compacta_boxplot
+Neo.Car_C_californica_boxplot
 
 
-#### Neoxanthin C_cephalanthii ####
-plot_list_Grammica_Neoxanthin[["C_cephalanthii"]] + 
+#### Neo.Car C_compacta ####
+plot_list_Grammica_Neo.Car[["C_compacta"]] -> Neo.Car_C_compacta_boxplot
+
+# no KW and no post hoc
+Neo.Car_C_compacta_boxplot
+
+
+#### Neo.Car C_cephalanthii ####
+plot_list_Grammica_Neo.Car[["C_cephalanthii"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Neo.Car" & Species == "C_cephalanthii"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Neoxanthin_C_cephalanthii_boxplot
+    nudge_y = -.5, parse = TRUE) -> Neo.Car_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_cephalanthii_Neoxanthin <- dplyr::filter(data_Neoxanthin_plots_grammicaspe, Species == "C_cephalanthii")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_cephalanthii_Neo.Car <- dplyr::filter(data_Neo.Car_plots_grammicaspe, Species == "C_cephalanthii")
 
-box.rslt_Neoxanthin_C_cephalanthii <- with(data_C_cephalanthii_Neoxanthin, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Neoxanthin_C_cephalanthii)
-boxplot_positions_Neoxanthin_C_cephalanthii <- as.data.frame(box.rslt_Neoxanthin_C_cephalanthii$stats)
+box.rslt_Neo.Car_C_cephalanthii <- with(data_C_cephalanthii_Neo.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Neo.Car_C_cephalanthii)
+boxplot_positions_Neo.Car_C_cephalanthii <- as.data.frame(box.rslt_Neo.Car_C_cephalanthii$stats)
 
 # what are these column tissue codes?
-tissues_Neoxanthin_C_cephalanthii <- levels(data_C_cephalanthii_Neoxanthin$Tissue.code)
+tissues_Neo.Car_C_cephalanthii <- levels(data_C_cephalanthii_Neo.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Neoxanthin_C_cephalanthii) <- tissues_Neoxanthin_C_cephalanthii
+colnames(boxplot_positions_Neo.Car_C_cephalanthii) <- tissues_Neo.Car_C_cephalanthii
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Neoxanthin_C_cephalanthii <- boxplot_positions_Neoxanthin_C_cephalanthii[5,]
+top_positions_Neo.Car_C_cephalanthii <- boxplot_positions_Neo.Car_C_cephalanthii[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Neoxanthin_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Neo.Car"]])[["Letters"]])
-colnames(cbd_Neoxanthin_C_cephalanthii)[1] <- "Letter"
+cbd_Neo.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Neo.Car"]])[["Letters"]])
+colnames(cbd_Neo.Car_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Neoxanthin_C_cephalanthii, keep.rownames = "Tissue.code")
+setDT(cbd_Neo.Car_C_cephalanthii, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Neoxanthin_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_Neoxanthin_C_cephalanthii
+top_positions_Neo.Car_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_Neo.Car_C_cephalanthii
 # now join these positions to cbd
-left_join(cbd_Neoxanthin_C_cephalanthii, top_positions_Neoxanthin_C_cephalanthii, by = "Tissue.code") -> cbd_Neoxanthin_C_cephalanthii
+left_join(cbd_Neo.Car_C_cephalanthii, top_positions_Neo.Car_C_cephalanthii, by = "Tissue.code") -> cbd_Neo.Car_C_cephalanthii
 
 # calculate how much to nudge
-data_C_cephalanthii_Neoxanthin %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Neoxanthin_C_cephalanthii
-cbd_Neoxanthin_C_cephalanthii$nudged <- max_Neoxanthin_C_cephalanthii$max * 1.05
+data_C_cephalanthii_Neo.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Neo.Car_C_cephalanthii
+cbd_Neo.Car_C_cephalanthii$nudged <- max_Neo.Car_C_cephalanthii$max * 1.05
 
 
 # add CLDs to plot
-Neoxanthin_C_cephalanthii_boxplot + 
+Neo.Car_C_cephalanthii_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Neoxanthin_C_cephalanthii,
+    data    = cbd_Neo.Car_C_cephalanthii,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Neoxanthin_C_cephalanthii_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Neo.Car_C_cephalanthii_boxplot
 
 
-Neoxanthin_C_cephalanthii_boxplot
+Neo.Car_C_cephalanthii_boxplot
 
 
-#### Neoxanthin C_denticulata ####
-plot_list_Grammica_Neoxanthin[["C_denticulata"]] -> Neoxanthin_C_denticulata_boxplot
-
-# no KW and no post hoc
-Neoxanthin_C_denticulata_boxplot
-
-
-
-#### Neoxanthin C_tasmanica ####
-plot_list_Grammica_Neoxanthin[["C_tasmanica"]]  -> Neoxanthin_C_tasmanica_boxplot
+#### Neo.Car C_denticulata ####
+plot_list_Grammica_Neo.Car[["C_denticulata"]] -> Neo.Car_C_denticulata_boxplot
 
 # no KW and no post hoc
+Neo.Car_C_denticulata_boxplot
 
-Neoxanthin_C_tasmanica_boxplot
 
 
-#### Neoxanthin C_costaricensis ####
-plot_list_Grammica_Neoxanthin[["C_costaricensis"]] -> Neoxanthin_C_costaricensis_boxplot
+#### Neo.Car C_tasmanica ####
+plot_list_Grammica_Neo.Car[["C_tasmanica"]]  -> Neo.Car_C_tasmanica_boxplot
 
 # no KW and no post hoc
-Neoxanthin_C_costaricensis_boxplot
+
+Neo.Car_C_tasmanica_boxplot
 
 
-#### Neoxanthin C_indecora species alone ####
+#### Neo.Car C_costaricensis ####
+plot_list_Grammica_Neo.Car[["C_costaricensis"]] -> Neo.Car_C_costaricensis_boxplot
 
-data_Grammica_Neoxanthin <- dplyr::filter(data_Neoxanthin_plots_grammicaspe, Species == "C_indecora")
+# no KW and no post hoc
+Neo.Car_C_costaricensis_boxplot
 
-Neoxanthin_C_indecora_boxplot <- ggplot(data_Grammica_Neoxanthin, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+
+#### Neo.Car C_indecora species alone ####
+
+data_Grammica_Neo.Car <- dplyr::filter(data_Neo.Car_plots_grammicaspe, Species == "C_indecora")
+
+Neo.Car_C_indecora_boxplot <- ggplot(data_Grammica_Neo.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -7085,24 +7109,24 @@ Neoxanthin_C_indecora_boxplot <- ggplot(data_Grammica_Neoxanthin, aes(x=Tissue.c
 
 
 # no KW and no post hoc
-Neoxanthin_C_indecora_boxplot
+Neo.Car_C_indecora_boxplot
 
 
-#### Lutein.epoxide loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
+#### Lut.Car.epoxide loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
 loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
-# dplyr::filter for Lutein.epoxide
-data_Lutein.epoxide_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "Lut.epo.Car")
+# dplyr::filter for Lut.Car.epoxide
+data_Lut.Car.epoxide_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "Lut.epo.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_Lutein.epoxide_plots_grammicaspe$Tissue.code <- factor(data_Lutein.epoxide_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_Lut.Car.epoxide_plots_grammicaspe$Tissue.code <- factor(data_Lut.Car.epoxide_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Grammica_Lutein.epoxide = list()
+plot_list_Grammica_Lut.Car.epoxide = list()
 
 for (sub in (loop_species)) {
   
-  data_loop <- dplyr::filter(data_Lutein.epoxide_plots_grammicaspe, Species == sub)
+  data_loop <- dplyr::filter(data_Lut.Car.epoxide_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -7118,172 +7142,172 @@ for (sub in (loop_species)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100))
-  plot_list_Grammica_Lutein.epoxide[[sub]] = p
+  plot_list_Grammica_Lut.Car.epoxide[[sub]] = p
   
 }
 
-#### Lutein.epoxide C_polygonorum ####
-plot_list_Grammica_Lutein.epoxide[["C_polygonorum"]] + 
+#### Lut.Car.epoxide C_polygonorum ####
+plot_list_Grammica_Lut.Car.epoxide[["C_polygonorum"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.epo.Car" & Species == "C_polygonorum"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_C_polygonorum_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_C_polygonorum_boxplot
 
 # KW not sig so no post hoc
-Lutein.epoxide_C_polygonorum_boxplot
+Lut.Car.epoxide_C_polygonorum_boxplot
 
 
-#### Lutein.epoxide C_sandwichiana ####
-plot_list_Grammica_Lutein.epoxide[["C_sandwichiana"]] + 
+#### Lut.Car.epoxide C_sandwichiana ####
+plot_list_Grammica_Lut.Car.epoxide[["C_sandwichiana"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.epo.Car" & Species == "C_sandwichiana"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_C_sandwichiana_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_C_sandwichiana_boxplot
 
 
 # KW not sig so no post hoc
-Lutein.epoxide_C_sandwichiana_boxplot
+Lut.Car.epoxide_C_sandwichiana_boxplot
 
 
-#### Lutein.epoxide C_californica ####
-plot_list_Grammica_Lutein.epoxide[["C_californica"]] + 
+#### Lut.Car.epoxide C_californica ####
+plot_list_Grammica_Lut.Car.epoxide[["C_californica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.epo.Car" & Species == "C_californica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_C_californica_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_C_californica_boxplot
 
 
 # KW not sig no post hoc
-Lutein.epoxide_C_californica_boxplot
+Lut.Car.epoxide_C_californica_boxplot
 
 
-#### Lutein.epoxide C_compacta ####
-plot_list_Grammica_Lutein.epoxide[["C_compacta"]] + 
+#### Lut.Car.epoxide C_compacta ####
+plot_list_Grammica_Lut.Car.epoxide[["C_compacta"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.epo.Car" & Species == "C_compacta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_C_compacta_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_C_compacta_boxplot
 
 # KW not sig no post hoc
-Lutein.epoxide_C_compacta_boxplot
+Lut.Car.epoxide_C_compacta_boxplot
 
 
-#### Lutein.epoxide C_cephalanthii ####
-plot_list_Grammica_Lutein.epoxide[["C_cephalanthii"]] + 
+#### Lut.Car.epoxide C_cephalanthii ####
+plot_list_Grammica_Lut.Car.epoxide[["C_cephalanthii"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.epo.Car" & Species == "C_cephalanthii"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_C_cephalanthii_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_cephalanthii_Lutein.epoxide <- dplyr::filter(data_Lutein.epoxide_plots_grammicaspe, Species == "C_cephalanthii")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_cephalanthii_Lut.Car.epoxide <- dplyr::filter(data_Lut.Car.epoxide_plots_grammicaspe, Species == "C_cephalanthii")
 
-box.rslt_Lutein.epoxide_C_cephalanthii <- with(data_C_cephalanthii_Lutein.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein.epoxide_C_cephalanthii)
-boxplot_positions_Lutein.epoxide_C_cephalanthii <- as.data.frame(box.rslt_Lutein.epoxide_C_cephalanthii$stats)
+box.rslt_Lut.Car.epoxide_C_cephalanthii <- with(data_C_cephalanthii_Lut.Car.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car.epoxide_C_cephalanthii)
+boxplot_positions_Lut.Car.epoxide_C_cephalanthii <- as.data.frame(box.rslt_Lut.Car.epoxide_C_cephalanthii$stats)
 
 # what are these column tissue codes?
-tissues_Lutein.epoxide_C_cephalanthii <- levels(data_C_cephalanthii_Lutein.epoxide$Tissue.code)
+tissues_Lut.Car.epoxide_C_cephalanthii <- levels(data_C_cephalanthii_Lut.Car.epoxide$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein.epoxide_C_cephalanthii) <- tissues_Lutein.epoxide_C_cephalanthii
+colnames(boxplot_positions_Lut.Car.epoxide_C_cephalanthii) <- tissues_Lut.Car.epoxide_C_cephalanthii
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein.epoxide_C_cephalanthii <- boxplot_positions_Lutein.epoxide_C_cephalanthii[5,]
+top_positions_Lut.Car.epoxide_C_cephalanthii <- boxplot_positions_Lut.Car.epoxide_C_cephalanthii[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein.epoxide_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Lut.epo.Car"]])[["Letters"]])
-colnames(cbd_Lutein.epoxide_C_cephalanthii)[1] <- "Letter"
+cbd_Lut.Car.epoxide_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Lut.epo.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car.epoxide_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein.epoxide_C_cephalanthii, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car.epoxide_C_cephalanthii, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein.epoxide_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_Lutein.epoxide_C_cephalanthii
+top_positions_Lut.Car.epoxide_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car.epoxide_C_cephalanthii
 # now join these positions to cbd
-left_join(cbd_Lutein.epoxide_C_cephalanthii, top_positions_Lutein.epoxide_C_cephalanthii, by = "Tissue.code") -> cbd_Lutein.epoxide_C_cephalanthii
+left_join(cbd_Lut.Car.epoxide_C_cephalanthii, top_positions_Lut.Car.epoxide_C_cephalanthii, by = "Tissue.code") -> cbd_Lut.Car.epoxide_C_cephalanthii
 
 # calculate how much to nudge
-data_C_cephalanthii_Lutein.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein.epoxide_C_cephalanthii
-cbd_Lutein.epoxide_C_cephalanthii$nudged <- max_Lutein.epoxide_C_cephalanthii$max * 1.05
+data_C_cephalanthii_Lut.Car.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car.epoxide_C_cephalanthii
+cbd_Lut.Car.epoxide_C_cephalanthii$nudged <- max_Lut.Car.epoxide_C_cephalanthii$max * 1.05
 
 
 # add CLDs to plot
-Lutein.epoxide_C_cephalanthii_boxplot + 
+Lut.Car.epoxide_C_cephalanthii_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein.epoxide_C_cephalanthii,
+    data    = cbd_Lut.Car.epoxide_C_cephalanthii,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein.epoxide_C_cephalanthii_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car.epoxide_C_cephalanthii_boxplot
 
 
-Lutein.epoxide_C_cephalanthii_boxplot
+Lut.Car.epoxide_C_cephalanthii_boxplot
 
 
-#### Lutein.epoxide C_denticulata ####
-plot_list_Grammica_Lutein.epoxide[["C_denticulata"]] + 
+#### Lut.Car.epoxide C_denticulata ####
+plot_list_Grammica_Lut.Car.epoxide[["C_denticulata"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.epo.Car" & Species == "C_denticulata"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_C_denticulata_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_C_denticulata_boxplot
 
 # not sig
 
 
 
-#### Lutein.epoxide C_tasmanica ####
-plot_list_Grammica_Lutein.epoxide[["C_tasmanica"]] + 
+#### Lut.Car.epoxide C_tasmanica ####
+plot_list_Grammica_Lut.Car.epoxide[["C_tasmanica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.epo.Car" & Species == "C_tasmanica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_C_tasmanica_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_tasmanica_Lutein.epoxide <- dplyr::filter(data_Lutein.epoxide_plots_grammicaspe, Species == "C_tasmanica")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_tasmanica_Lut.Car.epoxide <- dplyr::filter(data_Lut.Car.epoxide_plots_grammicaspe, Species == "C_tasmanica")
 
-box.rslt_Lutein.epoxide_C_tasmanica <- with(data_C_tasmanica_Lutein.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein.epoxide_C_tasmanica)
-boxplot_positions_Lutein.epoxide_C_tasmanica <- as.data.frame(box.rslt_Lutein.epoxide_C_tasmanica$stats)
+box.rslt_Lut.Car.epoxide_C_tasmanica <- with(data_C_tasmanica_Lut.Car.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car.epoxide_C_tasmanica)
+boxplot_positions_Lut.Car.epoxide_C_tasmanica <- as.data.frame(box.rslt_Lut.Car.epoxide_C_tasmanica$stats)
 
 # what are these column tissue codes?
-tissues_Lutein.epoxide_C_tasmanica <- levels(data_C_tasmanica_Lutein.epoxide$Tissue.code)
+tissues_Lut.Car.epoxide_C_tasmanica <- levels(data_C_tasmanica_Lut.Car.epoxide$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein.epoxide_C_tasmanica) <- tissues_Lutein.epoxide_C_tasmanica
+colnames(boxplot_positions_Lut.Car.epoxide_C_tasmanica) <- tissues_Lut.Car.epoxide_C_tasmanica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein.epoxide_C_tasmanica <- boxplot_positions_Lutein.epoxide_C_tasmanica[5,]
+top_positions_Lut.Car.epoxide_C_tasmanica <- boxplot_positions_Lut.Car.epoxide_C_tasmanica[5,]
 
 
 # #add pairwise significance letter groups (compact letter display; CLD)
-# cbd_Lutein.epoxide_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Lut.epo.Car"]])[["Letters"]])
-# colnames(cbd_Lutein.epoxide_C_tasmanica)[1] <- "Letter"
+# cbd_Lut.Car.epoxide_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Lut.epo.Car"]])[["Letters"]])
+# colnames(cbd_Lut.Car.epoxide_C_tasmanica)[1] <- "Letter"
 # # turn rownames into first column for Tissue.code
-# setDT(cbd_Lutein.epoxide_C_tasmanica, keep.rownames = "Tissue.code")
+# setDT(cbd_Lut.Car.epoxide_C_tasmanica, keep.rownames = "Tissue.code")
 
-dunn_list_Grammica[["C_tasmanica__Lutein.epoxide"]]
+dunn_list_Grammica[["C_tasmanica__Lut.Car.epoxide"]]
 
 # Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
 # 
@@ -7297,9 +7321,9 @@ dunn_list_Grammica[["C_tasmanica__Lutein.epoxide"]]
 # P value adjustment method: BH
 
 # make df
-cbd_Lutein.epoxide_C_tasmanica_Tissue.code <- c("y", "o", "h", "f")
-cbd_Lutein.epoxide_C_tasmanica_Letters <- c("a", "b", "c", "c")
-cbd_Lutein.epoxide_C_tasmanica <- data.frame("Tissue.code" = cbd_Lutein.epoxide_C_tasmanica_Tissue.code, "Letter" = cbd_Lutein.epoxide_C_tasmanica_Letters)
+cbd_Lut.Car.epoxide_C_tasmanica_Tissue.code <- c("y", "o", "h", "f")
+cbd_Lut.Car.epoxide_C_tasmanica_Letters <- c("a", "b", "c", "c")
+cbd_Lut.Car.epoxide_C_tasmanica <- data.frame("Tissue.code" = cbd_Lut.Car.epoxide_C_tasmanica_Tissue.code, "Letter" = cbd_Lut.Car.epoxide_C_tasmanica_Letters)
 
 
 
@@ -7307,48 +7331,48 @@ cbd_Lutein.epoxide_C_tasmanica <- data.frame("Tissue.code" = cbd_Lutein.epoxide_
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein.epoxide_C_tasmanica %>% gather(., Tissue.code, y.position) -> top_positions_Lutein.epoxide_C_tasmanica
+top_positions_Lut.Car.epoxide_C_tasmanica %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car.epoxide_C_tasmanica
 # now join these positions to cbd
-left_join(cbd_Lutein.epoxide_C_tasmanica, top_positions_Lutein.epoxide_C_tasmanica, by = "Tissue.code") -> cbd_Lutein.epoxide_C_tasmanica
+left_join(cbd_Lut.Car.epoxide_C_tasmanica, top_positions_Lut.Car.epoxide_C_tasmanica, by = "Tissue.code") -> cbd_Lut.Car.epoxide_C_tasmanica
 
 # calculate how much to nudge
-data_C_tasmanica_Lutein.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein.epoxide_C_tasmanica
-cbd_Lutein.epoxide_C_tasmanica$nudged <- max_Lutein.epoxide_C_tasmanica$max * 1.05
+data_C_tasmanica_Lut.Car.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car.epoxide_C_tasmanica
+cbd_Lut.Car.epoxide_C_tasmanica$nudged <- max_Lut.Car.epoxide_C_tasmanica$max * 1.05
 
 
 # add CLDs to plot
-Lutein.epoxide_C_tasmanica_boxplot + 
+Lut.Car.epoxide_C_tasmanica_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein.epoxide_C_tasmanica,
+    data    = cbd_Lut.Car.epoxide_C_tasmanica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein.epoxide_C_tasmanica_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car.epoxide_C_tasmanica_boxplot
 
 
-Lutein.epoxide_C_tasmanica_boxplot
+Lut.Car.epoxide_C_tasmanica_boxplot
 
 
-#### Lutein.epoxide C_costaricensis ####
-plot_list_Grammica_Lutein.epoxide[["C_costaricensis"]] + 
+#### Lut.Car.epoxide C_costaricensis ####
+plot_list_Grammica_Lut.Car.epoxide[["C_costaricensis"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.epo.Car" & Species == "C_costaricensis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein.epoxide_C_costaricensis_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car.epoxide_C_costaricensis_boxplot
 
 # KW not sig no post hoc
-Lutein.epoxide_C_costaricensis_boxplot
+Lut.Car.epoxide_C_costaricensis_boxplot
 
 
-#### Lutein.epoxide C_indecora species alone ####
+#### Lut.Car.epoxide C_indecora species alone ####
 
-data_Grammica_Lutein.epoxide <- dplyr::filter(data_Lutein.epoxide_plots_grammicaspe, Species == "C_indecora")
+data_Grammica_Lut.Car.epoxide <- dplyr::filter(data_Lut.Car.epoxide_plots_grammicaspe, Species == "C_indecora")
 
-Lutein.epoxide_C_indecora_boxplot <- ggplot(data_Grammica_Lutein.epoxide, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+Lut.Car.epoxide_C_indecora_boxplot <- ggplot(data_Grammica_Lut.Car.epoxide, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -7374,29 +7398,29 @@ Lutein.epoxide_C_indecora_boxplot <- ggplot(data_Grammica_Lutein.epoxide, aes(x=
     nudge_y = -.5, parse = TRUE) 
 
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_indecora_Lutein.epoxide <- dplyr::filter(data_Lutein.epoxide_plots_grammicaspe, Species == "C_indecora")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_indecora_Lut.Car.epoxide <- dplyr::filter(data_Lut.Car.epoxide_plots_grammicaspe, Species == "C_indecora")
 
-box.rslt_Lutein.epoxide_C_indecora <- with(data_C_indecora_Lutein.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein.epoxide_C_indecora)
-boxplot_positions_Lutein.epoxide_C_indecora <- as.data.frame(box.rslt_Lutein.epoxide_C_indecora$stats)
+box.rslt_Lut.Car.epoxide_C_indecora <- with(data_C_indecora_Lut.Car.epoxide, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car.epoxide_C_indecora)
+boxplot_positions_Lut.Car.epoxide_C_indecora <- as.data.frame(box.rslt_Lut.Car.epoxide_C_indecora$stats)
 
 # what are these column tissue codes?
-tissues_Lutein.epoxide_C_indecora <- levels(data_C_indecora_Lutein.epoxide$Tissue.code)
+tissues_Lut.Car.epoxide_C_indecora <- levels(data_C_indecora_Lut.Car.epoxide$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein.epoxide_C_indecora) <- tissues_Lutein.epoxide_C_indecora
+colnames(boxplot_positions_Lut.Car.epoxide_C_indecora) <- tissues_Lut.Car.epoxide_C_indecora
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein.epoxide_C_indecora <- boxplot_positions_Lutein.epoxide_C_indecora[5,]
+top_positions_Lut.Car.epoxide_C_indecora <- boxplot_positions_Lut.Car.epoxide_C_indecora[5,]
 
 
 # #add pairwise significance letter groups (compact letter display; CLD)
-# cbd_Lutein.epoxide_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Lut.epo.Car"]])[["Letters"]])
-# colnames(cbd_Lutein.epoxide_C_indecora)[1] <- "Letter"
+# cbd_Lut.Car.epoxide_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Lut.epo.Car"]])[["Letters"]])
+# colnames(cbd_Lut.Car.epoxide_C_indecora)[1] <- "Letter"
 # # turn rownames into first column for Tissue.code
-# setDT(cbd_Lutein.epoxide_C_indecora, keep.rownames = "Tissue.code")
+# setDT(cbd_Lut.Car.epoxide_C_indecora, keep.rownames = "Tissue.code")
 
-dunn_list_Grammica[["C_indecora__Lutein.epoxide"]]
+dunn_list_Grammica[["C_indecora__Lut.Car.epoxide"]]
 
 # Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
 # 
@@ -7410,52 +7434,52 @@ dunn_list_Grammica[["C_indecora__Lutein.epoxide"]]
 # P value adjustment method: BH 
 
 # make df
-cbd_Lutein.epoxide_C_indecora_Tissue.code <- c("y", "o", "h", "f")
-cbd_Lutein.epoxide_C_indecora_Letters <- c("a", "a", "a", "a")
-cbd_Lutein.epoxide_C_indecora <- data.frame("Tissue.code" = cbd_Lutein.epoxide_C_indecora_Tissue.code, "Letter" = cbd_Lutein.epoxide_C_indecora_Letters)
+cbd_Lut.Car.epoxide_C_indecora_Tissue.code <- c("y", "o", "h", "f")
+cbd_Lut.Car.epoxide_C_indecora_Letters <- c("a", "a", "a", "a")
+cbd_Lut.Car.epoxide_C_indecora <- data.frame("Tissue.code" = cbd_Lut.Car.epoxide_C_indecora_Tissue.code, "Letter" = cbd_Lut.Car.epoxide_C_indecora_Letters)
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein.epoxide_C_indecora %>% gather(., Tissue.code, y.position) -> top_positions_Lutein.epoxide_C_indecora
+top_positions_Lut.Car.epoxide_C_indecora %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car.epoxide_C_indecora
 # now join these positions to cbd
-left_join(cbd_Lutein.epoxide_C_indecora, top_positions_Lutein.epoxide_C_indecora, by = "Tissue.code") -> cbd_Lutein.epoxide_C_indecora
+left_join(cbd_Lut.Car.epoxide_C_indecora, top_positions_Lut.Car.epoxide_C_indecora, by = "Tissue.code") -> cbd_Lut.Car.epoxide_C_indecora
 
 # calculate how much to nudge
-data_C_indecora_Lutein.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein.epoxide_C_indecora
-cbd_Lutein.epoxide_C_indecora$nudged <- (max_Lutein.epoxide_C_indecora$max * 1.05)
+data_C_indecora_Lut.Car.epoxide %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car.epoxide_C_indecora
+cbd_Lut.Car.epoxide_C_indecora$nudged <- (max_Lut.Car.epoxide_C_indecora$max * 1.05)
 
 # add CLDs to plot
-Lutein.epoxide_C_indecora_boxplot + 
+Lut.Car.epoxide_C_indecora_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein.epoxide_C_indecora,
+    data    = cbd_Lut.Car.epoxide_C_indecora,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein.epoxide_C_indecora_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car.epoxide_C_indecora_boxplot
 
 
-Lutein.epoxide_C_indecora_boxplot
+Lut.Car.epoxide_C_indecora_boxplot
 
 
 
 
 
-#### Lutein loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
+#### Lut.Car loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
 loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
-# dplyr::filter for Lutein
-data_Lutein_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "Lut.Car")
+# dplyr::filter for Lut.Car
+data_Lut.Car_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "Lut.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_Lutein_plots_grammicaspe$Tissue.code <- factor(data_Lutein_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_Lut.Car_plots_grammicaspe$Tissue.code <- factor(data_Lut.Car_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Grammica_Lutein = list()
+plot_list_Grammica_Lut.Car = list()
 
 for (sub in (loop_species)) {
   
-  data_loop <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == sub)
+  data_loop <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -7471,436 +7495,436 @@ for (sub in (loop_species)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100))
-  plot_list_Grammica_Lutein[[sub]] = p
+  plot_list_Grammica_Lut.Car[[sub]] = p
   
 }
 
 
-#### Lutein C_polygonorum ####
-plot_list_Grammica_Lutein[["C_polygonorum"]] + 
+#### Lut.Car C_polygonorum ####
+plot_list_Grammica_Lut.Car[["C_polygonorum"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.Car" & Species == "C_polygonorum"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_C_polygonorum_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_C_polygonorum_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_polygonorum_Lutein <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == "C_polygonorum")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_polygonorum_Lut.Car <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == "C_polygonorum")
 
-box.rslt_Lutein_C_polygonorum <- with(data_C_polygonorum_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_C_polygonorum)
-boxplot_positions_Lutein_C_polygonorum <- as.data.frame(box.rslt_Lutein_C_polygonorum$stats)
+box.rslt_Lut.Car_C_polygonorum <- with(data_C_polygonorum_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_C_polygonorum)
+boxplot_positions_Lut.Car_C_polygonorum <- as.data.frame(box.rslt_Lut.Car_C_polygonorum$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_C_polygonorum <- levels(data_C_polygonorum_Lutein$Tissue.code)
+tissues_Lut.Car_C_polygonorum <- levels(data_C_polygonorum_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_C_polygonorum) <- tissues_Lutein_C_polygonorum
+colnames(boxplot_positions_Lut.Car_C_polygonorum) <- tissues_Lut.Car_C_polygonorum
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_C_polygonorum <- boxplot_positions_Lutein_C_polygonorum[5,]
+top_positions_Lut.Car_C_polygonorum <- boxplot_positions_Lut.Car_C_polygonorum[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_polygonorum__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_C_polygonorum)[1] <- "Letter"
+cbd_Lut.Car_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_polygonorum__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_C_polygonorum)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_C_polygonorum, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_C_polygonorum, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_C_polygonorum %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_C_polygonorum
+top_positions_Lut.Car_C_polygonorum %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_C_polygonorum
 # now join these positions to cbd
-left_join(cbd_Lutein_C_polygonorum, top_positions_Lutein_C_polygonorum, by = "Tissue.code") -> cbd_Lutein_C_polygonorum
+left_join(cbd_Lut.Car_C_polygonorum, top_positions_Lut.Car_C_polygonorum, by = "Tissue.code") -> cbd_Lut.Car_C_polygonorum
 
 # calculate how much to nudge
-data_C_polygonorum_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_C_polygonorum
-cbd_Lutein_C_polygonorum$nudged <- max_Lutein_C_polygonorum$max * 1.05
+data_C_polygonorum_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_C_polygonorum
+cbd_Lut.Car_C_polygonorum$nudged <- max_Lut.Car_C_polygonorum$max * 1.05
 
 
 # add CLDs to plot
-Lutein_C_polygonorum_boxplot + 
+Lut.Car_C_polygonorum_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein_C_polygonorum,
+    data    = cbd_Lut.Car_C_polygonorum,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_C_polygonorum_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_C_polygonorum_boxplot
 
 
-Lutein_C_polygonorum_boxplot
+Lut.Car_C_polygonorum_boxplot
 
 
 
-#### Lutein C_sandwichiana ####
-plot_list_Grammica_Lutein[["C_sandwichiana"]] + 
+#### Lut.Car C_sandwichiana ####
+plot_list_Grammica_Lut.Car[["C_sandwichiana"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.Car" & Species == "C_sandwichiana"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_C_sandwichiana_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_C_sandwichiana_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_sandwichiana_Lutein <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == "C_sandwichiana")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_sandwichiana_Lut.Car <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == "C_sandwichiana")
 
-box.rslt_Lutein_C_sandwichiana <- with(data_C_sandwichiana_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_C_sandwichiana)
-boxplot_positions_Lutein_C_sandwichiana <- as.data.frame(box.rslt_Lutein_C_sandwichiana$stats)
+box.rslt_Lut.Car_C_sandwichiana <- with(data_C_sandwichiana_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_C_sandwichiana)
+boxplot_positions_Lut.Car_C_sandwichiana <- as.data.frame(box.rslt_Lut.Car_C_sandwichiana$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_C_sandwichiana <- levels(data_C_sandwichiana_Lutein$Tissue.code)
+tissues_Lut.Car_C_sandwichiana <- levels(data_C_sandwichiana_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_C_sandwichiana) <- tissues_Lutein_C_sandwichiana
+colnames(boxplot_positions_Lut.Car_C_sandwichiana) <- tissues_Lut.Car_C_sandwichiana
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_C_sandwichiana <- boxplot_positions_Lutein_C_sandwichiana[5,]
+top_positions_Lut.Car_C_sandwichiana <- boxplot_positions_Lut.Car_C_sandwichiana[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_sandwichiana__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_C_sandwichiana)[1] <- "Letter"
+cbd_Lut.Car_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_sandwichiana__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_C_sandwichiana)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_C_sandwichiana, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_C_sandwichiana, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_C_sandwichiana %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_C_sandwichiana
+top_positions_Lut.Car_C_sandwichiana %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_C_sandwichiana
 # now join these positions to cbd
-left_join(cbd_Lutein_C_sandwichiana, top_positions_Lutein_C_sandwichiana, by = "Tissue.code") -> cbd_Lutein_C_sandwichiana
+left_join(cbd_Lut.Car_C_sandwichiana, top_positions_Lut.Car_C_sandwichiana, by = "Tissue.code") -> cbd_Lut.Car_C_sandwichiana
 
 # calculate how much to nudge
-data_C_sandwichiana_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_C_sandwichiana
-cbd_Lutein_C_sandwichiana$nudged <- max_Lutein_C_sandwichiana$max * 1.05
+data_C_sandwichiana_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_C_sandwichiana
+cbd_Lut.Car_C_sandwichiana$nudged <- max_Lut.Car_C_sandwichiana$max * 1.05
 
 
 # add CLDs to plot
-Lutein_C_sandwichiana_boxplot + 
+Lut.Car_C_sandwichiana_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein_C_sandwichiana,
+    data    = cbd_Lut.Car_C_sandwichiana,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_C_sandwichiana_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_C_sandwichiana_boxplot
 
 
-Lutein_C_sandwichiana_boxplot
+Lut.Car_C_sandwichiana_boxplot
 
 
 
-#### Lutein C_californica ####
-plot_list_Grammica_Lutein[["C_californica"]] + 
+#### Lut.Car C_californica ####
+plot_list_Grammica_Lut.Car[["C_californica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.Car" & Species == "C_californica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_C_californica_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_C_californica_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_californica_Lutein <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == "C_californica")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_californica_Lut.Car <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == "C_californica")
 
-box.rslt_Lutein_C_californica <- with(data_C_californica_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_C_californica)
-boxplot_positions_Lutein_C_californica <- as.data.frame(box.rslt_Lutein_C_californica$stats)
+box.rslt_Lut.Car_C_californica <- with(data_C_californica_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_C_californica)
+boxplot_positions_Lut.Car_C_californica <- as.data.frame(box.rslt_Lut.Car_C_californica$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_C_californica <- levels(data_C_californica_Lutein$Tissue.code)
+tissues_Lut.Car_C_californica <- levels(data_C_californica_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_C_californica) <- tissues_Lutein_C_californica
+colnames(boxplot_positions_Lut.Car_C_californica) <- tissues_Lut.Car_C_californica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_C_californica <- boxplot_positions_Lutein_C_californica[5,]
+top_positions_Lut.Car_C_californica <- boxplot_positions_Lut.Car_C_californica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_californica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_californica__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_C_californica)[1] <- "Letter"
+cbd_Lut.Car_C_californica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_californica__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_C_californica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_C_californica, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_C_californica, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_C_californica %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_C_californica
+top_positions_Lut.Car_C_californica %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_C_californica
 # now join these positions to cbd
-left_join(cbd_Lutein_C_californica, top_positions_Lutein_C_californica, by = "Tissue.code") -> cbd_Lutein_C_californica
+left_join(cbd_Lut.Car_C_californica, top_positions_Lut.Car_C_californica, by = "Tissue.code") -> cbd_Lut.Car_C_californica
 
 # calculate how much to nudge
-data_C_californica_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_C_californica
-cbd_Lutein_C_californica$nudged <- max_Lutein_C_californica$max * 1.05
+data_C_californica_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_C_californica
+cbd_Lut.Car_C_californica$nudged <- max_Lut.Car_C_californica$max * 1.05
 
 
 # add CLDs to plot
-Lutein_C_californica_boxplot + 
+Lut.Car_C_californica_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein_C_californica,
+    data    = cbd_Lut.Car_C_californica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_C_californica_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_C_californica_boxplot
 
 
-Lutein_C_californica_boxplot
+Lut.Car_C_californica_boxplot
 
 
-#### Lutein C_compacta ####
-plot_list_Grammica_Lutein[["C_compacta"]] + 
+#### Lut.Car C_compacta ####
+plot_list_Grammica_Lut.Car[["C_compacta"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.Car" & Species == "C_compacta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_C_compacta_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_C_compacta_boxplot
 
 
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_compacta_Lutein <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == "C_compacta")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_compacta_Lut.Car <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == "C_compacta")
 
-box.rslt_Lutein_C_compacta <- with(data_C_compacta_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_C_compacta)
-boxplot_positions_Lutein_C_compacta <- as.data.frame(box.rslt_Lutein_C_compacta$stats)
+box.rslt_Lut.Car_C_compacta <- with(data_C_compacta_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_C_compacta)
+boxplot_positions_Lut.Car_C_compacta <- as.data.frame(box.rslt_Lut.Car_C_compacta$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_C_compacta <- levels(data_C_compacta_Lutein$Tissue.code)
+tissues_Lut.Car_C_compacta <- levels(data_C_compacta_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_C_compacta) <- tissues_Lutein_C_compacta
+colnames(boxplot_positions_Lut.Car_C_compacta) <- tissues_Lut.Car_C_compacta
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_C_compacta <- boxplot_positions_Lutein_C_compacta[5,]
+top_positions_Lut.Car_C_compacta <- boxplot_positions_Lut.Car_C_compacta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_C_compacta)[1] <- "Letter"
+cbd_Lut.Car_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_C_compacta, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_C_compacta, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_C_compacta %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_C_compacta
+top_positions_Lut.Car_C_compacta %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_C_compacta
 # now join these positions to cbd
-left_join(cbd_Lutein_C_compacta, top_positions_Lutein_C_compacta, by = "Tissue.code") -> cbd_Lutein_C_compacta
+left_join(cbd_Lut.Car_C_compacta, top_positions_Lut.Car_C_compacta, by = "Tissue.code") -> cbd_Lut.Car_C_compacta
 
 # calculate how much to nudge
-data_C_compacta_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_C_compacta
-cbd_Lutein_C_compacta$nudged <- max_Lutein_C_compacta$max * 1.05
+data_C_compacta_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_C_compacta
+cbd_Lut.Car_C_compacta$nudged <- max_Lut.Car_C_compacta$max * 1.05
 
 
 # add CLDs to plot
-Lutein_C_compacta_boxplot + 
+Lut.Car_C_compacta_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein_C_compacta,
+    data    = cbd_Lut.Car_C_compacta,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_C_compacta_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_C_compacta_boxplot
 
 
-Lutein_C_compacta_boxplot
+Lut.Car_C_compacta_boxplot
 
 
-#### Lutein C_cephalanthii ####
-plot_list_Grammica_Lutein[["C_cephalanthii"]] + 
+#### Lut.Car C_cephalanthii ####
+plot_list_Grammica_Lut.Car[["C_cephalanthii"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.Car" & Species == "C_cephalanthii"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_C_cephalanthii_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_cephalanthii_Lutein <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == "C_cephalanthii")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_cephalanthii_Lut.Car <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == "C_cephalanthii")
 
-box.rslt_Lutein_C_cephalanthii <- with(data_C_cephalanthii_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_C_cephalanthii)
-boxplot_positions_Lutein_C_cephalanthii <- as.data.frame(box.rslt_Lutein_C_cephalanthii$stats)
+box.rslt_Lut.Car_C_cephalanthii <- with(data_C_cephalanthii_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_C_cephalanthii)
+boxplot_positions_Lut.Car_C_cephalanthii <- as.data.frame(box.rslt_Lut.Car_C_cephalanthii$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_C_cephalanthii <- levels(data_C_cephalanthii_Lutein$Tissue.code)
+tissues_Lut.Car_C_cephalanthii <- levels(data_C_cephalanthii_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_C_cephalanthii) <- tissues_Lutein_C_cephalanthii
+colnames(boxplot_positions_Lut.Car_C_cephalanthii) <- tissues_Lut.Car_C_cephalanthii
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_C_cephalanthii <- boxplot_positions_Lutein_C_cephalanthii[5,]
+top_positions_Lut.Car_C_cephalanthii <- boxplot_positions_Lut.Car_C_cephalanthii[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_C_cephalanthii)[1] <- "Letter"
+cbd_Lut.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_C_cephalanthii, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_C_cephalanthii, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_C_cephalanthii
+top_positions_Lut.Car_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_C_cephalanthii
 # now join these positions to cbd
-left_join(cbd_Lutein_C_cephalanthii, top_positions_Lutein_C_cephalanthii, by = "Tissue.code") -> cbd_Lutein_C_cephalanthii
+left_join(cbd_Lut.Car_C_cephalanthii, top_positions_Lut.Car_C_cephalanthii, by = "Tissue.code") -> cbd_Lut.Car_C_cephalanthii
 
 # calculate how much to nudge
-data_C_cephalanthii_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_C_cephalanthii
-cbd_Lutein_C_cephalanthii$nudged <- max_Lutein_C_cephalanthii$max * 1.05
+data_C_cephalanthii_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_C_cephalanthii
+cbd_Lut.Car_C_cephalanthii$nudged <- max_Lut.Car_C_cephalanthii$max * 1.05
 
 
 # add CLDs to plot
-Lutein_C_cephalanthii_boxplot + 
+Lut.Car_C_cephalanthii_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein_C_cephalanthii,
+    data    = cbd_Lut.Car_C_cephalanthii,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_C_cephalanthii_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_C_cephalanthii_boxplot
 
 
-Lutein_C_cephalanthii_boxplot
+Lut.Car_C_cephalanthii_boxplot
 
 
-#### Lutein C_denticulata ####
-plot_list_Grammica_Lutein[["C_denticulata"]] + 
+#### Lut.Car C_denticulata ####
+plot_list_Grammica_Lut.Car[["C_denticulata"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.Car" & Species == "C_denticulata"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_C_denticulata_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_C_denticulata_boxplot
 
 
 # KW not sig so no post hoc
 
 
 
-#### Lutein C_tasmanica ####
-plot_list_Grammica_Lutein[["C_tasmanica"]] + 
+#### Lut.Car C_tasmanica ####
+plot_list_Grammica_Lut.Car[["C_tasmanica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.Car" & Species == "C_tasmanica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_C_tasmanica_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_tasmanica_Lutein <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == "C_tasmanica")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_tasmanica_Lut.Car <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == "C_tasmanica")
 
-box.rslt_Lutein_C_tasmanica <- with(data_C_tasmanica_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_C_tasmanica)
-boxplot_positions_Lutein_C_tasmanica <- as.data.frame(box.rslt_Lutein_C_tasmanica$stats)
+box.rslt_Lut.Car_C_tasmanica <- with(data_C_tasmanica_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_C_tasmanica)
+boxplot_positions_Lut.Car_C_tasmanica <- as.data.frame(box.rslt_Lut.Car_C_tasmanica$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_C_tasmanica <- levels(data_C_tasmanica_Lutein$Tissue.code)
+tissues_Lut.Car_C_tasmanica <- levels(data_C_tasmanica_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_C_tasmanica) <- tissues_Lutein_C_tasmanica
+colnames(boxplot_positions_Lut.Car_C_tasmanica) <- tissues_Lut.Car_C_tasmanica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_C_tasmanica <- boxplot_positions_Lutein_C_tasmanica[5,]
+top_positions_Lut.Car_C_tasmanica <- boxplot_positions_Lut.Car_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_C_tasmanica)[1] <- "Letter"
+cbd_Lut.Car_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_C_tasmanica, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_C_tasmanica, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_C_tasmanica %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_C_tasmanica
+top_positions_Lut.Car_C_tasmanica %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_C_tasmanica
 # now join these positions to cbd
-left_join(cbd_Lutein_C_tasmanica, top_positions_Lutein_C_tasmanica, by = "Tissue.code") -> cbd_Lutein_C_tasmanica
+left_join(cbd_Lut.Car_C_tasmanica, top_positions_Lut.Car_C_tasmanica, by = "Tissue.code") -> cbd_Lut.Car_C_tasmanica
 
 # calculate how much to nudge
-data_C_tasmanica_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_C_tasmanica
-cbd_Lutein_C_tasmanica$nudged <- max_Lutein_C_tasmanica$max * 1.05
+data_C_tasmanica_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_C_tasmanica
+cbd_Lut.Car_C_tasmanica$nudged <- max_Lut.Car_C_tasmanica$max * 1.05
 
 
 # add CLDs to plot
-Lutein_C_tasmanica_boxplot + 
+Lut.Car_C_tasmanica_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein_C_tasmanica,
+    data    = cbd_Lut.Car_C_tasmanica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_C_tasmanica_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_C_tasmanica_boxplot
 
 
-Lutein_C_tasmanica_boxplot
+Lut.Car_C_tasmanica_boxplot
 
 
-#### Lutein C_costaricensis ####
-plot_list_Grammica_Lutein[["C_costaricensis"]] + 
+#### Lut.Car C_costaricensis ####
+plot_list_Grammica_Lut.Car[["C_costaricensis"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Lut.Car" & Species == "C_costaricensis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Lutein_C_costaricensis_boxplot
+    nudge_y = -.5, parse = TRUE) -> Lut.Car_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_costaricensis_Lutein <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == "C_costaricensis")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_costaricensis_Lut.Car <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == "C_costaricensis")
 
-box.rslt_Lutein_C_costaricensis <- with(data_C_costaricensis_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_C_costaricensis)
-boxplot_positions_Lutein_C_costaricensis <- as.data.frame(box.rslt_Lutein_C_costaricensis$stats)
+box.rslt_Lut.Car_C_costaricensis <- with(data_C_costaricensis_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_C_costaricensis)
+boxplot_positions_Lut.Car_C_costaricensis <- as.data.frame(box.rslt_Lut.Car_C_costaricensis$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_C_costaricensis <- levels(data_C_costaricensis_Lutein$Tissue.code)
+tissues_Lut.Car_C_costaricensis <- levels(data_C_costaricensis_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_C_costaricensis) <- tissues_Lutein_C_costaricensis
+colnames(boxplot_positions_Lut.Car_C_costaricensis) <- tissues_Lut.Car_C_costaricensis
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_C_costaricensis <- boxplot_positions_Lutein_C_costaricensis[5,]
+top_positions_Lut.Car_C_costaricensis <- boxplot_positions_Lut.Car_C_costaricensis[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_C_costaricensis)[1] <- "Letter"
+cbd_Lut.Car_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_C_costaricensis, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_C_costaricensis, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_C_costaricensis %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_C_costaricensis
+top_positions_Lut.Car_C_costaricensis %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_C_costaricensis
 # now join these positions to cbd
-left_join(cbd_Lutein_C_costaricensis, top_positions_Lutein_C_costaricensis, by = "Tissue.code") -> cbd_Lutein_C_costaricensis
+left_join(cbd_Lut.Car_C_costaricensis, top_positions_Lut.Car_C_costaricensis, by = "Tissue.code") -> cbd_Lut.Car_C_costaricensis
 
 # calculate how much to nudge
-data_C_costaricensis_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_C_costaricensis
-cbd_Lutein_C_costaricensis$nudged <- max_Lutein_C_costaricensis$max * 1.05
+data_C_costaricensis_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_C_costaricensis
+cbd_Lut.Car_C_costaricensis$nudged <- max_Lut.Car_C_costaricensis$max * 1.05
 
 
 # add CLDs to plot
-Lutein_C_costaricensis_boxplot + 
+Lut.Car_C_costaricensis_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein_C_costaricensis,
+    data    = cbd_Lut.Car_C_costaricensis,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_C_costaricensis_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_C_costaricensis_boxplot
 
 
-Lutein_C_costaricensis_boxplot
+Lut.Car_C_costaricensis_boxplot
 
 
-#### Lutein C_indecora species alone ####
+#### Lut.Car C_indecora species alone ####
 
-data_Grammica_Lutein <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == "C_indecora")
+data_Grammica_Lut.Car <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == "C_indecora")
 
-Lutein_C_indecora_boxplot <- ggplot(data_Grammica_Lutein, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+Lut.Car_C_indecora_boxplot <- ggplot(data_Grammica_Lut.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -7926,68 +7950,68 @@ Lutein_C_indecora_boxplot <- ggplot(data_Grammica_Lutein, aes(x=Tissue.code, y=(
     nudge_y = -.5, parse = TRUE) 
 
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_indecora_Lutein <- dplyr::filter(data_Lutein_plots_grammicaspe, Species == "C_indecora")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_indecora_Lut.Car <- dplyr::filter(data_Lut.Car_plots_grammicaspe, Species == "C_indecora")
 
-box.rslt_Lutein_C_indecora <- with(data_C_indecora_Lutein, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Lutein_C_indecora)
-boxplot_positions_Lutein_C_indecora <- as.data.frame(box.rslt_Lutein_C_indecora$stats)
+box.rslt_Lut.Car_C_indecora <- with(data_C_indecora_Lut.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_Lut.Car_C_indecora)
+boxplot_positions_Lut.Car_C_indecora <- as.data.frame(box.rslt_Lut.Car_C_indecora$stats)
 
 # what are these column tissue codes?
-tissues_Lutein_C_indecora <- levels(data_C_indecora_Lutein$Tissue.code)
+tissues_Lut.Car_C_indecora <- levels(data_C_indecora_Lut.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_Lutein_C_indecora) <- tissues_Lutein_C_indecora
+colnames(boxplot_positions_Lut.Car_C_indecora) <- tissues_Lut.Car_C_indecora
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Lutein_C_indecora <- boxplot_positions_Lutein_C_indecora[5,]
+top_positions_Lut.Car_C_indecora <- boxplot_positions_Lut.Car_C_indecora[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_Lutein_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Lut.Car"]])[["Letters"]])
-colnames(cbd_Lutein_C_indecora)[1] <- "Letter"
+cbd_Lut.Car_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Lut.Car"]])[["Letters"]])
+colnames(cbd_Lut.Car_C_indecora)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_Lutein_C_indecora, keep.rownames = "Tissue.code")
+setDT(cbd_Lut.Car_C_indecora, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Lutein_C_indecora %>% gather(., Tissue.code, y.position) -> top_positions_Lutein_C_indecora
+top_positions_Lut.Car_C_indecora %>% gather(., Tissue.code, y.position) -> top_positions_Lut.Car_C_indecora
 # now join these positions to cbd
-left_join(cbd_Lutein_C_indecora, top_positions_Lutein_C_indecora, by = "Tissue.code") -> cbd_Lutein_C_indecora
+left_join(cbd_Lut.Car_C_indecora, top_positions_Lut.Car_C_indecora, by = "Tissue.code") -> cbd_Lut.Car_C_indecora
 
 # calculate how much to nudge
-data_C_indecora_Lutein %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lutein_C_indecora
-cbd_Lutein_C_indecora$nudged <- (max_Lutein_C_indecora$max * 1.05)
+data_C_indecora_Lut.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_Lut.Car_C_indecora
+cbd_Lut.Car_C_indecora$nudged <- (max_Lut.Car_C_indecora$max * 1.05)
 
 # add CLDs to plot
-Lutein_C_indecora_boxplot + 
+Lut.Car_C_indecora_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_Lutein_C_indecora,
+    data    = cbd_Lut.Car_C_indecora,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lutein_C_indecora_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Lut.Car_C_indecora_boxplot
 
 
-Lutein_C_indecora_boxplot
+Lut.Car_C_indecora_boxplot
 
 
 
-#### a.Carotene loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
+#### a.Car.Car loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
 loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
-# dplyr::filter for a.Carotene
-data_a.Carotene_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "a.Car.Car")
+# dplyr::filter for a.Car.Car
+data_a.Car.Car_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "a.Car.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_a.Carotene_plots_grammicaspe$Tissue.code <- factor(data_a.Carotene_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_a.Car.Car_plots_grammicaspe$Tissue.code <- factor(data_a.Car.Car_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Grammica_a.Carotene = list()
+plot_list_Grammica_a.Car.Car = list()
 
 for (sub in (loop_species)) {
   
-  data_loop <- dplyr::filter(data_a.Carotene_plots_grammicaspe, Species == sub)
+  data_loop <- dplyr::filter(data_a.Car.Car_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -8003,261 +8027,261 @@ for (sub in (loop_species)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100))
-  plot_list_Grammica_a.Carotene[[sub]] = p
+  plot_list_Grammica_a.Car.Car[[sub]] = p
   
 }
 
-#### a.Carotene C_polygonorum ####
-plot_list_Grammica_a.Carotene[["C_polygonorum"]] + 
+#### a.Car.Car C_polygonorum ####
+plot_list_Grammica_a.Car.Car[["C_polygonorum"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "a.Car.Car" & Species == "C_polygonorum"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_C_polygonorum_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_C_polygonorum_boxplot
 
 # KW not sig so no post hoc
-a.Carotene_C_polygonorum_boxplot
+a.Car.Car_C_polygonorum_boxplot
 
 
-#### a.Carotene C_sandwichiana ####
-plot_list_Grammica_a.Carotene[["C_sandwichiana"]] + 
+#### a.Car.Car C_sandwichiana ####
+plot_list_Grammica_a.Car.Car[["C_sandwichiana"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "a.Car.Car" & Species == "C_sandwichiana"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_C_sandwichiana_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_C_sandwichiana_boxplot
 
 
 # KW not sig so no post hoc
-a.Carotene_C_sandwichiana_boxplot
+a.Car.Car_C_sandwichiana_boxplot
 
 
-#### a.Carotene C_californica ####
-plot_list_Grammica_a.Carotene[["C_californica"]] + 
+#### a.Car.Car C_californica ####
+plot_list_Grammica_a.Car.Car[["C_californica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "a.Car.Car" & Species == "C_californica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_C_californica_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_C_californica_boxplot
 
 
 # KW not sig so no post hoc
-a.Carotene_C_californica_boxplot
+a.Car.Car_C_californica_boxplot
 
 
-#### a.Carotene C_compacta ####
-plot_list_Grammica_a.Carotene[["C_compacta"]] + 
+#### a.Car.Car C_compacta ####
+plot_list_Grammica_a.Car.Car[["C_compacta"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "a.Car.Car" & Species == "C_compacta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_C_compacta_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_C_compacta_boxplot
 
 
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_compacta_a.Carotene <- dplyr::filter(data_a.Carotene_plots_grammicaspe, Species == "C_compacta")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_compacta_a.Car.Car <- dplyr::filter(data_a.Car.Car_plots_grammicaspe, Species == "C_compacta")
 
-box.rslt_a.Carotene_C_compacta <- with(data_C_compacta_a.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_a.Carotene_C_compacta)
-boxplot_positions_a.Carotene_C_compacta <- as.data.frame(box.rslt_a.Carotene_C_compacta$stats)
+box.rslt_a.Car.Car_C_compacta <- with(data_C_compacta_a.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_a.Car.Car_C_compacta)
+boxplot_positions_a.Car.Car_C_compacta <- as.data.frame(box.rslt_a.Car.Car_C_compacta$stats)
 
 # what are these column tissue codes?
-tissues_a.Carotene_C_compacta <- levels(data_C_compacta_a.Carotene$Tissue.code)
+tissues_a.Car.Car_C_compacta <- levels(data_C_compacta_a.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_a.Carotene_C_compacta) <- tissues_a.Carotene_C_compacta
+colnames(boxplot_positions_a.Car.Car_C_compacta) <- tissues_a.Car.Car_C_compacta
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_a.Carotene_C_compacta <- boxplot_positions_a.Carotene_C_compacta[5,]
+top_positions_a.Car.Car_C_compacta <- boxplot_positions_a.Car.Car_C_compacta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__a.Car.Car"]])[["Letters"]])
-colnames(cbd_a.Carotene_C_compacta)[1] <- "Letter"
+cbd_a.Car.Car_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__a.Car.Car"]])[["Letters"]])
+colnames(cbd_a.Car.Car_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_a.Carotene_C_compacta, keep.rownames = "Tissue.code")
+setDT(cbd_a.Car.Car_C_compacta, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_a.Carotene_C_compacta %>% gather(., Tissue.code, y.position) -> top_positions_a.Carotene_C_compacta
+top_positions_a.Car.Car_C_compacta %>% gather(., Tissue.code, y.position) -> top_positions_a.Car.Car_C_compacta
 # now join these positions to cbd
-left_join(cbd_a.Carotene_C_compacta, top_positions_a.Carotene_C_compacta, by = "Tissue.code") -> cbd_a.Carotene_C_compacta
+left_join(cbd_a.Car.Car_C_compacta, top_positions_a.Car.Car_C_compacta, by = "Tissue.code") -> cbd_a.Car.Car_C_compacta
 
 # calculate how much to nudge
-data_C_compacta_a.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Carotene_C_compacta
-cbd_a.Carotene_C_compacta$nudged <- max_a.Carotene_C_compacta$max * 1.05
+data_C_compacta_a.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Car.Car_C_compacta
+cbd_a.Car.Car_C_compacta$nudged <- max_a.Car.Car_C_compacta$max * 1.05
 
 
 # add CLDs to plot
-a.Carotene_C_compacta_boxplot + 
+a.Car.Car_C_compacta_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_a.Carotene_C_compacta,
+    data    = cbd_a.Car.Car_C_compacta,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Carotene_C_compacta_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Car.Car_C_compacta_boxplot
 
 
-a.Carotene_C_compacta_boxplot
+a.Car.Car_C_compacta_boxplot
 
 
-#### a.Carotene C_cephalanthii ####
-plot_list_Grammica_a.Carotene[["C_cephalanthii"]] + 
+#### a.Car.Car C_cephalanthii ####
+plot_list_Grammica_a.Car.Car[["C_cephalanthii"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "a.Car.Car" & Species == "C_cephalanthii"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_C_cephalanthii_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_cephalanthii_a.Carotene <- dplyr::filter(data_a.Carotene_plots_grammicaspe, Species == "C_cephalanthii")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_cephalanthii_a.Car.Car <- dplyr::filter(data_a.Car.Car_plots_grammicaspe, Species == "C_cephalanthii")
 
-box.rslt_a.Carotene_C_cephalanthii <- with(data_C_cephalanthii_a.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_a.Carotene_C_cephalanthii)
-boxplot_positions_a.Carotene_C_cephalanthii <- as.data.frame(box.rslt_a.Carotene_C_cephalanthii$stats)
+box.rslt_a.Car.Car_C_cephalanthii <- with(data_C_cephalanthii_a.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_a.Car.Car_C_cephalanthii)
+boxplot_positions_a.Car.Car_C_cephalanthii <- as.data.frame(box.rslt_a.Car.Car_C_cephalanthii$stats)
 
 # what are these column tissue codes?
-tissues_a.Carotene_C_cephalanthii <- levels(data_C_cephalanthii_a.Carotene$Tissue.code)
+tissues_a.Car.Car_C_cephalanthii <- levels(data_C_cephalanthii_a.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_a.Carotene_C_cephalanthii) <- tissues_a.Carotene_C_cephalanthii
+colnames(boxplot_positions_a.Car.Car_C_cephalanthii) <- tissues_a.Car.Car_C_cephalanthii
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_a.Carotene_C_cephalanthii <- boxplot_positions_a.Carotene_C_cephalanthii[5,]
+top_positions_a.Car.Car_C_cephalanthii <- boxplot_positions_a.Car.Car_C_cephalanthii[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__a.Car.Car"]])[["Letters"]])
-colnames(cbd_a.Carotene_C_cephalanthii)[1] <- "Letter"
+cbd_a.Car.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__a.Car.Car"]])[["Letters"]])
+colnames(cbd_a.Car.Car_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_a.Carotene_C_cephalanthii, keep.rownames = "Tissue.code")
+setDT(cbd_a.Car.Car_C_cephalanthii, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_a.Carotene_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_a.Carotene_C_cephalanthii
+top_positions_a.Car.Car_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_a.Car.Car_C_cephalanthii
 # now join these positions to cbd
-left_join(cbd_a.Carotene_C_cephalanthii, top_positions_a.Carotene_C_cephalanthii, by = "Tissue.code") -> cbd_a.Carotene_C_cephalanthii
+left_join(cbd_a.Car.Car_C_cephalanthii, top_positions_a.Car.Car_C_cephalanthii, by = "Tissue.code") -> cbd_a.Car.Car_C_cephalanthii
 
 # calculate how much to nudge
-data_C_cephalanthii_a.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Carotene_C_cephalanthii
-cbd_a.Carotene_C_cephalanthii$nudged <- max_a.Carotene_C_cephalanthii$max * 1.05
+data_C_cephalanthii_a.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Car.Car_C_cephalanthii
+cbd_a.Car.Car_C_cephalanthii$nudged <- max_a.Car.Car_C_cephalanthii$max * 1.05
 
 
 # add CLDs to plot
-a.Carotene_C_cephalanthii_boxplot + 
+a.Car.Car_C_cephalanthii_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_a.Carotene_C_cephalanthii,
+    data    = cbd_a.Car.Car_C_cephalanthii,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Carotene_C_cephalanthii_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Car.Car_C_cephalanthii_boxplot
 
 
-a.Carotene_C_cephalanthii_boxplot
+a.Car.Car_C_cephalanthii_boxplot
 
 
-#### a.Carotene C_denticulata ####
-plot_list_Grammica_a.Carotene[["C_denticulata"]] + 
+#### a.Car.Car C_denticulata ####
+plot_list_Grammica_a.Car.Car[["C_denticulata"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "a.Car.Car" & Species == "C_denticulata"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_C_denticulata_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_C_denticulata_boxplot
 
 
 # KW not sig so no post hoc
-a.Carotene_C_denticulata_boxplot
+a.Car.Car_C_denticulata_boxplot
 
 
-#### a.Carotene C_tasmanica ####
-plot_list_Grammica_a.Carotene[["C_tasmanica"]] + 
+#### a.Car.Car C_tasmanica ####
+plot_list_Grammica_a.Car.Car[["C_tasmanica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "a.Car.Car" & Species == "C_tasmanica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_C_tasmanica_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_C_tasmanica_boxplot
 
 # KW not sig so no post hoc
 
 
-#### a.Carotene C_costaricensis ####
-plot_list_Grammica_a.Carotene[["C_costaricensis"]] + 
+#### a.Car.Car C_costaricensis ####
+plot_list_Grammica_a.Car.Car[["C_costaricensis"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "a.Car.Car" & Species == "C_costaricensis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> a.Carotene_C_costaricensis_boxplot
+    nudge_y = -.5, parse = TRUE) -> a.Car.Car_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_costaricensis_a.Carotene <- dplyr::filter(data_a.Carotene_plots_grammicaspe, Species == "C_costaricensis")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_costaricensis_a.Car.Car <- dplyr::filter(data_a.Car.Car_plots_grammicaspe, Species == "C_costaricensis")
 
-box.rslt_a.Carotene_C_costaricensis <- with(data_C_costaricensis_a.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_a.Carotene_C_costaricensis)
-boxplot_positions_a.Carotene_C_costaricensis <- as.data.frame(box.rslt_a.Carotene_C_costaricensis$stats)
+box.rslt_a.Car.Car_C_costaricensis <- with(data_C_costaricensis_a.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_a.Car.Car_C_costaricensis)
+boxplot_positions_a.Car.Car_C_costaricensis <- as.data.frame(box.rslt_a.Car.Car_C_costaricensis$stats)
 
 # what are these column tissue codes?
-tissues_a.Carotene_C_costaricensis <- levels(data_C_costaricensis_a.Carotene$Tissue.code)
+tissues_a.Car.Car_C_costaricensis <- levels(data_C_costaricensis_a.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_a.Carotene_C_costaricensis) <- tissues_a.Carotene_C_costaricensis
+colnames(boxplot_positions_a.Car.Car_C_costaricensis) <- tissues_a.Car.Car_C_costaricensis
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_a.Carotene_C_costaricensis <- boxplot_positions_a.Carotene_C_costaricensis[5,]
+top_positions_a.Car.Car_C_costaricensis <- boxplot_positions_a.Car.Car_C_costaricensis[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_a.Carotene_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__a.Car.Car"]])[["Letters"]])
-colnames(cbd_a.Carotene_C_costaricensis)[1] <- "Letter"
+cbd_a.Car.Car_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__a.Car.Car"]])[["Letters"]])
+colnames(cbd_a.Car.Car_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_a.Carotene_C_costaricensis, keep.rownames = "Tissue.code")
+setDT(cbd_a.Car.Car_C_costaricensis, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_a.Carotene_C_costaricensis %>% gather(., Tissue.code, y.position) -> top_positions_a.Carotene_C_costaricensis
+top_positions_a.Car.Car_C_costaricensis %>% gather(., Tissue.code, y.position) -> top_positions_a.Car.Car_C_costaricensis
 # now join these positions to cbd
-left_join(cbd_a.Carotene_C_costaricensis, top_positions_a.Carotene_C_costaricensis, by = "Tissue.code") -> cbd_a.Carotene_C_costaricensis
+left_join(cbd_a.Car.Car_C_costaricensis, top_positions_a.Car.Car_C_costaricensis, by = "Tissue.code") -> cbd_a.Car.Car_C_costaricensis
 
 # calculate how much to nudge
-data_C_costaricensis_a.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Carotene_C_costaricensis
-cbd_a.Carotene_C_costaricensis$nudged <- max_a.Carotene_C_costaricensis$max * 1.05
+data_C_costaricensis_a.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_a.Car.Car_C_costaricensis
+cbd_a.Car.Car_C_costaricensis$nudged <- max_a.Car.Car_C_costaricensis$max * 1.05
 
 
 # add CLDs to plot
-a.Carotene_C_costaricensis_boxplot + 
+a.Car.Car_C_costaricensis_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_a.Carotene_C_costaricensis,
+    data    = cbd_a.Car.Car_C_costaricensis,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Carotene_C_costaricensis_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> a.Car.Car_C_costaricensis_boxplot
 
 
-a.Carotene_C_costaricensis_boxplot
+a.Car.Car_C_costaricensis_boxplot
 
 
-#### a.Carotene C_indecora species alone ####
+#### a.Car.Car C_indecora species alone ####
 
-data_Grammica_a.Carotene <- dplyr::filter(data_a.Carotene_plots_grammicaspe, Species == "C_indecora")
+data_Grammica_a.Car.Car <- dplyr::filter(data_a.Car.Car_plots_grammicaspe, Species == "C_indecora")
 
-a.Carotene_C_indecora_boxplot <- ggplot(data_Grammica_a.Carotene, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+a.Car.Car_C_indecora_boxplot <- ggplot(data_Grammica_a.Car.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -8284,23 +8308,23 @@ a.Carotene_C_indecora_boxplot <- ggplot(data_Grammica_a.Carotene, aes(x=Tissue.c
 
 
 # KW not sig so no post hoc
-a.Carotene_C_indecora_boxplot
+a.Car.Car_C_indecora_boxplot
 
-#### b.Carotene loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
+#### b.Car.Car loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
 loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
-# dplyr::filter for b.Carotene
-data_b.Carotene_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "b.Car.Car")
+# dplyr::filter for b.Car.Car
+data_b.Car.Car_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "b.Car.Car")
 # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_b.Carotene_plots_grammicaspe$Tissue.code <- factor(data_b.Carotene_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+data_b.Car.Car_plots_grammicaspe$Tissue.code <- factor(data_b.Car.Car_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
 
 
-plot_list_Grammica_b.Carotene = list()
+plot_list_Grammica_b.Car.Car = list()
 
 for (sub in (loop_species)) {
   
-  data_loop <- dplyr::filter(data_b.Carotene_plots_grammicaspe, Species == sub)
+  data_loop <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -8316,349 +8340,473 @@ for (sub in (loop_species)) {
           legend.position = "none") +
     guides(colour = guide_legend(nrow = 1)) +
     scale_y_continuous(position = "right", limits = c(0, 100))
-  plot_list_Grammica_b.Carotene[[sub]] = p
+  plot_list_Grammica_b.Car.Car[[sub]] = p
   
 }
 
-#### b.Carotene C_polygonorum ####
-plot_list_Grammica_b.Carotene[["C_polygonorum"]] + 
+#### b.Car.Car C_polygonorum ####
+plot_list_Grammica_b.Car.Car[["C_polygonorum"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "b.Car.Car" & Species == "C_polygonorum"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_C_polygonorum_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_C_polygonorum_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_polygonorum_b.Carotene <- dplyr::filter(data_b.Carotene_plots_grammicaspe, Species == "C_polygonorum")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_polygonorum_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == "C_polygonorum")
 
-box.rslt_b.Carotene_C_polygonorum <- with(data_C_polygonorum_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_C_polygonorum)
-boxplot_positions_b.Carotene_C_polygonorum <- as.data.frame(box.rslt_b.Carotene_C_polygonorum$stats)
+box.rslt_b.Car.Car_C_polygonorum <- with(data_C_polygonorum_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_C_polygonorum)
+boxplot_positions_b.Car.Car_C_polygonorum <- as.data.frame(box.rslt_b.Car.Car_C_polygonorum$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_C_polygonorum <- levels(data_C_polygonorum_b.Carotene$Tissue.code)
+tissues_b.Car.Car_C_polygonorum <- levels(data_C_polygonorum_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_C_polygonorum) <- tissues_b.Carotene_C_polygonorum
+colnames(boxplot_positions_b.Car.Car_C_polygonorum) <- tissues_b.Car.Car_C_polygonorum
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_C_polygonorum <- boxplot_positions_b.Carotene_C_polygonorum[5,]
+top_positions_b.Car.Car_C_polygonorum <- boxplot_positions_b.Car.Car_C_polygonorum[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_polygonorum__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_C_polygonorum)[1] <- "Letter"
+cbd_b.Car.Car_C_polygonorum <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_polygonorum__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_C_polygonorum)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_C_polygonorum, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_C_polygonorum, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_C_polygonorum %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_C_polygonorum
+top_positions_b.Car.Car_C_polygonorum %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_C_polygonorum
 # now join these positions to cbd
-left_join(cbd_b.Carotene_C_polygonorum, top_positions_b.Carotene_C_polygonorum, by = "Tissue.code") -> cbd_b.Carotene_C_polygonorum
+left_join(cbd_b.Car.Car_C_polygonorum, top_positions_b.Car.Car_C_polygonorum, by = "Tissue.code") -> cbd_b.Car.Car_C_polygonorum
 
 # calculate how much to nudge
-data_C_polygonorum_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_C_polygonorum
-cbd_b.Carotene_C_polygonorum$nudged <- max_b.Carotene_C_polygonorum$max * 1.05
+data_C_polygonorum_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_C_polygonorum
+cbd_b.Car.Car_C_polygonorum$nudged <- max_b.Car.Car_C_polygonorum$max * 1.05
 
 
 # add CLDs to plot
-b.Carotene_C_polygonorum_boxplot + 
+b.Car.Car_C_polygonorum_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_b.Carotene_C_polygonorum,
+    data    = cbd_b.Car.Car_C_polygonorum,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_C_polygonorum_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_C_polygonorum_boxplot
 
 
-b.Carotene_C_polygonorum_boxplot
+b.Car.Car_C_polygonorum_boxplot
 
 
 
-#### b.Carotene C_sandwichiana ####
-plot_list_Grammica_b.Carotene[["C_sandwichiana"]] + 
+#### b.Car.Car C_sandwichiana ####
+plot_list_Grammica_b.Car.Car[["C_sandwichiana"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "b.Car.Car" & Species == "C_sandwichiana"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_C_sandwichiana_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_C_sandwichiana_boxplot
 
 
-# KW not sig so no post hoc
-b.Carotene_C_sandwichiana_boxplot
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_sandwichiana_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == "C_sandwichiana")
+
+box.rslt_b.Car.Car_C_sandwichiana <- with(data_C_sandwichiana_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_C_sandwichiana)
+boxplot_positions_b.Car.Car_C_sandwichiana <- as.data.frame(box.rslt_b.Car.Car_C_sandwichiana$stats)
+
+# what are these column tissue codes?
+tissues_b.Car.Car_C_sandwichiana <- levels(data_C_sandwichiana_b.Car.Car$Tissue.code)
+# add appropriate tissues to position df
+colnames(boxplot_positions_b.Car.Car_C_sandwichiana) <- tissues_b.Car.Car_C_sandwichiana
+
+# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+top_positions_b.Car.Car_C_sandwichiana <- boxplot_positions_b.Car.Car_C_sandwichiana[5,]
 
 
-#### b.Carotene C_californica ####
-plot_list_Grammica_b.Carotene[["C_californica"]] + 
+#add pairwise significance letter groups (compact letter display; CLD)
+cbd_b.Car.Car_C_sandwichiana <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_sandwichiana__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_C_sandwichiana)[1] <- "Letter"
+# turn rownames into first column for Tissue.code
+setDT(cbd_b.Car.Car_C_sandwichiana, keep.rownames = "Tissue.code")
+
+
+# add a column y.position taken from top_positions based on mtaching up Tissue.code
+# first reshape top_positions so that colnames are a column called Tissue.code
+top_positions_b.Car.Car_C_sandwichiana %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_C_sandwichiana
+# now join these positions to cbd
+left_join(cbd_b.Car.Car_C_sandwichiana, top_positions_b.Car.Car_C_sandwichiana, by = "Tissue.code") -> cbd_b.Car.Car_C_sandwichiana
+
+# calculate how much to nudge
+data_C_sandwichiana_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_C_sandwichiana
+cbd_b.Car.Car_C_sandwichiana$nudged <- max_b.Car.Car_C_sandwichiana$max * 1.05
+
+
+# add CLDs to plot
+b.Car.Car_C_sandwichiana_boxplot + 
+  geom_text(
+    size    = 1.8,
+    color = "black",
+    data    = cbd_b.Car.Car_C_sandwichiana,
+    inherit.aes = T,
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_C_sandwichiana_boxplot
+
+b.Car.Car_C_sandwichiana_boxplot
+
+
+#### b.Car.Car C_californica ####
+plot_list_Grammica_b.Car.Car[["C_californica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "b.Car.Car" & Species == "C_californica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_C_californica_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_C_californica_boxplot
 
 
-# KW not sig so no post hoc
-b.Carotene_C_californica_boxplot
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_californica_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == "C_californica")
+
+box.rslt_b.Car.Car_C_californica <- with(data_C_californica_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_C_californica)
+boxplot_positions_b.Car.Car_C_californica <- as.data.frame(box.rslt_b.Car.Car_C_californica$stats)
+
+# what are these column tissue codes?
+tissues_b.Car.Car_C_californica <- levels(data_C_californica_b.Car.Car$Tissue.code)
+# add appropriate tissues to position df
+colnames(boxplot_positions_b.Car.Car_C_californica) <- tissues_b.Car.Car_C_californica
+
+# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+top_positions_b.Car.Car_C_californica <- boxplot_positions_b.Car.Car_C_californica[5,]
 
 
-#### b.Carotene C_compacta ####
-plot_list_Grammica_b.Carotene[["C_compacta"]] + 
+#add pairwise significance letter groups (compact letter display; CLD)
+cbd_b.Car.Car_C_californica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_californica__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_C_californica)[1] <- "Letter"
+# turn rownames into first column for Tissue.code
+setDT(cbd_b.Car.Car_C_californica, keep.rownames = "Tissue.code")
+
+
+# add a column y.position taken from top_positions based on mtaching up Tissue.code
+# first reshape top_positions so that colnames are a column called Tissue.code
+top_positions_b.Car.Car_C_californica %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_C_californica
+# now join these positions to cbd
+left_join(cbd_b.Car.Car_C_californica, top_positions_b.Car.Car_C_californica, by = "Tissue.code") -> cbd_b.Car.Car_C_californica
+
+# calculate how much to nudge
+data_C_californica_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_C_californica
+cbd_b.Car.Car_C_californica$nudged <- max_b.Car.Car_C_californica$max * 1.05
+
+
+# add CLDs to plot
+b.Car.Car_C_californica_boxplot + 
+  geom_text(
+    size    = 1.8,
+    color = "black",
+    data    = cbd_b.Car.Car_C_californica,
+    inherit.aes = T,
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_C_californica_boxplot
+
+b.Car.Car_C_californica_boxplot
+
+#### b.Car.Car C_compacta ####
+plot_list_Grammica_b.Car.Car[["C_compacta"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "b.Car.Car" & Species == "C_compacta"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_C_compacta_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_C_compacta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_compacta_b.Carotene <- dplyr::filter(data_b.Carotene_plots_grammicaspe, Species == "C_compacta")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_compacta_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == "C_compacta")
 
-box.rslt_b.Carotene_C_compacta <- with(data_C_compacta_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_C_compacta)
-boxplot_positions_b.Carotene_C_compacta <- as.data.frame(box.rslt_b.Carotene_C_compacta$stats)
+box.rslt_b.Car.Car_C_compacta <- with(data_C_compacta_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_C_compacta)
+boxplot_positions_b.Car.Car_C_compacta <- as.data.frame(box.rslt_b.Car.Car_C_compacta$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_C_compacta <- levels(data_C_compacta_b.Carotene$Tissue.code)
+tissues_b.Car.Car_C_compacta <- levels(data_C_compacta_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_C_compacta) <- tissues_b.Carotene_C_compacta
+colnames(boxplot_positions_b.Car.Car_C_compacta) <- tissues_b.Car.Car_C_compacta
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_C_compacta <- boxplot_positions_b.Carotene_C_compacta[5,]
+top_positions_b.Car.Car_C_compacta <- boxplot_positions_b.Car.Car_C_compacta[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_C_compacta)[1] <- "Letter"
+cbd_b.Car.Car_C_compacta <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_compacta__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_C_compacta)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_C_compacta, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_C_compacta, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_C_compacta %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_C_compacta
+top_positions_b.Car.Car_C_compacta %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_C_compacta
 # now join these positions to cbd
-left_join(cbd_b.Carotene_C_compacta, top_positions_b.Carotene_C_compacta, by = "Tissue.code") -> cbd_b.Carotene_C_compacta
+left_join(cbd_b.Car.Car_C_compacta, top_positions_b.Car.Car_C_compacta, by = "Tissue.code") -> cbd_b.Car.Car_C_compacta
 
 # calculate how much to nudge
-data_C_compacta_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_C_compacta
-cbd_b.Carotene_C_compacta$nudged <- max_b.Carotene_C_compacta$max * 1.05
+data_C_compacta_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_C_compacta
+cbd_b.Car.Car_C_compacta$nudged <- max_b.Car.Car_C_compacta$max * 1.05
 
 
 # add CLDs to plot
-b.Carotene_C_compacta_boxplot + 
+b.Car.Car_C_compacta_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_b.Carotene_C_compacta,
+    data    = cbd_b.Car.Car_C_compacta,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_C_compacta_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_C_compacta_boxplot
 
 
-b.Carotene_C_compacta_boxplot
+b.Car.Car_C_compacta_boxplot
 
 
-#### b.Carotene C_cephalanthii ####
-plot_list_Grammica_b.Carotene[["C_cephalanthii"]] + 
+#### b.Car.Car C_cephalanthii ####
+plot_list_Grammica_b.Car.Car[["C_cephalanthii"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "b.Car.Car" & Species == "C_cephalanthii"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_C_cephalanthii_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_cephalanthii_b.Carotene <- dplyr::filter(data_b.Carotene_plots_grammicaspe, Species == "C_cephalanthii")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_cephalanthii_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == "C_cephalanthii")
 
-box.rslt_b.Carotene_C_cephalanthii <- with(data_C_cephalanthii_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_C_cephalanthii)
-boxplot_positions_b.Carotene_C_cephalanthii <- as.data.frame(box.rslt_b.Carotene_C_cephalanthii$stats)
+box.rslt_b.Car.Car_C_cephalanthii <- with(data_C_cephalanthii_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_C_cephalanthii)
+boxplot_positions_b.Car.Car_C_cephalanthii <- as.data.frame(box.rslt_b.Car.Car_C_cephalanthii$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_C_cephalanthii <- levels(data_C_cephalanthii_b.Carotene$Tissue.code)
+tissues_b.Car.Car_C_cephalanthii <- levels(data_C_cephalanthii_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_C_cephalanthii) <- tissues_b.Carotene_C_cephalanthii
+colnames(boxplot_positions_b.Car.Car_C_cephalanthii) <- tissues_b.Car.Car_C_cephalanthii
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_C_cephalanthii <- boxplot_positions_b.Carotene_C_cephalanthii[5,]
+top_positions_b.Car.Car_C_cephalanthii <- boxplot_positions_b.Car.Car_C_cephalanthii[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_C_cephalanthii)[1] <- "Letter"
+cbd_b.Car.Car_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_C_cephalanthii)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_C_cephalanthii, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_C_cephalanthii, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_C_cephalanthii
+top_positions_b.Car.Car_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_C_cephalanthii
 # now join these positions to cbd
-left_join(cbd_b.Carotene_C_cephalanthii, top_positions_b.Carotene_C_cephalanthii, by = "Tissue.code") -> cbd_b.Carotene_C_cephalanthii
+left_join(cbd_b.Car.Car_C_cephalanthii, top_positions_b.Car.Car_C_cephalanthii, by = "Tissue.code") -> cbd_b.Car.Car_C_cephalanthii
 
 # calculate how much to nudge
-data_C_cephalanthii_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_C_cephalanthii
-cbd_b.Carotene_C_cephalanthii$nudged <- max_b.Carotene_C_cephalanthii$max * 1.05
+data_C_cephalanthii_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_C_cephalanthii
+cbd_b.Car.Car_C_cephalanthii$nudged <- max_b.Car.Car_C_cephalanthii$max * 1.05
 
 
 # add CLDs to plot
-b.Carotene_C_cephalanthii_boxplot + 
+b.Car.Car_C_cephalanthii_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_b.Carotene_C_cephalanthii,
+    data    = cbd_b.Car.Car_C_cephalanthii,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_C_cephalanthii_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_C_cephalanthii_boxplot
 
 
-b.Carotene_C_cephalanthii_boxplot
+b.Car.Car_C_cephalanthii_boxplot
 
 
-#### b.Carotene C_denticulata ####
-plot_list_Grammica_b.Carotene[["C_denticulata"]] + 
+#### b.Car.Car C_denticulata ####
+plot_list_Grammica_b.Car.Car[["C_denticulata"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "b.Car.Car" & Species == "C_denticulata"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_C_denticulata_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_C_denticulata_boxplot
+
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_denticulata_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == "C_denticulata")
+
+box.rslt_b.Car.Car_C_denticulata <- with(data_C_denticulata_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_C_denticulata)
+boxplot_positions_b.Car.Car_C_denticulata <- as.data.frame(box.rslt_b.Car.Car_C_denticulata$stats)
+
+# what are these column tissue codes?
+tissues_b.Car.Car_C_denticulata <- levels(data_C_denticulata_b.Car.Car$Tissue.code)
+# add appropriate tissues to position df
+colnames(boxplot_positions_b.Car.Car_C_denticulata) <- tissues_b.Car.Car_C_denticulata
+
+# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+top_positions_b.Car.Car_C_denticulata <- boxplot_positions_b.Car.Car_C_denticulata[5,]
 
 
-# KW not sig so no post hoc
-b.Carotene_C_denticulata_boxplot
+#add pairwise significance letter groups (compact letter display; CLD)
+cbd_b.Car.Car_C_denticulata <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_denticulata__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_C_denticulata)[1] <- "Letter"
+# turn rownames into first column for Tissue.code
+setDT(cbd_b.Car.Car_C_denticulata, keep.rownames = "Tissue.code")
+
+
+# add a column y.position taken from top_positions based on mtaching up Tissue.code
+# first reshape top_positions so that colnames are a column called Tissue.code
+top_positions_b.Car.Car_C_denticulata %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_C_denticulata
+# now join these positions to cbd
+left_join(cbd_b.Car.Car_C_denticulata, top_positions_b.Car.Car_C_denticulata, by = "Tissue.code") -> cbd_b.Car.Car_C_denticulata
+
+# calculate how much to nudge
+data_C_denticulata_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_C_denticulata
+cbd_b.Car.Car_C_denticulata$nudged <- max_b.Car.Car_C_denticulata$max * 1.05
+
+
+# add CLDs to plot
+b.Car.Car_C_denticulata_boxplot + 
+  geom_text(
+    size    = 1.8,
+    color = "black",
+    data    = cbd_b.Car.Car_C_denticulata,
+    inherit.aes = T,
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_C_denticulata_boxplot
+
+b.Car.Car_C_denticulata_boxplot
 
 
 
-#### b.Carotene C_tasmanica ####
-plot_list_Grammica_b.Carotene[["C_tasmanica"]] + 
+#### b.Car.Car C_tasmanica ####
+plot_list_Grammica_b.Car.Car[["C_tasmanica"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "b.Car.Car" & Species == "C_tasmanica"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_C_tasmanica_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_tasmanica_b.Carotene <- dplyr::filter(data_b.Carotene_plots_grammicaspe, Species == "C_tasmanica")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_tasmanica_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == "C_tasmanica")
 
-box.rslt_b.Carotene_C_tasmanica <- with(data_C_tasmanica_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_C_tasmanica)
-boxplot_positions_b.Carotene_C_tasmanica <- as.data.frame(box.rslt_b.Carotene_C_tasmanica$stats)
+box.rslt_b.Car.Car_C_tasmanica <- with(data_C_tasmanica_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_C_tasmanica)
+boxplot_positions_b.Car.Car_C_tasmanica <- as.data.frame(box.rslt_b.Car.Car_C_tasmanica$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_C_tasmanica <- levels(data_C_tasmanica_b.Carotene$Tissue.code)
+tissues_b.Car.Car_C_tasmanica <- levels(data_C_tasmanica_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_C_tasmanica) <- tissues_b.Carotene_C_tasmanica
+colnames(boxplot_positions_b.Car.Car_C_tasmanica) <- tissues_b.Car.Car_C_tasmanica
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_C_tasmanica <- boxplot_positions_b.Carotene_C_tasmanica[5,]
+top_positions_b.Car.Car_C_tasmanica <- boxplot_positions_b.Car.Car_C_tasmanica[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_C_tasmanica)[1] <- "Letter"
+cbd_b.Car.Car_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_C_tasmanica)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_C_tasmanica, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_C_tasmanica, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_C_tasmanica %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_C_tasmanica
+top_positions_b.Car.Car_C_tasmanica %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_C_tasmanica
 # now join these positions to cbd
-left_join(cbd_b.Carotene_C_tasmanica, top_positions_b.Carotene_C_tasmanica, by = "Tissue.code") -> cbd_b.Carotene_C_tasmanica
+left_join(cbd_b.Car.Car_C_tasmanica, top_positions_b.Car.Car_C_tasmanica, by = "Tissue.code") -> cbd_b.Car.Car_C_tasmanica
 
 # calculate how much to nudge
-data_C_tasmanica_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_C_tasmanica
-cbd_b.Carotene_C_tasmanica$nudged <- max_b.Carotene_C_tasmanica$max * 1.05
+data_C_tasmanica_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_C_tasmanica
+cbd_b.Car.Car_C_tasmanica$nudged <- max_b.Car.Car_C_tasmanica$max * 1.05
 
 
 # add CLDs to plot
-b.Carotene_C_tasmanica_boxplot + 
+b.Car.Car_C_tasmanica_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_b.Carotene_C_tasmanica,
+    data    = cbd_b.Car.Car_C_tasmanica,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_C_tasmanica_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_C_tasmanica_boxplot
 
 
-b.Carotene_C_tasmanica_boxplot
+b.Car.Car_C_tasmanica_boxplot
 
 
-#### b.Carotene C_costaricensis ####
-plot_list_Grammica_b.Carotene[["C_costaricensis"]] + 
+#### b.Car.Car C_costaricensis ####
+plot_list_Grammica_b.Car.Car[["C_costaricensis"]] + 
   geom_text(
     size    = 1.8,
     color = "black",
     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "b.Car.Car" & Species == "C_costaricensis"),
     inherit.aes = T,
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> b.Carotene_C_costaricensis_boxplot
+    nudge_y = -.5, parse = TRUE) -> b.Car.Car_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
-data_C_costaricensis_b.Carotene <- dplyr::filter(data_b.Carotene_plots_grammicaspe, Species == "C_costaricensis")
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+data_C_costaricensis_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == "C_costaricensis")
 
-box.rslt_b.Carotene_C_costaricensis <- with(data_C_costaricensis_b.Carotene, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_b.Carotene_C_costaricensis)
-boxplot_positions_b.Carotene_C_costaricensis <- as.data.frame(box.rslt_b.Carotene_C_costaricensis$stats)
+box.rslt_b.Car.Car_C_costaricensis <- with(data_C_costaricensis_b.Car.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+str(box.rslt_b.Car.Car_C_costaricensis)
+boxplot_positions_b.Car.Car_C_costaricensis <- as.data.frame(box.rslt_b.Car.Car_C_costaricensis$stats)
 
 # what are these column tissue codes?
-tissues_b.Carotene_C_costaricensis <- levels(data_C_costaricensis_b.Carotene$Tissue.code)
+tissues_b.Car.Car_C_costaricensis <- levels(data_C_costaricensis_b.Car.Car$Tissue.code)
 # add appropriate tissues to position df
-colnames(boxplot_positions_b.Carotene_C_costaricensis) <- tissues_b.Carotene_C_costaricensis
+colnames(boxplot_positions_b.Car.Car_C_costaricensis) <- tissues_b.Car.Car_C_costaricensis
 
 # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_b.Carotene_C_costaricensis <- boxplot_positions_b.Carotene_C_costaricensis[5,]
+top_positions_b.Car.Car_C_costaricensis <- boxplot_positions_b.Car.Car_C_costaricensis[5,]
 
 
 #add pairwise significance letter groups (compact letter display; CLD)
-cbd_b.Carotene_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__b.Car.Car"]])[["Letters"]])
-colnames(cbd_b.Carotene_C_costaricensis)[1] <- "Letter"
+cbd_b.Car.Car_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__b.Car.Car"]])[["Letters"]])
+colnames(cbd_b.Car.Car_C_costaricensis)[1] <- "Letter"
 # turn rownames into first column for Tissue.code
-setDT(cbd_b.Carotene_C_costaricensis, keep.rownames = "Tissue.code")
+setDT(cbd_b.Car.Car_C_costaricensis, keep.rownames = "Tissue.code")
 
 
 # add a column y.position taken from top_positions based on mtaching up Tissue.code
 # first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_b.Carotene_C_costaricensis %>% gather(., Tissue.code, y.position) -> top_positions_b.Carotene_C_costaricensis
+top_positions_b.Car.Car_C_costaricensis %>% gather(., Tissue.code, y.position) -> top_positions_b.Car.Car_C_costaricensis
 # now join these positions to cbd
-left_join(cbd_b.Carotene_C_costaricensis, top_positions_b.Carotene_C_costaricensis, by = "Tissue.code") -> cbd_b.Carotene_C_costaricensis
+left_join(cbd_b.Car.Car_C_costaricensis, top_positions_b.Car.Car_C_costaricensis, by = "Tissue.code") -> cbd_b.Car.Car_C_costaricensis
 
 # calculate how much to nudge
-data_C_costaricensis_b.Carotene %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Carotene_C_costaricensis
-cbd_b.Carotene_C_costaricensis$nudged <- max_b.Carotene_C_costaricensis$max * 1.05
+data_C_costaricensis_b.Car.Car %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(FW.norm*100)) -> max_b.Car.Car_C_costaricensis
+cbd_b.Car.Car_C_costaricensis$nudged <- max_b.Car.Car_C_costaricensis$max * 1.05
 
 
 # add CLDs to plot
-b.Carotene_C_costaricensis_boxplot + 
+b.Car.Car_C_costaricensis_boxplot + 
   geom_text(
     size    = 1.8,
     color = "black",
-    data    = cbd_b.Carotene_C_costaricensis,
+    data    = cbd_b.Car.Car_C_costaricensis,
     inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Carotene_C_costaricensis_boxplot
+    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> b.Car.Car_C_costaricensis_boxplot
 
 
-b.Carotene_C_costaricensis_boxplot
+b.Car.Car_C_costaricensis_boxplot
 
 
-#### b.Carotene C_indecora species alone ####
+#### b.Car.Car C_indecora species alone ####
 
-data_Grammica_b.Carotene <- dplyr::filter(data_b.Carotene_plots_grammicaspe, Species == "C_indecora")
+data_Grammica_b.Car.Car <- dplyr::filter(data_b.Car.Car_plots_grammicaspe, Species == "C_indecora")
 
-b.Carotene_C_indecora_boxplot <- ggplot(data_Grammica_b.Carotene, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+b.Car.Car_C_indecora_boxplot <- ggplot(data_Grammica_b.Car.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -8685,7 +8833,7 @@ b.Carotene_C_indecora_boxplot <- ggplot(data_Grammica_b.Carotene, aes(x=Tissue.c
 
 
 # KW not sig so no post hoc
-b.Carotene_C_indecora_boxplot
+b.Car.Car_C_indecora_boxplot
 
 
 #### Tot.Car loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
@@ -8702,7 +8850,7 @@ for (sub in (loop_species)) {
   
   data_loop <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -8733,7 +8881,7 @@ plot_list_Grammica_Tot.Car[["C_polygonorum"]] +
     nudge_y = -.5, parse = TRUE) -> Tot.Car_C_polygonorum_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_polygonorum_Tot.Car <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == "C_polygonorum")
 
 box.rslt_Tot.Car_C_polygonorum <- with(data_C_polygonorum_Tot.Car, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -8792,7 +8940,7 @@ plot_list_Grammica_Tot.Car[["C_sandwichiana"]] +
     nudge_y = -.5, parse = TRUE) -> Tot.Car_C_sandwichiana_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_sandwichiana_Tot.Car <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == "C_sandwichiana")
 
 box.rslt_Tot.Car_C_sandwichiana <- with(data_C_sandwichiana_Tot.Car, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -8850,7 +8998,7 @@ plot_list_Grammica_Tot.Car[["C_californica"]] +
     nudge_y = -.5, parse = TRUE) -> Tot.Car_C_californica_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_californica_Tot.Car <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == "C_californica")
 
 box.rslt_Tot.Car_C_californica <- with(data_C_californica_Tot.Car, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -8909,7 +9057,7 @@ plot_list_Grammica_Tot.Car[["C_compacta"]] +
 
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_compacta_Tot.Car <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == "C_compacta")
 
 box.rslt_Tot.Car_C_compacta <- with(data_C_compacta_Tot.Car, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -8966,7 +9114,7 @@ plot_list_Grammica_Tot.Car[["C_cephalanthii"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Car_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_cephalanthii_Tot.Car <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_Tot.Car_C_cephalanthii <- with(data_C_cephalanthii_Tot.Car, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -9023,7 +9171,7 @@ plot_list_Grammica_Tot.Car[["C_denticulata"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Car_C_denticulata_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_denticulata_Tot.Car <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == "C_denticulata")
 
 box.rslt_Tot.Car_C_denticulata <- with(data_C_denticulata_Tot.Car, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -9082,7 +9230,7 @@ plot_list_Grammica_Tot.Car[["C_tasmanica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Car_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_tasmanica_Tot.Car <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == "C_tasmanica")
 
 box.rslt_Tot.Car_C_tasmanica <- with(data_C_tasmanica_Tot.Car, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -9139,7 +9287,7 @@ plot_list_Grammica_Tot.Car[["C_costaricensis"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> Tot.Car_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_costaricensis_Tot.Car <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == "C_costaricensis")
 
 box.rslt_Tot.Car_C_costaricensis <- with(data_C_costaricensis_Tot.Car, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
@@ -9191,7 +9339,7 @@ Tot.Car_C_costaricensis_boxplot
 data_Grammica_Tot.Car <- dplyr::filter(data_Tot.Car_plots_grammicaspe, Species == "C_indecora")
 
 Tot.Car_C_indecora_boxplot <- ggplot(data_Grammica_Tot.Car, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -9236,7 +9384,7 @@ for (sub in (loop_species)) {
   
   data_loop <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == sub)
   p <- ggplot(data_loop, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+    # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -9266,7 +9414,7 @@ plot_list_Grammica_NVZ.Car[["C_polygonorum"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> NVZ.Car_C_polygonorum_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_polygonorum_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_polygonorum")
 
 box.rslt_NVZ.Car_C_polygonorum <- with(data_C_polygonorum_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -9324,7 +9472,7 @@ plot_list_Grammica_NVZ.Car[["C_sandwichiana"]] +
     nudge_y = -.5, parse = TRUE) -> NVZ.Car_C_sandwichiana_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_sandwichiana_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_sandwichiana")
 
 box.rslt_NVZ.Car_C_sandwichiana <- with(data_C_sandwichiana_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -9382,7 +9530,7 @@ plot_list_Grammica_NVZ.Car[["C_californica"]] +
     nudge_y = -.5, parse = TRUE) -> NVZ.Car_C_californica_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_californica_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_californica")
 
 box.rslt_NVZ.Car_C_californica <- with(data_C_californica_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -9439,7 +9587,7 @@ plot_list_Grammica_NVZ.Car[["C_compacta"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> NVZ.Car_C_compacta_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_compacta_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_compacta")
 
 box.rslt_NVZ.Car_C_compacta <- with(data_C_compacta_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -9496,7 +9644,7 @@ plot_list_Grammica_NVZ.Car[["C_cephalanthii"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> NVZ.Car_C_cephalanthii_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_cephalanthii_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_cephalanthii")
 
 box.rslt_NVZ.Car_C_cephalanthii <- with(data_C_cephalanthii_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -9554,7 +9702,7 @@ plot_list_Grammica_NVZ.Car[["C_denticulata"]] +
     nudge_y = -.5, parse = TRUE) -> NVZ.Car_C_denticulata_boxplot
 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_denticulata_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_denticulata")
 
 box.rslt_NVZ.Car_C_denticulata <- with(data_C_denticulata_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -9611,7 +9759,7 @@ plot_list_Grammica_NVZ.Car[["C_tasmanica"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> NVZ.Car_C_tasmanica_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_tasmanica_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_tasmanica")
 
 box.rslt_NVZ.Car_C_tasmanica <- with(data_C_tasmanica_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -9668,7 +9816,7 @@ plot_list_Grammica_NVZ.Car[["C_costaricensis"]] +
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) -> NVZ.Car_C_costaricensis_boxplot
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_costaricensis_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_costaricensis")
 
 box.rslt_NVZ.Car_C_costaricensis <- with(data_C_costaricensis_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -9720,7 +9868,7 @@ NVZ.Car_C_costaricensis_boxplot
 data_Grammica_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_indecora")
 
 NVZ.Car_C_indecora_boxplot <- ggplot(data_Grammica_NVZ.Car, aes(x=Tissue.code, y=(FW.norm*100), color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+  # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
@@ -9745,7 +9893,7 @@ NVZ.Car_C_indecora_boxplot <- ggplot(data_Grammica_NVZ.Car, aes(x=Tissue.code, y
     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
     nudge_y = -.5, parse = TRUE) 
 
-# use base R boxplot to get the coordinates of the boxes
+# SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
 data_C_indecora_NVZ.Car <- dplyr::filter(data_NVZ.Car_plots_grammicaspe, Species == "C_indecora")
 
 box.rslt_NVZ.Car_C_indecora <- with(data_C_indecora_NVZ.Car, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
@@ -9831,780 +9979,779 @@ wrap_elements(gridtext::richtext_grob('Total carotenoids', rot = 90, hjust = 0.5
   # NVZ.Car_C_tasmanica_boxplot +
   # NVZ.Car_C_costaricensis_boxplot +
   # NVZ.Car_C_indecora_boxplot +
-wrap_elements(gridtext::richtext_grob('Neoxanthin', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) +
-  Neoxanthin_C_australis_boxplot +
-  Neoxanthin_C_polygonorum_boxplot +
-  Neoxanthin_C_sandwichiana_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
-  Neoxanthin_C_californica_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
-  Neoxanthin_C_compacta_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
-  Neoxanthin_C_cephalanthii_boxplot +
-  Neoxanthin_C_denticulata_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
-  Neoxanthin_C_tasmanica_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
-  Neoxanthin_C_costaricensis_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
-  Neoxanthin_C_indecora_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
-  wrap_elements(gridtext::richtext_grob('Lutein', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) + 
-  Lutein_C_australis_boxplot +
-  Lutein_C_polygonorum_boxplot + 
-  Lutein_C_sandwichiana_boxplot +
-  Lutein_C_californica_boxplot + 
-  Lutein_C_compacta_boxplot +
-  Lutein_C_cephalanthii_boxplot +
-  Lutein_C_denticulata_boxplot +
-  Lutein_C_tasmanica_boxplot +
-  Lutein_C_costaricensis_boxplot +
-  Lutein_C_indecora_boxplot +
-  wrap_elements(gridtext::richtext_grob('Lutein epoxide', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) + 
-  Lutein.epoxide_C_australis_boxplot +
-  Lutein.epoxide_C_polygonorum_boxplot + 
-  Lutein.epoxide_C_sandwichiana_boxplot +
-  Lutein.epoxide_C_californica_boxplot + 
-  Lutein.epoxide_C_compacta_boxplot +
-  Lutein.epoxide_C_cephalanthii_boxplot +
-  Lutein.epoxide_C_denticulata_boxplot +
-  Lutein.epoxide_C_tasmanica_boxplot +
-  Lutein.epoxide_C_costaricensis_boxplot +
-  Lutein.epoxide_C_indecora_boxplot +
+wrap_elements(gridtext::richtext_grob('Neo.Car', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) +
+  Neo.Car_C_australis_boxplot +
+  Neo.Car_C_polygonorum_boxplot +
+  Neo.Car_C_sandwichiana_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
+  Neo.Car_C_californica_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
+  Neo.Car_C_compacta_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
+  Neo.Car_C_cephalanthii_boxplot +
+  Neo.Car_C_denticulata_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
+  Neo.Car_C_tasmanica_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
+  Neo.Car_C_costaricensis_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
+  Neo.Car_C_indecora_boxplot + geom_text(size    = 1.8, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) +
+  wrap_elements(gridtext::richtext_grob('Lut.Car', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) + 
+  Lut.Car_C_australis_boxplot +
+  Lut.Car_C_polygonorum_boxplot + 
+  Lut.Car_C_sandwichiana_boxplot +
+  Lut.Car_C_californica_boxplot + 
+  Lut.Car_C_compacta_boxplot +
+  Lut.Car_C_cephalanthii_boxplot +
+  Lut.Car_C_denticulata_boxplot +
+  Lut.Car_C_tasmanica_boxplot +
+  Lut.Car_C_costaricensis_boxplot +
+  Lut.Car_C_indecora_boxplot +
+  wrap_elements(gridtext::richtext_grob('Lut.Car epoxide', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) + 
+  Lut.Car.epoxide_C_australis_boxplot +
+  Lut.Car.epoxide_C_polygonorum_boxplot + 
+  Lut.Car.epoxide_C_sandwichiana_boxplot +
+  Lut.Car.epoxide_C_californica_boxplot + 
+  Lut.Car.epoxide_C_compacta_boxplot +
+  Lut.Car.epoxide_C_cephalanthii_boxplot +
+  Lut.Car.epoxide_C_denticulata_boxplot +
+  Lut.Car.epoxide_C_tasmanica_boxplot +
+  Lut.Car.epoxide_C_costaricensis_boxplot +
+  Lut.Car.epoxide_C_indecora_boxplot +
   wrap_elements(gridtext::richtext_grob('*a*-Carotene', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) + 
-  a.Carotene_C_australis_boxplot +
-  a.Carotene_C_polygonorum_boxplot + 
-  a.Carotene_C_sandwichiana_boxplot +
-  a.Carotene_C_californica_boxplot + 
-  a.Carotene_C_compacta_boxplot +
-  a.Carotene_C_cephalanthii_boxplot +
-  a.Carotene_C_denticulata_boxplot +
-  a.Carotene_C_tasmanica_boxplot +
-  a.Carotene_C_costaricensis_boxplot +
-  a.Carotene_C_indecora_boxplot +
+  a.Car.Car_C_australis_boxplot +
+  a.Car.Car_C_polygonorum_boxplot + 
+  a.Car.Car_C_sandwichiana_boxplot +
+  a.Car.Car_C_californica_boxplot + 
+  a.Car.Car_C_compacta_boxplot +
+  a.Car.Car_C_cephalanthii_boxplot +
+  a.Car.Car_C_denticulata_boxplot +
+  a.Car.Car_C_tasmanica_boxplot +
+  a.Car.Car_C_costaricensis_boxplot +
+  a.Car.Car_C_indecora_boxplot +
   wrap_elements(gridtext::richtext_grob('*b*-Carotene', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) + 
-  b.Carotene_C_australis_boxplot +
-  b.Carotene_C_polygonorum_boxplot + 
-  b.Carotene_C_sandwichiana_boxplot +
-  b.Carotene_C_californica_boxplot + 
-  b.Carotene_C_compacta_boxplot +
-  b.Carotene_C_cephalanthii_boxplot +
-  b.Carotene_C_denticulata_boxplot +
-  b.Carotene_C_tasmanica_boxplot +
-  b.Carotene_C_costaricensis_boxplot +
-  b.Carotene_C_indecora_boxplot +
+  b.Car.Car_C_australis_boxplot +
+  b.Car.Car_C_polygonorum_boxplot + 
+  b.Car.Car_C_sandwichiana_boxplot +
+  b.Car.Car_C_californica_boxplot + 
+  b.Car.Car_C_compacta_boxplot +
+  b.Car.Car_C_cephalanthii_boxplot +
+  b.Car.Car_C_denticulata_boxplot +
+  b.Car.Car_C_tasmanica_boxplot +
+  b.Car.Car_C_costaricensis_boxplot +
+  b.Car.Car_C_indecora_boxplot +
   plot_layout(nrow = 7, byrow = T) -> carotenoid_boxplot_Grammica_new
 
 carotenoid_boxplot_Grammica_new 
 
-pdf("../output/boxplots/carotenoid_boxplot_Grammica_new.pdf", width=9,height=5.5) 
+pdf("../output/boxplots/fig_S3_carotenoid_boxplot_Grammica.pdf", width=9,height=5.5) 
 carotenoid_boxplot_Grammica_new
 dev.off()
 
-
-#### Car.Chl PLOTS! ####
-#### Car.Chl31 Ipomoea_nil ####
-data_ipomoea_Car.Chl31 <- dplyr::filter(data_ipomoea, Pigment == "Car.Chl31")
-
-Car.Chl31_ipomoea_boxplot <- ggplot(data_ipomoea_Car.Chl31, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
-  scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
-  scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
-  geom_boxplot(outlier.size = 0.1, lwd=0.2) +
-  theme_minimal() +
-  theme(text = element_text(size=10),
-        strip.text.x = element_text(angle=0, face = "bold"),
-        strip.text.y.left = element_text(angle = 0, face = "bold"), 
-        axis.text.y = element_text(size = 5), 
-        axis.text.x = element_blank(),
-        axis.ticks.x=element_blank(), 
-        axis.title.x = element_blank(),
-        axis.title.y = element_text(size = 5),
-        legend.position = "none") +
-  ylab("Natural Log mmol/mol") +
-  guides(colour = guide_legend(nrow = 1)) +
-  scale_y_continuous(position = "left", limits = c(0,15)) + 
-  geom_text(
-    size    = 2,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "Ipomoea nil"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) 
-
-
-
-# use base R boxplot to get the coordinates of the boxes
-box.rslt_Car.Chl31_ipomoea <- with(data_ipomoea_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Car.Chl31_ipomoea)
-boxplot_positions_Car.Chl31_ipomoea <- as.data.frame(box.rslt_Car.Chl31_ipomoea$stats)
-
-# what are these column tissue codes?
-tissues_Car.Chl31_ipomoea <- levels(data_ipomoea_Car.Chl31$Tissue.code)
-# add appropriate tissues to position df
-colnames(boxplot_positions_Car.Chl31_ipomoea) <- tissues_Car.Chl31_ipomoea
-
-# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Car.Chl31_ipomoea <- boxplot_positions_Car.Chl31_ipomoea[5,]
-
-
-#add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Car.Chl31"]])[["Letters"]])
-colnames(cbd_Car.Chl31_ipomoea)[1] <- "Letter"
-# turn rownames into first column for Tissue.code
-setDT(cbd_Car.Chl31_ipomoea, keep.rownames = "Tissue.code")
-
-
-# add a column y.position taken from top_positions based on mtaching up Tissue.code
-# first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Car.Chl31_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_ipomoea
-# now join these positions to cbd
-left_join(cbd_Car.Chl31_ipomoea, top_positions_Car.Chl31_ipomoea, by = "Tissue.code") -> cbd_Car.Chl31_ipomoea
-
-# calculate how much to nudge
-data_ipomoea_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_ipomoea
-cbd_Car.Chl31_ipomoea$nudged <- max_Car.Chl31_ipomoea$max* 1.05
-
-
-# add CLDs to plot
-Car.Chl31_ipomoea_boxplot + 
-  geom_text(
-    size    = 2,
-    color = "black",
-    data    = cbd_Car.Chl31_ipomoea,
-    inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_ipomoea_boxplot
-
-
-Car.Chl31_ipomoea_boxplot
-
-
-#### Car.Chl31 loop through Monogynella, Cuscuta, and C. purpurata ####
-loop_subgenera <- c("Monogynella","Cuscuta", "C_purpurata")
-# dplyr::filter for Car.Chl31
-data_Car.Chl31_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "Car.Chl31")
-# drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_Car.Chl31_plots_cuscutasub$Tissue.code <- factor(data_Car.Chl31_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
-
-plot_list_Cuscuta_Car.Chl31 = list()
-
-for (sub in (loop_subgenera)) {
-  
-  data_loop <- dplyr::filter(data_Car.Chl31_plots_cuscutasub, Subgenus == sub)
-  p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-    scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-    scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
-    geom_boxplot(outlier.size = 0.1, lwd=0.2) +
-    theme_minimal() +
-    theme(text = element_text(size=10),
-          strip.text.x = element_text(angle=0, face = "bold"),
-          strip.text.y.left = element_text(angle = 0, face = "bold"), 
-          axis.text.y = element_blank(), # uncomment later but need for now to set limits on Cuscuta plots
-          axis.text.x=element_blank(), 
-          axis.ticks.x=element_blank(), 
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(),
-          legend.position = "none") +
-    guides(colour = guide_legend(nrow = 1)) +
-    scale_y_continuous(position = "right", limits = c(0,15))
-  plot_list_Cuscuta_Car.Chl31[[sub]] = p
-  
-}
-
-#### Car.Chl31. Monogynella ####
-plot_list_Cuscuta_Car.Chl31[["Monogynella"]] + 
-  geom_text(
-    size    = 2,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "Monogynella"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_Monogynella_boxplot
-
-# use base R boxplot to get the coordinates of the boxes
-data_Monogynella_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_cuscutasub, Subgenus == "Monogynella")
-
-box.rslt_Car.Chl31_Monogynella <- with(data_Monogynella_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Car.Chl31_Monogynella)
-boxplot_positions_Car.Chl31_Monogynella <- as.data.frame(box.rslt_Car.Chl31_Monogynella$stats)
-
-# what are these column tissue codes?
-tissues_Car.Chl31_Monogynella <- levels(data_Monogynella_Car.Chl31$Tissue.code)
-# add appropriate tissues to position df
-colnames(boxplot_positions_Car.Chl31_Monogynella) <- tissues_Car.Chl31_Monogynella
-
-# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Car.Chl31_Monogynella <- boxplot_positions_Car.Chl31_Monogynella[5,]
-
-
-#add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Car.Chl31"]])[["Letters"]])
-colnames(cbd_Car.Chl31_Monogynella)[1] <- "Letter"
-# turn rownames into first column for Tissue.code
-setDT(cbd_Car.Chl31_Monogynella, keep.rownames = "Tissue.code")
-
-
-# add a column y.position taken from top_positions based on mtaching up Tissue.code
-# first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Car.Chl31_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_Monogynella
-# now join these positions to cbd
-left_join(cbd_Car.Chl31_Monogynella, top_positions_Car.Chl31_Monogynella, by = "Tissue.code") -> cbd_Car.Chl31_Monogynella
-
-# calculate how much to nudge
-data_Monogynella_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_Monogynella
-cbd_Car.Chl31_Monogynella$nudged <- max_Car.Chl31_Monogynella$max * 1.05
-
-
-# add CLDs to plot
-Car.Chl31_Monogynella_boxplot + 
-  geom_text(
-    size    = 2,
-    color = "black",
-    data    = cbd_Car.Chl31_Monogynella,
-    inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_Monogynella_boxplot
-
-
-Car.Chl31_Monogynella_boxplot
-
-
-#### Car.Chl31 Cuscuta ####
-plot_list_Cuscuta_Car.Chl31[["Cuscuta"]] + 
-  geom_text(
-    size    = 2,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "Cuscuta"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_Cuscuta_boxplot
-
-# KW not sig so no post hoc
-
-Car.Chl31_Cuscuta_boxplot
-
-
-
-#### Car.Chl31 C_purpurata ####
-plot_list_Cuscuta_Car.Chl31[["C_purpurata"]] + 
-  geom_text(
-    size    = 2,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "C. purpurata"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_purpurata_boxplot
-
-# KW not sig so no post hoc
-
-Car.Chl31_C_purpurata_boxplot
-
-
-
-
-#### Car.Chl31 Grammica subgenus alone ####
-
-data_Grammica_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_cuscutasub, Subgenus == "Grammica")
-
-Car.Chl31_Grammica_boxplot <- ggplot(data_Grammica_Car.Chl31, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-  scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-  scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
-  geom_boxplot(outlier.size = 0.1, lwd=0.2) +
-  theme_minimal() +
-  theme(text = element_text(size=10),
-        strip.text.x = element_text(angle=0, face = "bold"),
-        strip.text.y.left = element_text(angle = 0, face = "bold"), 
-        axis.text.y = element_text(size = 5), 
-        axis.text.x=element_blank(), 
-        axis.ticks.x=element_blank(), 
-        axis.title.x = element_blank(),
-        axis.title.y = element_text(size = 5),
-        legend.position = "none") +
-  ylab("Natural Log mmol/mol") +
-  guides(colour = guide_legend(nrow = 1)) +
-  scale_y_continuous(position = "right", limits = c(0,15)) + 
-  geom_text(
-    size    = 2,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "Grammica"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) 
-
-Car.Chl31_Grammica_boxplot
-
-# use base R boxplot to get the coordinates of the boxes
-data_Grammica_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_cuscutasub, Subgenus == "Grammica")
-
-box.rslt_Car.Chl31_Grammica <- with(data_Grammica_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Car.Chl31_Grammica)
-boxplot_positions_Car.Chl31_Grammica <- as.data.frame(box.rslt_Car.Chl31_Grammica$stats)
-
-# what are these column tissue codes?
-tissues_Car.Chl31_Grammica <- levels(data_Grammica_Car.Chl31$Tissue.code)
-# add appropriate tissues to position df
-colnames(boxplot_positions_Car.Chl31_Grammica) <- tissues_Car.Chl31_Grammica
-
-# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Car.Chl31_Grammica <- boxplot_positions_Car.Chl31_Grammica[5,]
-
-
-#add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Car.Chl31"]])[["Letters"]])
-colnames(cbd_Car.Chl31_Grammica)[1] <- "Letter"
-# turn rownames into first column for Tissue.code
-setDT(cbd_Car.Chl31_Grammica, keep.rownames = "Tissue.code")
-
-
-# add a column y.position taken from top_positions based on mtaching up Tissue.code
-# first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Car.Chl31_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_Grammica
-# now join these positions to cbd
-left_join(cbd_Car.Chl31_Grammica, top_positions_Car.Chl31_Grammica, by = "Tissue.code") -> cbd_Car.Chl31_Grammica
-
-# calculate how much to nudge
-data_Grammica_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_Grammica
-cbd_Car.Chl31_Grammica$nudged <- max_Car.Chl31_Grammica$max * 1.05
-
-# add CLDs to plot
-Car.Chl31_Grammica_boxplot + 
-  geom_text(
-    size    = 2,
-    color = "black",
-    data    = cbd_Car.Chl31_Grammica,
-    inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_Grammica_boxplot
-
-
-Car.Chl31_Grammica_boxplot
-
-
-#### COMBINED (faceted) car:chl plot: subgenus ####
-wrap_elements(gridtext::richtext_grob('Carotenoid:Chlorophyll', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
-  Car.Chl31_ipomoea_boxplot + ggtitle('Ipomoea nil') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + 
-  Car.Chl31_Monogynella_boxplot + ggtitle('Monogynella') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + 
-  Car.Chl31_Cuscuta_boxplot + ggtitle('Cuscuta') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + 
-  Car.Chl31_C_purpurata_boxplot + ggtitle('C. purpurata') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + 
-  Car.Chl31_Grammica_boxplot + ggtitle('Grammica') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + plot_layout(nrow = 1, byrow = T) -> car.chl_boxplot_new
-
-car.chl_boxplot_new 
-
-pdf("../output/boxplots/car.chl_boxplot_new.pdf", width=7,height=2) 
-car.chl_boxplot_new
-dev.off()
-
-#### car:chl plot Grammica ONLY ####
-
-#### Car.Chl31 C_australis ####
-data_C_australis <-  dplyr::filter(data_long_calcs_Grammica_plot, Species == "C_australis")
-data_C_australis_Car.Chl31 <- dplyr::filter(data_C_australis, Pigment == "Car.Chl31")
-
-# drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_C_australis$Tissue.code <- factor(data_C_australis$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
-
-Car.Chl31_C_australis_boxplot <- ggplot(data_C_australis_Car.Chl31, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-  scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-  scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
-  geom_boxplot(outlier.size = 0.1, lwd=0.2) +
-  theme_minimal() +
-  theme(text = element_text(size=10),
-        strip.text.x = element_text(angle=0, face = "bold"),
-        strip.text.y.left = element_text(angle = 0, face = "bold"), 
-        axis.text.y = element_text(size = 5),        
-        axis.text.x = element_blank(),
-        axis.ticks.x=element_blank(), 
-        axis.title.x = element_blank(),
-        axis.title.y = element_text(size = 5),
-        legend.position = "none") +
-  ylab("Natural Log ng/mg FW") +
-  guides(colour = guide_legend(nrow = 1)) +
-  scale_y_continuous(position = "left", limits = c(0, 15)) + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_australis"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.6, parse = TRUE) 
-
-Car.Chl31_C_australis_boxplot 
-
-# KW not sig so no post hoc
-Car.Chl31_C_australis_boxplot
-
-#### Car.Chl31 loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
-loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
-# dplyr::filter for Car.Chl31
-data_Car.Chl31_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "Car.Chl31")
-# drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
-data_Car.Chl31_plots_grammicaspe$Tissue.code <- factor(data_Car.Chl31_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
-
-
-plot_list_Grammica_Car.Chl31 = list()
-
-for (sub in (loop_species)) {
-  
-  data_loop <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == sub)
-  p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
-    scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-    scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-    scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
-    geom_boxplot(outlier.size = 0.1, lwd=0.2) +
-    theme_minimal() +
-    theme(text = element_text(size=10),
-          strip.text.x = element_text(angle=0, face = "bold"),
-          strip.text.y.left = element_text(angle = 0, face = "bold"), 
-          axis.text.y = element_blank(), # uncomment later but need for now to set limits on C_sandwichiana plots
-          axis.text.x=element_blank(), 
-          axis.ticks.x=element_blank(), 
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(),
-          legend.position = "none") +
-    guides(colour = guide_legend(nrow = 1)) +
-    scale_y_continuous(position = "right", limits = c(0, 15))
-  plot_list_Grammica_Car.Chl31[[sub]] = p
-  
-}
-
-#### Car.Chl31 C_polygonorum ####
-plot_list_Grammica_Car.Chl31[["C_polygonorum"]] + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_polygonorum"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_polygonorum_boxplot
-
-# KW not sig so no post hoc
-Car.Chl31_C_polygonorum_boxplot
-
-
-#### Car.Chl31 C_sandwichiana ####
-plot_list_Grammica_Car.Chl31[["C_sandwichiana"]] + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_sandwichiana"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_sandwichiana_boxplot
-
-
-# KW not sig so no post hoc
-Car.Chl31_C_sandwichiana_boxplot
-
-
-#### Car.Chl31 C_californica ####
-plot_list_Grammica_Car.Chl31[["C_californica"]] + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_californica"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_californica_boxplot
-
-
-# KW not sig so no post hoc
-
-Car.Chl31_C_californica_boxplot
-
-
-#### Car.Chl31 C_compacta ####
-plot_list_Grammica_Car.Chl31[["C_compacta"]] + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_compacta"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_compacta_boxplot
-
-
-
-# KW not sig so no post hoc
-
-Car.Chl31_C_compacta_boxplot
-
-
-#### Car.Chl31 C_cephalanthii ####
-plot_list_Grammica_Car.Chl31[["C_cephalanthii"]] + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_cephalanthii"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_cephalanthii_boxplot
-
-# use base R boxplot to get the coordinates of the boxes
-data_C_cephalanthii_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_cephalanthii")
-
-box.rslt_Car.Chl31_C_cephalanthii <- with(data_C_cephalanthii_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Car.Chl31_C_cephalanthii)
-boxplot_positions_Car.Chl31_C_cephalanthii <- as.data.frame(box.rslt_Car.Chl31_C_cephalanthii$stats)
-
-# what are these column tissue codes?
-tissues_Car.Chl31_C_cephalanthii <- levels(data_C_cephalanthii_Car.Chl31$Tissue.code)
-# add appropriate tissues to position df
-colnames(boxplot_positions_Car.Chl31_C_cephalanthii) <- tissues_Car.Chl31_C_cephalanthii
-
-# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Car.Chl31_C_cephalanthii <- boxplot_positions_Car.Chl31_C_cephalanthii[5,]
-
-
-#add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Car.Chl31"]])[["Letters"]])
-colnames(cbd_Car.Chl31_C_cephalanthii)[1] <- "Letter"
-# turn rownames into first column for Tissue.code
-setDT(cbd_Car.Chl31_C_cephalanthii, keep.rownames = "Tissue.code")
-
-
-# add a column y.position taken from top_positions based on mtaching up Tissue.code
-# first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Car.Chl31_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_C_cephalanthii
-# now join these positions to cbd
-left_join(cbd_Car.Chl31_C_cephalanthii, top_positions_Car.Chl31_C_cephalanthii, by = "Tissue.code") -> cbd_Car.Chl31_C_cephalanthii
-
-# calculate how much to nudge
-data_C_cephalanthii_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_C_cephalanthii
-cbd_Car.Chl31_C_cephalanthii$nudged <- max_Car.Chl31_C_cephalanthii$max * 1.05
-
-
-# add CLDs to plot
-Car.Chl31_C_cephalanthii_boxplot + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = cbd_Car.Chl31_C_cephalanthii,
-    inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_C_cephalanthii_boxplot
-
-
-Car.Chl31_C_cephalanthii_boxplot
-
-
-#### Car.Chl31 C_denticulata ####
-plot_list_Grammica_Car.Chl31[["C_denticulata"]] + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_denticulata"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_denticulata_boxplot
-
-
-# KW not sig so no post hoc
-
-Car.Chl31_C_denticulata_boxplot
-
-
-
-#### Car.Chl31 C_tasmanica ####
-plot_list_Grammica_Car.Chl31[["C_tasmanica"]] + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_tasmanica"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_tasmanica_boxplot
-
-# use base R boxplot to get the coordinates of the boxes
-data_C_tasmanica_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_tasmanica")
-
-box.rslt_Car.Chl31_C_tasmanica <- with(data_C_tasmanica_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Car.Chl31_C_tasmanica)
-boxplot_positions_Car.Chl31_C_tasmanica <- as.data.frame(box.rslt_Car.Chl31_C_tasmanica$stats)
-
-# what are these column tissue codes?
-tissues_Car.Chl31_C_tasmanica <- levels(data_C_tasmanica_Car.Chl31$Tissue.code)
-# add appropriate tissues to position df
-colnames(boxplot_positions_Car.Chl31_C_tasmanica) <- tissues_Car.Chl31_C_tasmanica
-
-# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Car.Chl31_C_tasmanica <- boxplot_positions_Car.Chl31_C_tasmanica[5,]
-
-
-#add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Car.Chl31"]])[["Letters"]])
-colnames(cbd_Car.Chl31_C_tasmanica)[1] <- "Letter"
-# turn rownames into first column for Tissue.code
-setDT(cbd_Car.Chl31_C_tasmanica, keep.rownames = "Tissue.code")
-
-
-# add a column y.position taken from top_positions based on mtaching up Tissue.code
-# first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Car.Chl31_C_tasmanica %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_C_tasmanica
-# now join these positions to cbd
-left_join(cbd_Car.Chl31_C_tasmanica, top_positions_Car.Chl31_C_tasmanica, by = "Tissue.code") -> cbd_Car.Chl31_C_tasmanica
-
-# calculate how much to nudge
-data_C_tasmanica_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_C_tasmanica
-cbd_Car.Chl31_C_tasmanica$nudged <- max_Car.Chl31_C_tasmanica$max * 1.05
-
-
-# add CLDs to plot
-Car.Chl31_C_tasmanica_boxplot + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = cbd_Car.Chl31_C_tasmanica,
-    inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_C_tasmanica_boxplot
-
-
-Car.Chl31_C_tasmanica_boxplot
-
-
-#### Car.Chl31 C_costaricensis ####
-plot_list_Grammica_Car.Chl31[["C_costaricensis"]] + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_costaricensis"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_costaricensis_boxplot
-
-# use base R boxplot to get the coordinates of the boxes
-data_C_costaricensis_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_costaricensis")
-
-box.rslt_Car.Chl31_C_costaricensis <- with(data_C_costaricensis_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Car.Chl31_C_costaricensis)
-boxplot_positions_Car.Chl31_C_costaricensis <- as.data.frame(box.rslt_Car.Chl31_C_costaricensis$stats)
-
-# what are these column tissue codes?
-tissues_Car.Chl31_C_costaricensis <- levels(data_C_costaricensis_Car.Chl31$Tissue.code)
-# add appropriate tissues to position df
-colnames(boxplot_positions_Car.Chl31_C_costaricensis) <- tissues_Car.Chl31_C_costaricensis
-
-# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Car.Chl31_C_costaricensis <- boxplot_positions_Car.Chl31_C_costaricensis[5,]
-
-
-#add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Car.Chl31"]])[["Letters"]])
-colnames(cbd_Car.Chl31_C_costaricensis)[1] <- "Letter"
-# turn rownames into first column for Tissue.code
-setDT(cbd_Car.Chl31_C_costaricensis, keep.rownames = "Tissue.code")
-
-
-# add a column y.position taken from top_positions based on mtaching up Tissue.code
-# first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Car.Chl31_C_costaricensis %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_C_costaricensis
-# now join these positions to cbd
-left_join(cbd_Car.Chl31_C_costaricensis, top_positions_Car.Chl31_C_costaricensis, by = "Tissue.code") -> cbd_Car.Chl31_C_costaricensis
-
-# calculate how much to nudge
-data_C_costaricensis_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_C_costaricensis
-cbd_Car.Chl31_C_costaricensis$nudged <- max_Car.Chl31_C_costaricensis$max * 1.05
-
-
-# add CLDs to plot
-Car.Chl31_C_costaricensis_boxplot + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = cbd_Car.Chl31_C_costaricensis,
-    inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_C_costaricensis_boxplot
-
-
-Car.Chl31_C_costaricensis_boxplot
-
-
-#### Car.Chl31 C_indecora species alone ####
-
-data_Grammica_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_indecora")
-
-Car.Chl31_C_indecora_boxplot <- ggplot(data_Grammica_Car.Chl31, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
-  scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-  scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
-  scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
-  geom_boxplot(outlier.size = 0.1, lwd=0.2) +
-  theme_minimal() +
-  theme(text = element_text(size=10),
-        strip.text.x = element_text(angle=0, face = "bold"),
-        strip.text.y.left = element_text(angle = 0, face = "bold"), 
-        axis.text.y = element_text(size = 5), 
-        axis.text.x=element_blank(), 
-        axis.ticks.x=element_blank(), 
-        axis.title.x = element_blank(),
-        axis.title.y = element_text(size = 5),
-        legend.position = "none") +
-  ylab("Natural Log mmol/mol") +
-  guides(colour = guide_legend(nrow = 1)) +
-  scale_y_continuous(position = "right", limits = c(0, 15)) + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_indecora"),
-    inherit.aes = T,
-    mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
-    nudge_y = -.5, parse = TRUE) 
-
-
-# use base R boxplot to get the coordinates of the boxes
-data_C_indecora_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_indecora")
-
-box.rslt_Car.Chl31_C_indecora <- with(data_C_indecora_Car.Chl31, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
-str(box.rslt_Car.Chl31_C_indecora)
-boxplot_positions_Car.Chl31_C_indecora <- as.data.frame(box.rslt_Car.Chl31_C_indecora$stats)
-
-# what are these column tissue codes?
-tissues_Car.Chl31_C_indecora <- levels(data_C_indecora_Car.Chl31$Tissue.code)
-# add appropriate tissues to position df
-colnames(boxplot_positions_Car.Chl31_C_indecora) <- tissues_Car.Chl31_C_indecora
-
-# fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
-top_positions_Car.Chl31_C_indecora <- boxplot_positions_Car.Chl31_C_indecora[5,]
-
-
-#add pairwise significance letter groups (compact letter display; CLD)
-cbd_Car.Chl31_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Car.Chl31"]])[["Letters"]])
-colnames(cbd_Car.Chl31_C_indecora)[1] <- "Letter"
-# turn rownames into first column for Tissue.code
-setDT(cbd_Car.Chl31_C_indecora, keep.rownames = "Tissue.code")
-
-
-# add a column y.position taken from top_positions based on mtaching up Tissue.code
-# first reshape top_positions so that colnames are a column called Tissue.code
-top_positions_Car.Chl31_C_indecora %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_C_indecora
-# now join these positions to cbd
-left_join(cbd_Car.Chl31_C_indecora, top_positions_Car.Chl31_C_indecora, by = "Tissue.code") -> cbd_Car.Chl31_C_indecora
-
-# calculate how much to nudge
-data_C_indecora_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_C_indecora
-cbd_Car.Chl31_C_indecora$nudged <- (max_Car.Chl31_C_indecora$max * 1.05)
-
-# add CLDs to plot
-Car.Chl31_C_indecora_boxplot + 
-  geom_text(
-    size    = 1.8,
-    color = "black",
-    data    = cbd_Car.Chl31_C_indecora,
-    inherit.aes = T,
-    mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_C_indecora_boxplot
-
-
-Car.Chl31_C_indecora_boxplot
-
-
-
-#### COMBINED (faceted) car:chl plot: Grammica ONLY ####
-wrap_elements(gridtext::richtext_grob('Carotenoid: Chorophyll', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) + 
-  Car.Chl31_C_australis_boxplot + ggtitle('C. australis') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
-  Car.Chl31_C_polygonorum_boxplot + ggtitle('C. polygonorum') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
-  Car.Chl31_C_sandwichiana_boxplot + ggtitle('C. sandwichiana') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
-  Car.Chl31_C_californica_boxplot + ggtitle('C. californica') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
-  Car.Chl31_C_compacta_boxplot + ggtitle('C. compacta') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
-  Car.Chl31_C_cephalanthii_boxplot + ggtitle('C. cephalanthii') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
-  Car.Chl31_C_denticulata_boxplot + ggtitle('C. denticulata') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
-  Car.Chl31_C_tasmanica_boxplot + ggtitle('C. tasmanica') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) +
-  Car.Chl31_C_costaricensis_boxplot + ggtitle('C. costaricensis') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) +
-  Car.Chl31_C_indecora_boxplot + ggtitle('C. indecora') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) +
-  plot_layout(nrow = 1, byrow = T) -> car.chl_boxplot_Grammica_new
-
-car.chl_boxplot_Grammica_new 
-
-pdf("../output/boxplots/car.chl_boxplot_Grammica_new.pdf", width=9,height=2) 
-car.chl_boxplot_Grammica_new
-dev.off()
+# 
+# #### Car.Chl PLOTS! ####
+# #### Car.Chl31 Ipomoea_nil ####
+# data_ipomoea_Car.Chl31 <- dplyr::filter(data_ipomoea, Pigment == "Car.Chl31")
+# 
+# Car.Chl31_ipomoea_boxplot <- ggplot(data_ipomoea_Car.Chl31, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
+#   # scale_fill_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+#   scale_color_manual(name = "Tissue", labels = c("Leaf", "Young", "Old", "Flower", "Seed"),values = c("l" = leaf, "y" = young, "o" = old, "f" = flower, "s" = seed)) +
+#   scale_x_discrete(name = "Tissue", labels = c("l" = "L", "y" = "Y", "o" = "O", "f" = "F", "s" = "Sd"), drop = FALSE) +
+#   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
+#   theme_minimal() +
+#   theme(text = element_text(size=10),
+#         strip.text.x = element_text(angle=0, face = "bold"),
+#         strip.text.y.left = element_text(angle = 0, face = "bold"), 
+#         axis.text.y = element_text(size = 5), 
+#         axis.text.x = element_blank(),
+#         axis.ticks.x=element_blank(), 
+#         axis.title.x = element_blank(),
+#         axis.title.y = element_text(size = 5),
+#         legend.position = "none") +
+#   ylab("Natural Log mmol/mol") +
+#   guides(colour = guide_legend(nrow = 1)) +
+#   scale_y_continuous(position = "left", limits = c(0,15)) + 
+#   geom_text(
+#     size    = 2,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "Ipomoea nil"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) 
+# 
+# 
+# 
+# # SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+# box.rslt_Car.Chl31_ipomoea <- with(data_ipomoea_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
+# str(box.rslt_Car.Chl31_ipomoea)
+# boxplot_positions_Car.Chl31_ipomoea <- as.data.frame(box.rslt_Car.Chl31_ipomoea$stats)
+# 
+# # what are these column tissue codes?
+# tissues_Car.Chl31_ipomoea <- levels(data_ipomoea_Car.Chl31$Tissue.code)
+# # add appropriate tissues to position df
+# colnames(boxplot_positions_Car.Chl31_ipomoea) <- tissues_Car.Chl31_ipomoea
+# 
+# # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+# top_positions_Car.Chl31_ipomoea <- boxplot_positions_Car.Chl31_ipomoea[5,]
+# 
+# 
+# #add pairwise significance letter groups (compact letter display; CLD)
+# cbd_Car.Chl31_ipomoea <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Ipomoea_nil__Car.Chl31"]])[["Letters"]])
+# colnames(cbd_Car.Chl31_ipomoea)[1] <- "Letter"
+# # turn rownames into first column for Tissue.code
+# setDT(cbd_Car.Chl31_ipomoea, keep.rownames = "Tissue.code")
+# 
+# 
+# # add a column y.position taken from top_positions based on mtaching up Tissue.code
+# # first reshape top_positions so that colnames are a column called Tissue.code
+# top_positions_Car.Chl31_ipomoea %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_ipomoea
+# # now join these positions to cbd
+# left_join(cbd_Car.Chl31_ipomoea, top_positions_Car.Chl31_ipomoea, by = "Tissue.code") -> cbd_Car.Chl31_ipomoea
+# 
+# # calculate how much to nudge
+# data_ipomoea_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_ipomoea
+# cbd_Car.Chl31_ipomoea$nudged <- max_Car.Chl31_ipomoea$max* 1.05
+# 
+# 
+# # add CLDs to plot
+# Car.Chl31_ipomoea_boxplot + 
+#   geom_text(
+#     size    = 2,
+#     color = "black",
+#     data    = cbd_Car.Chl31_ipomoea,
+#     inherit.aes = T,
+#     mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_ipomoea_boxplot
+# 
+# 
+# Car.Chl31_ipomoea_boxplot
+# 
+# 
+# #### Car.Chl31 loop through Monogynella, Cuscuta, and C. purpurata ####
+# loop_subgenera <- c("Monogynella","Cuscuta", "C_purpurata")
+# # dplyr::filter for Car.Chl31
+# data_Car.Chl31_plots_cuscutasub <- dplyr::filter(data_long_calcs, Pigment == "Car.Chl31")
+# # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
+# data_Car.Chl31_plots_cuscutasub$Tissue.code <- factor(data_Car.Chl31_plots_cuscutasub$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+# 
+# plot_list_Cuscuta_Car.Chl31 = list()
+# 
+# for (sub in (loop_subgenera)) {
+#   
+#   data_loop <- dplyr::filter(data_Car.Chl31_plots_cuscutasub, Subgenus == sub)
+#   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
+#     # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
+#     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
+#     theme_minimal() +
+#     theme(text = element_text(size=10),
+#           strip.text.x = element_text(angle=0, face = "bold"),
+#           strip.text.y.left = element_text(angle = 0, face = "bold"), 
+#           axis.text.y = element_blank(), # uncomment later but need for now to set limits on Cuscuta plots
+#           axis.text.x=element_blank(), 
+#           axis.ticks.x=element_blank(), 
+#           axis.title.x = element_blank(),
+#           axis.title.y = element_blank(),
+#           legend.position = "none") +
+#     guides(colour = guide_legend(nrow = 1)) +
+#     scale_y_continuous(position = "right", limits = c(0,15))
+#   plot_list_Cuscuta_Car.Chl31[[sub]] = p
+#   
+# }
+# 
+# #### Car.Chl31. Monogynella ####
+# plot_list_Cuscuta_Car.Chl31[["Monogynella"]] + 
+#   geom_text(
+#     size    = 2,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "Monogynella"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_Monogynella_boxplot
+# 
+# # SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+# data_Monogynella_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_cuscutasub, Subgenus == "Monogynella")
+# 
+# box.rslt_Car.Chl31_Monogynella <- with(data_Monogynella_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
+# str(box.rslt_Car.Chl31_Monogynella)
+# boxplot_positions_Car.Chl31_Monogynella <- as.data.frame(box.rslt_Car.Chl31_Monogynella$stats)
+# 
+# # what are these column tissue codes?
+# tissues_Car.Chl31_Monogynella <- levels(data_Monogynella_Car.Chl31$Tissue.code)
+# # add appropriate tissues to position df
+# colnames(boxplot_positions_Car.Chl31_Monogynella) <- tissues_Car.Chl31_Monogynella
+# 
+# # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+# top_positions_Car.Chl31_Monogynella <- boxplot_positions_Car.Chl31_Monogynella[5,]
+# 
+# 
+# #add pairwise significance letter groups (compact letter display; CLD)
+# cbd_Car.Chl31_Monogynella <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Monogynella__Car.Chl31"]])[["Letters"]])
+# colnames(cbd_Car.Chl31_Monogynella)[1] <- "Letter"
+# # turn rownames into first column for Tissue.code
+# setDT(cbd_Car.Chl31_Monogynella, keep.rownames = "Tissue.code")
+# 
+# 
+# # add a column y.position taken from top_positions based on mtaching up Tissue.code
+# # first reshape top_positions so that colnames are a column called Tissue.code
+# top_positions_Car.Chl31_Monogynella %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_Monogynella
+# # now join these positions to cbd
+# left_join(cbd_Car.Chl31_Monogynella, top_positions_Car.Chl31_Monogynella, by = "Tissue.code") -> cbd_Car.Chl31_Monogynella
+# 
+# # calculate how much to nudge
+# data_Monogynella_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_Monogynella
+# cbd_Car.Chl31_Monogynella$nudged <- max_Car.Chl31_Monogynella$max * 1.05
+# 
+# 
+# # add CLDs to plot
+# Car.Chl31_Monogynella_boxplot + 
+#   geom_text(
+#     size    = 2,
+#     color = "black",
+#     data    = cbd_Car.Chl31_Monogynella,
+#     inherit.aes = T,
+#     mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_Monogynella_boxplot
+# 
+# 
+# Car.Chl31_Monogynella_boxplot
+# 
+# 
+# #### Car.Chl31 Cuscuta ####
+# plot_list_Cuscuta_Car.Chl31[["Cuscuta"]] + 
+#   geom_text(
+#     size    = 2,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "Cuscuta"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_Cuscuta_boxplot
+# 
+# # KW not sig so no post hoc
+# 
+# Car.Chl31_Cuscuta_boxplot
+# 
+# 
+# 
+# #### Car.Chl31 C_purpurata ####
+# plot_list_Cuscuta_Car.Chl31[["C_purpurata"]] + 
+#   geom_text(
+#     size    = 2,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "C. purpurata"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_purpurata_boxplot
+# 
+# # KW not sig so no post hoc
+# 
+# Car.Chl31_C_purpurata_boxplot
+# 
+# 
+# 
+# #### Car.Chl31 Grammica subgenus alone ####
+# 
+# data_Grammica_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_cuscutasub, Subgenus == "Grammica")
+# 
+# Car.Chl31_Grammica_boxplot <- ggplot(data_Grammica_Car.Chl31, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
+#   # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
+#   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
+#   theme_minimal() +
+#   theme(text = element_text(size=10),
+#         strip.text.x = element_text(angle=0, face = "bold"),
+#         strip.text.y.left = element_text(angle = 0, face = "bold"), 
+#         axis.text.y = element_text(size = 5), 
+#         axis.text.x=element_blank(), 
+#         axis.ticks.x=element_blank(), 
+#         axis.title.x = element_blank(),
+#         axis.title.y = element_text(size = 5),
+#         legend.position = "none") +
+#   ylab("Natural Log mmol/mol") +
+#   guides(colour = guide_legend(nrow = 1)) +
+#   scale_y_continuous(position = "right", limits = c(0,15)) + 
+#   geom_text(
+#     size    = 2,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal, Pigment == "Car.Chl31" & Subgenus == "Grammica"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) 
+# 
+# Car.Chl31_Grammica_boxplot
+# 
+# # SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+# data_Grammica_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_cuscutasub, Subgenus == "Grammica")
+# 
+# box.rslt_Car.Chl31_Grammica <- with(data_Grammica_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
+# str(box.rslt_Car.Chl31_Grammica)
+# boxplot_positions_Car.Chl31_Grammica <- as.data.frame(box.rslt_Car.Chl31_Grammica$stats)
+# 
+# # what are these column tissue codes?
+# tissues_Car.Chl31_Grammica <- levels(data_Grammica_Car.Chl31$Tissue.code)
+# # add appropriate tissues to position df
+# colnames(boxplot_positions_Car.Chl31_Grammica) <- tissues_Car.Chl31_Grammica
+# 
+# # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+# top_positions_Car.Chl31_Grammica <- boxplot_positions_Car.Chl31_Grammica[5,]
+# 
+# 
+# #add pairwise significance letter groups (compact letter display; CLD)
+# cbd_Car.Chl31_Grammica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list[["Grammica__Car.Chl31"]])[["Letters"]])
+# colnames(cbd_Car.Chl31_Grammica)[1] <- "Letter"
+# # turn rownames into first column for Tissue.code
+# setDT(cbd_Car.Chl31_Grammica, keep.rownames = "Tissue.code")
+# 
+# 
+# # add a column y.position taken from top_positions based on mtaching up Tissue.code
+# # first reshape top_positions so that colnames are a column called Tissue.code
+# top_positions_Car.Chl31_Grammica %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_Grammica
+# # now join these positions to cbd
+# left_join(cbd_Car.Chl31_Grammica, top_positions_Car.Chl31_Grammica, by = "Tissue.code") -> cbd_Car.Chl31_Grammica
+# 
+# # calculate how much to nudge
+# data_Grammica_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_Grammica
+# cbd_Car.Chl31_Grammica$nudged <- max_Car.Chl31_Grammica$max * 1.05
+# 
+# # add CLDs to plot
+# Car.Chl31_Grammica_boxplot + 
+#   geom_text(
+#     size    = 2,
+#     color = "black",
+#     data    = cbd_Car.Chl31_Grammica,
+#     inherit.aes = T,
+#     mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_Grammica_boxplot
+# 
+# 
+# Car.Chl31_Grammica_boxplot
+# 
+# 
+# #### COMBINED (faceted) car:chl plot: subgenus ####
+# wrap_elements(gridtext::richtext_grob('Carotenoid:Chlorophyll', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 8, fontface = 'bold'))) + 
+#   Car.Chl31_ipomoea_boxplot + ggtitle('Ipomoea nil') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + 
+#   Car.Chl31_Monogynella_boxplot + ggtitle('Monogynella') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + 
+#   Car.Chl31_Cuscuta_boxplot + ggtitle('Cuscuta') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + 
+#   Car.Chl31_C_purpurata_boxplot + ggtitle('C. purpurata') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + 
+#   Car.Chl31_Grammica_boxplot + ggtitle('Grammica') + theme(plot.title = element_text(hjust = 0.5, size = 9, face = "bold.italic")) + plot_layout(nrow = 1, byrow = T) -> car.chl_boxplot_new
+# 
+# car.chl_boxplot_new 
+# 
+# pdf("../output/boxplots/car.chl_boxplot_new.pdf", width=7,height=2) 
+# car.chl_boxplot_new
+# dev.off()
+# 
+# #### car:chl plot Grammica ONLY ####
+# 
+# #### Car.Chl31 C_australis ####
+# data_C_australis <-  dplyr::filter(data_long_calcs_Grammica_plot, Species == "C_australis")
+# data_C_australis_Car.Chl31 <- dplyr::filter(data_C_australis, Pigment == "Car.Chl31")
+# 
+# # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
+# data_C_australis$Tissue.code <- factor(data_C_australis$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+# 
+# Car.Chl31_C_australis_boxplot <- ggplot(data_C_australis_Car.Chl31, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
+#   # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
+#   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
+#   theme_minimal() +
+#   theme(text = element_text(size=10),
+#         strip.text.x = element_text(angle=0, face = "bold"),
+#         strip.text.y.left = element_text(angle = 0, face = "bold"), 
+#         axis.text.y = element_text(size = 5),        
+#         axis.text.x = element_blank(),
+#         axis.ticks.x=element_blank(), 
+#         axis.title.x = element_blank(),
+#         axis.title.y = element_text(size = 5),
+#         legend.position = "none") +
+#   ylab("Natural Log ng/mg FW") +
+#   guides(colour = guide_legend(nrow = 1)) +
+#   scale_y_continuous(position = "left", limits = c(0, 15)) + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_australis"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.6, parse = TRUE) 
+# 
+# Car.Chl31_C_australis_boxplot 
+# 
+# # KW not sig so no post hoc
+# Car.Chl31_C_australis_boxplot
+# 
+# #### Car.Chl31 loop through C_polygonorum, C_sandwichiana, C_californica, C_compacta, C_cephalanthii, C_denticulata, C_tasmanica, C_costaricensis, and C. indecora ####
+# loop_species <- c("C_polygonorum", "C_sandwichiana", "C_californica", "C_compacta", "C_cephalanthii", "C_denticulata", "C_tasmanica", "C_costaricensis", "C_indecora")
+# # dplyr::filter for Car.Chl31
+# data_Car.Chl31_plots_grammicaspe <- dplyr::filter(data_long_calcs_Grammica_plot, Pigment == "Car.Chl31")
+# # drop unused factor levels from tissues (e.g. haustorium from Ipomoea)
+# data_Car.Chl31_plots_grammicaspe$Tissue.code <- factor(data_Car.Chl31_plots_grammicaspe$Tissue.code, levels = c("sdlg", "y", "o", "h", "f", "s"))
+# 
+# 
+# plot_list_Grammica_Car.Chl31 = list()
+# 
+# for (sub in (loop_species)) {
+#   
+#   data_loop <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == sub)
+#   p <- ggplot(data_loop, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) + 
+#     # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#     scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#     scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
+#     geom_boxplot(outlier.size = 0.1, lwd=0.2) +
+#     theme_minimal() +
+#     theme(text = element_text(size=10),
+#           strip.text.x = element_text(angle=0, face = "bold"),
+#           strip.text.y.left = element_text(angle = 0, face = "bold"), 
+#           axis.text.y = element_blank(), # uncomment later but need for now to set limits on C_sandwichiana plots
+#           axis.text.x=element_blank(), 
+#           axis.ticks.x=element_blank(), 
+#           axis.title.x = element_blank(),
+#           axis.title.y = element_blank(),
+#           legend.position = "none") +
+#     guides(colour = guide_legend(nrow = 1)) +
+#     scale_y_continuous(position = "right", limits = c(0, 15))
+#   plot_list_Grammica_Car.Chl31[[sub]] = p
+#   
+# }
+# 
+# #### Car.Chl31 C_polygonorum ####
+# plot_list_Grammica_Car.Chl31[["C_polygonorum"]] + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_polygonorum"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_polygonorum_boxplot
+# 
+# # KW not sig so no post hoc
+# Car.Chl31_C_polygonorum_boxplot
+# 
+# 
+# #### Car.Chl31 C_sandwichiana ####
+# plot_list_Grammica_Car.Chl31[["C_sandwichiana"]] + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_sandwichiana"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_sandwichiana_boxplot
+# 
+# 
+# # KW not sig so no post hoc
+# Car.Chl31_C_sandwichiana_boxplot
+# 
+# 
+# #### Car.Chl31 C_californica ####
+# plot_list_Grammica_Car.Chl31[["C_californica"]] + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_californica"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_californica_boxplot
+# 
+# 
+# # KW not sig so no post hoc
+# 
+# Car.Chl31_C_californica_boxplot
+# 
+# 
+# #### Car.Chl31 C_compacta ####
+# plot_list_Grammica_Car.Chl31[["C_compacta"]] + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_compacta"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_compacta_boxplot
+# 
+# 
+# 
+# # KW not sig so no post hoc
+# 
+# Car.Chl31_C_compacta_boxplot
+# 
+# 
+# #### Car.Chl31 C_cephalanthii ####
+# plot_list_Grammica_Car.Chl31[["C_cephalanthii"]] + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_cephalanthii"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_cephalanthii_boxplot
+# 
+# # SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+# data_C_cephalanthii_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_cephalanthii")
+# 
+# box.rslt_Car.Chl31_C_cephalanthii <- with(data_C_cephalanthii_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
+# str(box.rslt_Car.Chl31_C_cephalanthii)
+# boxplot_positions_Car.Chl31_C_cephalanthii <- as.data.frame(box.rslt_Car.Chl31_C_cephalanthii$stats)
+# 
+# # what are these column tissue codes?
+# tissues_Car.Chl31_C_cephalanthii <- levels(data_C_cephalanthii_Car.Chl31$Tissue.code)
+# # add appropriate tissues to position df
+# colnames(boxplot_positions_Car.Chl31_C_cephalanthii) <- tissues_Car.Chl31_C_cephalanthii
+# 
+# # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+# top_positions_Car.Chl31_C_cephalanthii <- boxplot_positions_Car.Chl31_C_cephalanthii[5,]
+# 
+# 
+# #add pairwise significance letter groups (compact letter display; CLD)
+# cbd_Car.Chl31_C_cephalanthii <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_cephalanthii__Car.Chl31"]])[["Letters"]])
+# colnames(cbd_Car.Chl31_C_cephalanthii)[1] <- "Letter"
+# # turn rownames into first column for Tissue.code
+# setDT(cbd_Car.Chl31_C_cephalanthii, keep.rownames = "Tissue.code")
+# 
+# 
+# # add a column y.position taken from top_positions based on mtaching up Tissue.code
+# # first reshape top_positions so that colnames are a column called Tissue.code
+# top_positions_Car.Chl31_C_cephalanthii %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_C_cephalanthii
+# # now join these positions to cbd
+# left_join(cbd_Car.Chl31_C_cephalanthii, top_positions_Car.Chl31_C_cephalanthii, by = "Tissue.code") -> cbd_Car.Chl31_C_cephalanthii
+# 
+# # calculate how much to nudge
+# data_C_cephalanthii_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_C_cephalanthii
+# cbd_Car.Chl31_C_cephalanthii$nudged <- max_Car.Chl31_C_cephalanthii$max * 1.05
+# 
+# 
+# # add CLDs to plot
+# Car.Chl31_C_cephalanthii_boxplot + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = cbd_Car.Chl31_C_cephalanthii,
+#     inherit.aes = T,
+#     mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_C_cephalanthii_boxplot
+# 
+# 
+# Car.Chl31_C_cephalanthii_boxplot
+# 
+# 
+# #### Car.Chl31 C_denticulata ####
+# plot_list_Grammica_Car.Chl31[["C_denticulata"]] + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_denticulata"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_denticulata_boxplot
+# 
+# 
+# # KW not sig so no post hoc
+# 
+# Car.Chl31_C_denticulata_boxplot
+# 
+# 
+# 
+# #### Car.Chl31 C_tasmanica ####
+# plot_list_Grammica_Car.Chl31[["C_tasmanica"]] + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_tasmanica"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_tasmanica_boxplot
+# 
+# # SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+# data_C_tasmanica_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_tasmanica")
+# 
+# box.rslt_Car.Chl31_C_tasmanica <- with(data_C_tasmanica_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
+# str(box.rslt_Car.Chl31_C_tasmanica)
+# boxplot_positions_Car.Chl31_C_tasmanica <- as.data.frame(box.rslt_Car.Chl31_C_tasmanica$stats)
+# 
+# # what are these column tissue codes?
+# tissues_Car.Chl31_C_tasmanica <- levels(data_C_tasmanica_Car.Chl31$Tissue.code)
+# # add appropriate tissues to position df
+# colnames(boxplot_positions_Car.Chl31_C_tasmanica) <- tissues_Car.Chl31_C_tasmanica
+# 
+# # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+# top_positions_Car.Chl31_C_tasmanica <- boxplot_positions_Car.Chl31_C_tasmanica[5,]
+# 
+# 
+# #add pairwise significance letter groups (compact letter display; CLD)
+# cbd_Car.Chl31_C_tasmanica <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_tasmanica__Car.Chl31"]])[["Letters"]])
+# colnames(cbd_Car.Chl31_C_tasmanica)[1] <- "Letter"
+# # turn rownames into first column for Tissue.code
+# setDT(cbd_Car.Chl31_C_tasmanica, keep.rownames = "Tissue.code")
+# 
+# 
+# # add a column y.position taken from top_positions based on mtaching up Tissue.code
+# # first reshape top_positions so that colnames are a column called Tissue.code
+# top_positions_Car.Chl31_C_tasmanica %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_C_tasmanica
+# # now join these positions to cbd
+# left_join(cbd_Car.Chl31_C_tasmanica, top_positions_Car.Chl31_C_tasmanica, by = "Tissue.code") -> cbd_Car.Chl31_C_tasmanica
+# 
+# # calculate how much to nudge
+# data_C_tasmanica_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_C_tasmanica
+# cbd_Car.Chl31_C_tasmanica$nudged <- max_Car.Chl31_C_tasmanica$max * 1.05
+# 
+# 
+# # add CLDs to plot
+# Car.Chl31_C_tasmanica_boxplot + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = cbd_Car.Chl31_C_tasmanica,
+#     inherit.aes = T,
+#     mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_C_tasmanica_boxplot
+# 
+# 
+# Car.Chl31_C_tasmanica_boxplot
+# 
+# 
+# #### Car.Chl31 C_costaricensis ####
+# plot_list_Grammica_Car.Chl31[["C_costaricensis"]] + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_costaricensis"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) -> Car.Chl31_C_costaricensis_boxplot
+# 
+# # SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+# data_C_costaricensis_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_costaricensis")
+# 
+# box.rslt_Car.Chl31_C_costaricensis <- with(data_C_costaricensis_Car.Chl31, graphics::boxplot(logFW.norm ~ Tissue.code, plot = FALSE))
+# str(box.rslt_Car.Chl31_C_costaricensis)
+# boxplot_positions_Car.Chl31_C_costaricensis <- as.data.frame(box.rslt_Car.Chl31_C_costaricensis$stats)
+# 
+# # what are these column tissue codes?
+# tissues_Car.Chl31_C_costaricensis <- levels(data_C_costaricensis_Car.Chl31$Tissue.code)
+# # add appropriate tissues to position df
+# colnames(boxplot_positions_Car.Chl31_C_costaricensis) <- tissues_Car.Chl31_C_costaricensis
+# 
+# # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+# top_positions_Car.Chl31_C_costaricensis <- boxplot_positions_Car.Chl31_C_costaricensis[5,]
+# 
+# 
+# #add pairwise significance letter groups (compact letter display; CLD)
+# cbd_Car.Chl31_C_costaricensis <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_costaricensis__Car.Chl31"]])[["Letters"]])
+# colnames(cbd_Car.Chl31_C_costaricensis)[1] <- "Letter"
+# # turn rownames into first column for Tissue.code
+# setDT(cbd_Car.Chl31_C_costaricensis, keep.rownames = "Tissue.code")
+# 
+# 
+# # add a column y.position taken from top_positions based on mtaching up Tissue.code
+# # first reshape top_positions so that colnames are a column called Tissue.code
+# top_positions_Car.Chl31_C_costaricensis %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_C_costaricensis
+# # now join these positions to cbd
+# left_join(cbd_Car.Chl31_C_costaricensis, top_positions_Car.Chl31_C_costaricensis, by = "Tissue.code") -> cbd_Car.Chl31_C_costaricensis
+# 
+# # calculate how much to nudge
+# data_C_costaricensis_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_C_costaricensis
+# cbd_Car.Chl31_C_costaricensis$nudged <- max_Car.Chl31_C_costaricensis$max * 1.05
+# 
+# 
+# # add CLDs to plot
+# Car.Chl31_C_costaricensis_boxplot + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = cbd_Car.Chl31_C_costaricensis,
+#     inherit.aes = T,
+#     mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_C_costaricensis_boxplot
+# 
+# 
+# Car.Chl31_C_costaricensis_boxplot
+# 
+# 
+# #### Car.Chl31 C_indecora species alone ####
+# 
+# data_Grammica_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_indecora")
+# 
+# Car.Chl31_C_indecora_boxplot <- ggplot(data_Grammica_Car.Chl31, aes(x=Tissue.code, y=logFW.norm, color=Tissue.code)) +
+#   # scale_fill_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#   scale_color_manual(name = "Tissue", labels = c("Seedling", "Young", "Old", "Haustorium", "Flower", "Seed"),values = c("sdlg" = seedling, "l" = leaf, "y" = young, "o" = old, "h" = haustorium, "f" = flower, "s" = seed)) +
+#   scale_x_discrete(name = "Tissue", labels = c("sdlg" = "Sg", "y" = "Y", "o" = "O", "h" = "H", "f" = "F", "s" = "Sd"), drop = FALSE) +
+#   geom_boxplot(outlier.size = 0.1, lwd=0.2) +
+#   theme_minimal() +
+#   theme(text = element_text(size=10),
+#         strip.text.x = element_text(angle=0, face = "bold"),
+#         strip.text.y.left = element_text(angle = 0, face = "bold"), 
+#         axis.text.y = element_text(size = 5), 
+#         axis.text.x=element_blank(), 
+#         axis.ticks.x=element_blank(), 
+#         axis.title.x = element_blank(),
+#         axis.title.y = element_text(size = 5),
+#         legend.position = "none") +
+#   ylab("Natural Log mmol/mol") +
+#   guides(colour = guide_legend(nrow = 1)) +
+#   scale_y_continuous(position = "right", limits = c(0, 15)) + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = dplyr::filter(dat_text_plot_kruskal_Grammica, Pigment == "Car.Chl31" & Species == "C_indecora"),
+#     inherit.aes = T,
+#     mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"),
+#     nudge_y = -.5, parse = TRUE) 
+# 
+# 
+# # SIG KW add posthoc use base R boxplot to get the coordinates of the boxes
+# data_C_indecora_Car.Chl31 <- dplyr::filter(data_Car.Chl31_plots_grammicaspe, Species == "C_indecora")
+# 
+# box.rslt_Car.Chl31_C_indecora <- with(data_C_indecora_Car.Chl31, graphics::boxplot(FW.norm ~ Tissue.code, plot = FALSE))
+# str(box.rslt_Car.Chl31_C_indecora)
+# boxplot_positions_Car.Chl31_C_indecora <- as.data.frame(box.rslt_Car.Chl31_C_indecora$stats)
+# 
+# # what are these column tissue codes?
+# tissues_Car.Chl31_C_indecora <- levels(data_C_indecora_Car.Chl31$Tissue.code)
+# # add appropriate tissues to position df
+# colnames(boxplot_positions_Car.Chl31_C_indecora) <- tissues_Car.Chl31_C_indecora
+# 
+# # fifth row of boxplot_positions gives the y coordinates for the tops of the whiskers
+# top_positions_Car.Chl31_C_indecora <- boxplot_positions_Car.Chl31_C_indecora[5,]
+# 
+# 
+# #add pairwise significance letter groups (compact letter display; CLD)
+# cbd_Car.Chl31_C_indecora <- as.data.frame(QsRutils::make_letter_assignments(dunn_list_Grammica[["C_indecora__Car.Chl31"]])[["Letters"]])
+# colnames(cbd_Car.Chl31_C_indecora)[1] <- "Letter"
+# # turn rownames into first column for Tissue.code
+# setDT(cbd_Car.Chl31_C_indecora, keep.rownames = "Tissue.code")
+# 
+# 
+# # add a column y.position taken from top_positions based on mtaching up Tissue.code
+# # first reshape top_positions so that colnames are a column called Tissue.code
+# top_positions_Car.Chl31_C_indecora %>% gather(., Tissue.code, y.position) -> top_positions_Car.Chl31_C_indecora
+# # now join these positions to cbd
+# left_join(cbd_Car.Chl31_C_indecora, top_positions_Car.Chl31_C_indecora, by = "Tissue.code") -> cbd_Car.Chl31_C_indecora
+# 
+# # calculate how much to nudge
+# data_C_indecora_Car.Chl31 %>% group_by(Tissue.code) %>% dplyr::summarize(., max = max(logFW.norm)) -> max_Car.Chl31_C_indecora
+# cbd_Car.Chl31_C_indecora$nudged <- (max_Car.Chl31_C_indecora$max * 1.05)
+# 
+# # add CLDs to plot
+# Car.Chl31_C_indecora_boxplot + 
+#   geom_text(
+#     size    = 1.8,
+#     color = "black",
+#     data    = cbd_Car.Chl31_C_indecora,
+#     inherit.aes = T,
+#     mapping = aes(x = Tissue.code, y = nudged, label = Letter, vjust = 0)) -> Car.Chl31_C_indecora_boxplot
+# 
+# 
+# Car.Chl31_C_indecora_boxplot
+# 
+# 
+# 
+# #### COMBINED (faceted) car:chl plot: Grammica ONLY ####
+# wrap_elements(gridtext::richtext_grob('Carotenoid: Chorophyll', rot = 90, hjust = 0.5, vjust = 1, padding = unit(c(0, 0, 0, 0), "pt"), gp = gpar(fontsize = 6, fontface = 'bold'))) + 
+#   Car.Chl31_C_australis_boxplot + ggtitle('C. australis') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
+#   Car.Chl31_C_polygonorum_boxplot + ggtitle('C. polygonorum') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
+#   Car.Chl31_C_sandwichiana_boxplot + ggtitle('C. sandwichiana') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
+#   Car.Chl31_C_californica_boxplot + ggtitle('C. californica') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
+#   Car.Chl31_C_compacta_boxplot + ggtitle('C. compacta') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
+#   Car.Chl31_C_cephalanthii_boxplot + ggtitle('C. cephalanthii') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
+#   Car.Chl31_C_denticulata_boxplot + ggtitle('C. denticulata') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) + 
+#   Car.Chl31_C_tasmanica_boxplot + ggtitle('C. tasmanica') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) +
+#   Car.Chl31_C_costaricensis_boxplot + ggtitle('C. costaricensis') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) +
+#   Car.Chl31_C_indecora_boxplot + ggtitle('C. indecora') + theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold.italic")) +
+#   plot_layout(nrow = 1, byrow = T) -> car.chl_boxplot_Grammica_new
+# 
+# car.chl_boxplot_Grammica_new 
+# 
+# pdf("../output/boxplots/car.chl_boxplot_Grammica_new.pdf", width=9,height=2) 
+# car.chl_boxplot_Grammica_new
+# dev.off()
