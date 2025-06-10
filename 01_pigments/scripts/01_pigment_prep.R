@@ -697,3 +697,24 @@ dat_text_plot_kruskal_Grammica$Species <- factor(dat_text_plot_kruskal_Grammica$
 # save a copy of this plot text df
 write.csv(dat_text_plot_kruskal_Grammica, file = "../output/stat_results/dat_text_plot_kruskal_Grammica.csv", row.names = F)
 
+
+# write dataset S2 file
+# Define output file path
+output_file2 <- "../output/stat_results/dataset_S2_pigment_concentration_means.xlsx"
+
+# Create a new workbook
+wb2 <- createWorkbook()
+
+# Sheet names and corresponding data frames
+sheets <- c("Pigment raw data 2018_09_24", "pigments_subgenus_summary", "pigments_species_summary")
+tabs <- list(samples, summary_subgenus, summary_accession)
+
+# Loop over names and write each to its own sheet
+for (i in seq_along(sheets)) {
+  addWorksheet(wb2, sheetName = sheets[i])
+  writeData(wb2, sheet = sheets[i], x = tabs[[i]], rowNames = FALSE, colNames = TRUE)
+}
+
+# Save the workbook
+saveWorkbook(wb2, file = output_file2, overwrite = TRUE)
+
