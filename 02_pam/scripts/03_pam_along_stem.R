@@ -1,8 +1,6 @@
 library(tidyverse)
 library(lme4)
-library(ggplot2)
 library(ggeffects)
-library(dplyr)
 library(patchwork)
 library(grid)
 library(ggtext)
@@ -43,7 +41,7 @@ summary(HLM3)
 
 ## Fo
 HLM4 <-lmer(Fo ~ log(Distance.from.AM) + (1|Biorep/Sample), data=pam_df)
-summary(HLM3)
+summary(HLM4)
 
 #### plot_Fv/Fm, PSII, Fo, and phiNPQ with lmer predictions ####
 
@@ -58,6 +56,7 @@ pam <- ggplot() +
 
   geom_point(data = pam_df, aes(x=Distance.from.AM, y=Fo), shape = 19, size = 2.5, stroke = 0, color = Fo, alpha = 0.5) +
   # geom_line(data = pam_df, color = Fo, aes(x=Distance.from.AM, y=predict(HLM4), group=Sample), linewidth = 0.2) +
+  # Not plotting HLM4 predictions due to poor model fit
   
   theme_minimal() +
   theme(text = element_text(size = 14),
