@@ -10,6 +10,7 @@ library(rstudioapi)
 library(FSA) 
 library(data.table) 
 
+##### set working directory ##### 
 # Getting the path of your current open file
 # if not using rstudio, simply set your working directory to the scripts/ location of this script
 # setwd(<location of scripts dir>)
@@ -18,8 +19,11 @@ setwd(dirname(current_path ))
 # print( getwd() )
 
 
-# load data
+##### load data #####
 samples <- read.csv("../data/pam_data_tab.csv", header = T, stringsAsFactors = FALSE) 
+
+# DATA CLEANING -----------------------------------------------------------
+##### sample cleanup #####
 
 # remove columns of only na
 samples <- samples[,colSums(is.na(samples))<nrow(samples)]
@@ -27,8 +31,6 @@ samples <- samples[,colSums(is.na(samples))<nrow(samples)]
 # replace "*" with "NA" # need to check if this should instead be 0?
 samples[ samples == "*" ] <- NA
 
-
-#### data cleaning ####
 # exclude all rows that have "exclude" in the exclude column (grayed out in original excel file)
 samples %>% dplyr::filter(exclude != "exclude") -> samples
 
@@ -109,12 +111,11 @@ samples %>%
 # set levels to treatments
 samples$Tissue.edit <- factor(samples$Tissue.edit, levels = c("l", "sdlg", "y", "o", "h", "f", "s"))
 
-#### remove erroneous rows ####
+# remove erroneous rows
 samples <- samples[!is.na(samples$Species), ] 
 
 
-#### check for outliers ####
-
+##### check for outliers ##### 
 # list of the metrics
 metrics.used <- c("Fv.Fm", "φPSII", "ΦNPQ")
 # An observation with Cook’s distance larger than 4 times the mean Cook’s distance might be an outlier
@@ -194,10 +195,10 @@ for (sub in Subgenus.list) {
   }
 }
 
-
+# combine
 do.call(rbind, (do.call(rbind, data_no_outliers_list))) -> data_no_outliers
 
-
+# more cleanup
 # some mets were causing an error because "x all 'x' values are identical"
 # i identified them manually with:
 data_no_outliers %>% group_by(Metric, Subgenus) %>% dplyr::summarize(sd = sd(Value)) -> test_tissues
@@ -206,13 +207,14 @@ test_tissues %>% dplyr::filter(sd == 0) -> test_tissues_0
 
 # create table of just ipomoea lutein epoxide for correlation analysis
 ipo_fvfm <- data_no_outliers %>% dplyr::filter(Species == "Ipomoea_nil") %>% dplyr::filter(Metric == "Fv.Fm") 
-# save a copy of this dataset
+# save a copy of this appendix
 write.csv(ipo_fvfm, file = "../output/stat_results/ipomoea_fvfm.csv", row.names = F)
 
 
 
-#### statistical tests ####
-# shapiro test for normality per Metric per subgenus
+# STATISTICAL TESTS -------------------------------------------------------
+##### per Metric per subgenus #####
+# shapiro test for normality 
 data_no_outliers %>% ungroup() %>% 
   dplyr::filter(!(Metric == "Fv.Fm" & Subgenus == "C_purpurata")) %>% 
   dplyr::filter(!(Metric == "φPSII" & Subgenus == "C_purpurata")) %>% 
@@ -225,8 +227,7 @@ shapiro_met_sub %>%   add_significance("p") -> shapiro_met_sub
 shapiro_met_sub
 # most are not normal, use kruskal-wallace
 
-  
-# kruskal wallace per Metric per subgenus
+# kruskal wallace 
 data_no_outliers %>% ungroup() %>% 
   group_by(Metric, Subgenus) %>% 
   rstatix::kruskal_test(Value ~ Tissue.edit, data = .) -> kruskal_met_sub
@@ -239,14 +240,13 @@ kruskal_met_sub$p.adj.signif <- stars.pval(kruskal_met_sub$p.adj)
 # save a copy of this anova
 write.csv(kruskal_met_sub, file = "../output/stat_results/kruskal_met_sub.csv", row.names = F)
 
-
 # filter for signficant Metrics x main effects for posthoc comparisons
 kruskal_met_sub_sig <- as.data.frame(kruskal_met_sub) %>% dplyr::filter(p.adj < 0.05)
 
 # save a copy of this anova
 write.csv(kruskal_met_sub_sig, file = "../output/stat_results/kruskal_met_sub_sig.csv", row.names = F)
 
-
+##### posthoc on sig anovas #####
 # perform posthoc pairwise comparisons on the sig anovas
 # first create a vector on which to filter data_no_outliers by
 kruskal_met_sub_sig_vector <- paste0(kruskal_met_sub_sig$Subgenus, "__", kruskal_met_sub_sig$Metric)
@@ -260,6 +260,7 @@ filter(data_no_outliers, Subgenus.Metric %in% kruskal_met_sub_sig_vector) -> onl
 # after getting it working for one, set up loop to do for all combos (for those that had a positive kruskal-wallace at least)
 # add these to individual plots that then get arranged with patchwork package
 
+# loop through for sig anovas for dunn posthocs
 only_sig_met$Metric <- droplevels(only_sig_met$Metric)
 subgenusMetric_list <- unique(only_sig_met$Subgenus.Metric)
 
@@ -305,11 +306,27 @@ for(submet in subgenusMetric_list) {
 }
 
 
-# save this list for later use 
+# save this dataset list for later use 
 saveRDS(dunn_list, file = "../output/stat_results/dunn_list.RData")
 
 
-#### all tissues x subgenera comparison, per metric ####
+# save posthocs to sheets
+# Create workbook
+wbdunn <- createWorkbook()
+
+# Add each p.value matrix to its own sheet
+for (name in names(dunn_list)) {
+  pval_matrix <- dunn_list[[name]]$p.value
+  addWorksheet(wbdunn, sheetName = name)
+  writeData(wbdunn, sheet = name, x = pval_matrix, rowNames = TRUE)
+}
+
+# Save workbook
+saveWorkbook(wbdunn, file = "../output/stat_results/Appendix S5_dunn_pairwise_pvalues_permetpersubgenus.xlsx", overwrite = TRUE)
+
+
+
+##### all tissues x subgenera comparison, per metric #####
 # within each metric, test for differences among genera and among tissues. achieved using the metric__subgenus
 # add a column with full tissue names spelled out
 data_no_outliers$Tissue.edit_names <- data_no_outliers$Tissue.edit
@@ -395,7 +412,7 @@ for (met in plotted_mets) {
 
 # save pairwise dunn test with a different sheet for each metric
 # Define output file path
-output_file <- "../output/stat_results/dataset_S3_p-values-fluoresence.xlsx"
+output_file <- "../output/stat_results/Appendix S3_p-values-fluoresence.xlsx"
 
 # Create a new workbook
 wb <- createWorkbook()
@@ -411,52 +428,36 @@ saveWorkbook(wb, file = output_file, overwrite = TRUE)
 
 
 
-#### summary ####
-# summary stats per Individual (summarizes those that have replicates): mean, n, and std dev  
+##### summary stats #####
+# per Individual (summarizes those that have replicates): mean, n, and std dev  
 summary_individual <- data_no_outliers %>%
   group_by(Subgenus, Species, Accession., Individual, Tissue.edit, Metric)  %>%
   dplyr::summarize(mean = mean(as.numeric(Value)), n = n(), sd = sd(as.numeric(Value)))
-
 # write to csv
 write_csv(summary_individual, file = "../output/stat_results/fluorescence_individual_summary.csv")
 
 
-# summary stats per species: mean, n, and std dev  
+# per species: mean, n, and std dev  
 summary_species <- data_no_outliers %>%
   group_by(Subgenus, Species, Accession., Tissue.edit, Metric)  %>%
   dplyr::summarize(mean = mean(as.numeric(Value)), n = n(), sd = sd(as.numeric(Value)))
-
 # write to csv
 write_csv(summary_species, file = "../output/stat_results/fluorescence_species_summary.csv")
 
 
 
-# summary stats per subgenus x tissue x Metric: mean, n, and std dev  
+# per subgenus x tissue x Metric: mean, n, and std dev  
 summary_subgenus <- data_no_outliers %>%
   group_by(Subgenus, Tissue.edit, Metric)  %>%
   dplyr::summarize(mean = mean(as.numeric(Value)), n = n(), sd = sd(as.numeric(Value)))
-
 # write to csv
 write_csv(summary_subgenus, file = "../output/stat_results/fluorescence_subgenus_summary.csv")
 
 
-
-
+##### prep for plotting #####
 # will need to add kruskal wallace results to each box of the subgenus boxplot from kruskal_met_sub (including not significant global result)
 # edit scientific notation 
 kruskal_met_sub$p.adj <- kruskal_met_sub$p.adj %>% p_round(digits = 2)
-
-# # will need to add dunn test asterisks to each tissue in each box of the subgenus boxplot from posthoc_met_sub (including ns?)
-# # edit scientific notation
-# dunn_df$p.adj <- dunn_df$p.adj %>% p_round(digits = 2)
-
-
-# #### add significance groups to dunn results, will want to peform per metmnet x subgenus (in a loop or pipe) ####
-# # for now, pick one
-# dunn_df %>% dplyr::filter(Metric == "Chl.a" & Subgenus == "Monogynella") -> dunn_df_mono_Chl.a
-# ?multcompLetters
-
-
 
 # create a dataframe using the kruskal wallace results
 # omit p of NaN
@@ -481,10 +482,8 @@ dat_text_plot_kruskal$Subgenus <- factor(dat_text_plot_kruskal$Subgenus,
                                                     "C. purpurata",
                                                     "Grammica"))
 
-
 # save a copy of this plot text df
 write.csv(dat_text_plot_kruskal, file = "../output/stat_results/dat_text_plot_kruskal.csv", row.names = F)
-
 
 # write this to csv for plotting
 write_csv(data_no_outliers, file = "../output/stat_results/data_no_outliers_for_plots.csv")
@@ -493,9 +492,8 @@ write_csv(data_no_outliers, file = "../output/stat_results/data_no_outliers_for_
 
 
 
-#### GRAMMICA ONLY ####
-
-#### stats to be used for Grammica only pigment plots ####
+# GRAMMICA ONLY ANALYSES --------------------------------------------------
+##### stats to be used for Grammica only pigment plots ##### 
 
 # remove species with n = 1 in Grammica 
 Grammica <- c("C_australis",
@@ -573,7 +571,7 @@ kruskal_Tissue_met_spe_Grammica$p.adj <- kruskal_Tissue_met_spe_Grammica$p.adj %
 kruskal_Tissue_met_spe_sig_Grammica <- as.data.frame(kruskal_Tissue_met_spe_Grammica) %>% dplyr::filter(p.adj <= 0.05)
 
 
-
+##### posthoc ##### 
 # perform posthoc pairwise comparisons on the sig anovas
 # first create a vector on which to filter data_no_outliers_Grammica_plot by
 kruskal_Tissue_met_spe_sig_vector_Grammica <- paste0(kruskal_Tissue_met_spe_sig_Grammica$Species, "__", kruskal_Tissue_met_spe_sig_Grammica$Metric)
@@ -582,7 +580,6 @@ data_no_outliers_Grammica_plot$Species.Metric <- paste0(data_no_outliers_Grammic
 # filter data long calcs by the Species.Metric column, based on vector
 filter(data_no_outliers_Grammica_plot, Species.Metric %in% kruskal_Tissue_met_spe_sig_vector_Grammica) -> only_sig_met_Grammica
 
-####### #######
 # perform posthoc on these
 # filter for one fluorescence x subgenus then do a pairwise dunn on those
 # after getting it working for one, set up loop to do for all combos (for those that had a positive kruskal-wallace at least)
@@ -591,6 +588,7 @@ filter(data_no_outliers_Grammica_plot, Species.Metric %in% kruskal_Tissue_met_sp
 only_sig_met_Grammica$Metric <- droplevels(only_sig_met_Grammica$Metric)
 specisfluorescence_list <- unique(only_sig_met_Grammica$Species.Metric)
 
+# loop through sig anovas
 dunn_list_Grammica <- list()
 for(spepig in specisfluorescence_list) {
   data_loop_dunn <- only_sig_met_Grammica %>% dplyr::filter(Species.Metric == spepig)
@@ -621,7 +619,8 @@ for(spepig in specisfluorescence_list) {
     }
   }
   
-  diag(pmat) <- NA
+  # ✅ Add this line to mask upper triangle and diagonal:
+  pmat[upper.tri(pmat, diag = TRUE)] <- NA
   
   dunn_list_Grammica[[spepig]] <- structure(list(
     method = "Dunn test with BH correction",
@@ -633,17 +632,25 @@ for(spepig in specisfluorescence_list) {
 # Save for later use
 saveRDS(dunn_list_Grammica, file = "../output/stat_results/dunn_list_Grammica.RData")
 
+# save posthocs to sheets
+# Create workbook
+wbdunn_Grammica <- createWorkbook()
 
-# save this list for later use 
-saveRDS(dunn_list_Grammica, file="../output/stat_results/dunn_list_Grammica.RData")
+# Add each p.value matrix to its own sheet
+for (name in names(dunn_list_Grammica)) {
+  pval_matrix <- dunn_list_Grammica[[name]]$p.value
+  addWorksheet(wbdunn_Grammica, sheetName = name)
+  writeData(wbdunn_Grammica, sheet = name, x = pval_matrix, rowNames = TRUE)
+}
+
+# Save workbook
+saveWorkbook(wbdunn_Grammica, file = "../output/stat_results/Appendix S7_dunn_Grammica_pairwise_pvalues_permetpersubgenus.xlsx", overwrite = TRUE)
 
 
+##### prep for plotting ##### 
 # will need to add kruskal wallace results to each box of the subgenus boxplot from kruskal_Tissue_met_spe (including not significant global result)
 # edit scientific notation 
 kruskal_Tissue_met_spe_Grammica$p.adj <- kruskal_Tissue_met_spe_Grammica$p.adj %>% p_round(digits = 3)
-
-# # will need to add dunn test asterisks to each tissue in each box of the subgenus boxplot from posthoc_met_spe (including ns?)
-
 
 # create a dataframe using the kruskal wallace results
 dat_text_plot_kruskal_Grammica <- kruskal_Tissue_met_spe_Grammica[, c("Species", "Metric", "method", "p.adj")]

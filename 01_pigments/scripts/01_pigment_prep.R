@@ -8,8 +8,9 @@ library(rstatix)
 library(gtools)
 library(rstudioapi)
 library(FSA)
-library(data.table) # new
+library(data.table)
 
+##### set working directory ##### 
 # Getting the path of your current open file
 # if not using rstudio, simply set your working directory to the scripts/ location of this script
 # setwd(<location of scripts dir>)
@@ -18,7 +19,7 @@ setwd(dirname(current_path ))
 # print( getwd() )
 
 
-# load data
+##### load data #####
 # skip the first row which has units info (check raw csv for units)
 samples <- read.csv("../data/pigment_organized_data_tab_AS_edit.csv", 
                     skip = 1, header = T, 
@@ -26,7 +27,9 @@ samples <- read.csv("../data/pigment_organized_data_tab_AS_edit.csv",
                     na.strings = c("NA","NaN","","#DIV/0!")) 
 
 
-#### data cleaning ####
+# DATA CLEANING -----------------------------------------------------------
+##### sample cleanup #####
+
 # replace 'seedling' with 'sdlg'
 samples$Tissue.code <- gsub('seedling', 'sdlg', samples$Tissue.code)
 
@@ -179,7 +182,9 @@ ipo_le <- data_long_calcs %>% filter(Species == "Ipomoea_nil") %>% filter(Pigmen
 # save a copy of this dataset
 write.csv(ipo_le, file = "../output/stat_results/ipomoea_le.csv", row.names = F)
 
-#### overall patterns stats ####
+
+# STATISTICAL TESTS -------------------------------------------------------
+##### overall patterns stats ##### 
 # export only plotted pigments
 plotted_pigs <- c("Tot.Chl", "Chl.a", "Chl.b", "Chl.a.b", "Tot.Car", "VAZ.Car", "Neo.Car", "Lut.Car", "Lut.epo.Car",  "a.Car.Car", "b.Car.Car")
 
@@ -253,7 +258,7 @@ kruskal_Subgenus_perpigment$p.adj.signif <- stars.pval(kruskal_Subgenus_perpigme
 write.csv(kruskal_Subgenus_perpigment, file = "../output/stat_results/kruskal_Subgenus_perpigment.csv", row.names = F)
 
 
-#### all tissues x subgenera comparison, per pigment ####
+##### all tissues x subgenera comparison, per pigment ##### 
 # within each metric, test for differences among genera and among tissues. achieved using the metric__subgenus
 # add a column with full tissue names spelled out
 data_long_calcs$Tissue.code_names <- data_long_calcs$Tissue.code
@@ -333,7 +338,7 @@ for(pig in plotted_pigs) {
 
 # save pairwise posthoc results to a separate tab of an excel file each
 # Define output file path
-output_file <- "../output/stat_results/dataset_S4_p-values-pigments.xlsx"
+output_file <- "../output/stat_results/Appendix S4_p-values-pigments.xlsx"
 
 # Create a new workbook
 wb <- createWorkbook()
@@ -350,7 +355,7 @@ saveWorkbook(wb, file = output_file, overwrite = TRUE)
 
 
 
-#### stats to be used for all pigment plots ####
+##### stats to be used for all pigment plots ##### 
 # limit to plotted pigs 
 plotted_pigs
 # [1] "Tot.Chl"     "Chl.a"       "Chl.b"       "Chl.a.b"     "Tot.Car"     "VAZ.Car"     "Neo.Car"     "Lut.Car"     "Lut.epo.Car"
@@ -423,7 +428,6 @@ kruskal_Tissue_pig_sub$p.adj <- kruskal_Tissue_pig_sub$p.adj %>% p_round(digits 
 kruskal_Tissue_pig_sub_sig <- as.data.frame(kruskal_Tissue_pig_sub) %>% dplyr::filter(p.adj <= 0.05)
 
 
-
 # perform posthoc pairwise comparisons on the sig anovas
 # first create a vector on which to filter data_long_calcs by
 kruskal_Tissue_pig_sub_sig_vector <- paste0(kruskal_Tissue_pig_sub_sig$Subgenus, "__", kruskal_Tissue_pig_sub_sig$Pigment)
@@ -432,7 +436,6 @@ data_long_calcs$Subgenus.Pigment <- paste0(data_long_calcs$Subgenus, "__", data_
 # filter data long calcs by the Subgenus.Pigment column, based on vector
 filter(data_long_calcs, Subgenus.Pigment %in% kruskal_Tissue_pig_sub_sig_vector) -> only_sig_pig
 
-####### #######
 # perform posthoc on these
 # filter for one pigment x subgenus then do a pairwise dunn test on those
 # after getting it working for one, set up loop to do for all combos (for those that had a positive kruskal-wallace at least)
@@ -455,7 +458,46 @@ for(subpig in subgenuspigment_list) {
 # save this list for later use 
 saveRDS(dunn_list, file="../output/stat_results/dunn_list.RData")
 
+# save posthocs to sheets
+# Create workbook
+wbdunn <- createWorkbook()
 
+# Add each formatted matrix to its own sheet
+for (name in names(dunn_list)) {
+  # Extract result data frame
+  dunn_df <- dunn_list[[name]]$res
+  
+  # Separate comparisons into group1 and group2
+  dunn_df <- dunn_df %>%
+    tidyr::separate(Comparison, into = c("Group1", "Group2"), sep = " - ") %>%
+    dplyr::select(Group1, Group2, P.adj)
+  
+  # Create symmetrical p-value matrix
+  groups <- unique(c(dunn_df$Group1, dunn_df$Group2))
+  pmat <- matrix(NA, nrow = length(groups), ncol = length(groups),
+                 dimnames = list(groups, groups))
+  
+  for (i in 1:nrow(dunn_df)) {
+    g1 <- dunn_df$Group1[i]
+    g2 <- dunn_df$Group2[i]
+    p <- dunn_df$P.adj[i]
+    pmat[g1, g2] <- p
+    pmat[g2, g1] <- p
+  }
+  
+  # ✅ Keep only lower triangle
+  pmat[upper.tri(pmat, diag = TRUE)] <- NA
+  
+  # Write matrix to sheet
+  addWorksheet(wbdunn, sheetName = substr(name, 1, 31))  # Excel sheet name limit
+  writeData(wbdunn, sheet = substr(name, 1, 31), x = pmat, rowNames = TRUE)
+}
+
+# Save workbook
+saveWorkbook(wbdunn, file = "../output/stat_results/Appendix_S6_dunn_pairwise_pvalues_perpigpersubgenus.xlsx", overwrite = TRUE)
+
+
+##### prep for plotting #####
 # create a dataframe using the kruskal wallace results
 dat_text_plot_kruskal <- kruskal_Tissue_pig_sub[, c("Subgenus", "Pigment", "method", "p.adj")]
 # add equal sign to p.adj
@@ -480,7 +522,7 @@ write.csv(dat_text_plot_kruskal, file = "../output/stat_results/dat_text_plot_kr
 
 
 
-#### summary  ####
+##### summary stats #####
 # summary stats per Accession.No (summarizes those that have replicates), which is also per species: mean, n, and std dev  
 
 summary_accession <- data_long_calcs %>%
@@ -519,10 +561,8 @@ write_csv(data_long_calcs, file = "../output/stat_results/data_long_calcs_for_pl
 
 
 
-#### GRAMMICA ONLY ####
-
-#### stats to be used for Grammica only pigment plots ####
-
+# GRAMMICA ONLY ANALYSES --------------------------------------------------
+##### stats to be used for Grammica only pigment plots ##### 
 # remove species with n = 1 in Grammica 
 
 Grammica <- c("C_australis",
@@ -651,10 +691,6 @@ filter(data_long_calcs_Grammica_plot, Species.Pigment %in% kruskal_Tissue_pig_sp
 # write this to csv for plotting
 write_csv(data_long_calcs_Grammica_plot, file = "../output/stat_results/data_long_calcs_for_Grammica_plots.csv")
 
-
-
-####### #######
-# perform posthoc on these
 # dplyr::filter for one pigment x subgenus then do a pairwise dunn test on those
 # after getting it working for one, set up loop to do for all combos (for those that had a positive kruskal-wallace at least)
 # add these to individual plots that then get arranged with patchwork package
@@ -675,14 +711,50 @@ for(spepig in specispigment_list) {
 # save this list for later use 
 saveRDS(dunn_list_Grammica, file="../output/stat_results/dunn_list_Grammica.RData")
 
+# save posthocs to sheets
+# Create workbook
+wbdunn_Grammica <- createWorkbook()
+
+# Add each formatted matrix to its own sheet
+for (name in names(dunn_list_Grammica )) {
+  # Extract result data frame
+  dunn_df <- dunn_list_Grammica [[name]]$res
+  
+  # Separate comparisons into group1 and group2
+  dunn_df <- dunn_df %>%
+    tidyr::separate(Comparison, into = c("Group1", "Group2"), sep = " - ") %>%
+    dplyr::select(Group1, Group2, P.adj)
+  
+  # Create symmetrical p-value matrix
+  groups <- unique(c(dunn_df$Group1, dunn_df$Group2))
+  pmat <- matrix(NA, nrow = length(groups), ncol = length(groups),
+                 dimnames = list(groups, groups))
+  
+  for (i in 1:nrow(dunn_df)) {
+    g1 <- dunn_df$Group1[i]
+    g2 <- dunn_df$Group2[i]
+    p <- dunn_df$P.adj[i]
+    pmat[g1, g2] <- p
+    pmat[g2, g1] <- p
+  }
+  
+  # ✅ Keep only lower triangle
+  pmat[upper.tri(pmat, diag = TRUE)] <- NA
+  
+  # Write matrix to sheet
+  addWorksheet(wbdunn_Grammica, sheetName = substr(name, 1, 31))  # Excel sheet name limit
+  writeData(wbdunn_Grammica, sheet = substr(name, 1, 31), x = pmat, rowNames = TRUE)
+}
+
+# Save workbook
+saveWorkbook(wbdunn_Grammica, file = "../output/stat_results/Appendix S8_dunn_Grammica_pairwise_pvalues_perpigpersubgenus.xlsx", overwrite = TRUE)
 
 
+##### prep for plotting ##### 
 
 # will need to add kruskal wallace results to each box of the subgenus boxplot from kruskal_Tissue_pig_spe (including not significant global result)
 # edit scientific notation 
 kruskal_Tissue_pig_spe_Grammica$p.adj <- kruskal_Tissue_pig_spe_Grammica$p.adj %>% p_round(digits = 3)
-
-# # will need to add dunn test asterisks to each tissue in each box of the subgenus boxplot from posthoc_pig_spe (including ns?)
 
 
 # create a dataframe using the kruskal wallace results
@@ -712,7 +784,7 @@ write.csv(dat_text_plot_kruskal_Grammica, file = "../output/stat_results/dat_tex
 
 # write dataset S2 file
 # Define output file path
-output_file2 <- "../output/stat_results/dataset_S2_pigment_concentration_means.xlsx"
+output_file2 <- "../output/stat_results/Appendix S2_pigment_concentration_means.xlsx"
 
 # Create a new workbook
 wb2 <- createWorkbook()
