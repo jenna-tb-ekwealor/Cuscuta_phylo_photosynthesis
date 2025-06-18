@@ -1311,12 +1311,12 @@ wrap_elements(gridtext::richtext_grob('*F*<sub>v</sub>/*F*<sub>m</sub>', rot = 9
   ΦNPQ_Monogynella_boxplot +  
   ΦNPQ_Cuscuta_boxplot + 
   ΦNPQ_Grammica_boxplot + 
-  ΦNPQ_C_purpurata_boxplot + geom_text(size    = 2, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) + plot_layout(nrow = 3, byrow = T) -> fluorescence_boxplot_new
+  ΦNPQ_C_purpurata_boxplot + geom_text(size    = 2, color = "black", data    = absent, inherit.aes = T, mapping = aes(x = Inf, y = Inf, label = label, vjust = "top", hjust = "right"), nudge_y = -.5, parse = TRUE) + plot_layout(nrow = 3, byrow = T) -> fluorescence_boxplot
 
-fluorescence_boxplot_new 
+fluorescence_boxplot 
 
-pdf("../output/boxplots/fluorescence_boxplot_new.pdf", width=7,height=7) 
-fluorescence_boxplot_new
+pdf("../output/boxplots/fluorescence_boxplot.pdf", width=7,height=7) 
+fluorescence_boxplot
 dev.off()
 
 
@@ -3723,12 +3723,12 @@ wrap_elements(gridtext::richtext_grob('*F*<sub>v</sub>/*F*<sub>m</sub>', rot = 9
   ΦNPQ_C_tasmanica_boxplot +
   ΦNPQ_C_costaricensis_boxplot +
   ΦNPQ_C_indecora_boxplot +
-  plot_layout(nrow = 3, byrow = T) -> fluorescence_boxplot_Grammica_new
+  plot_layout(nrow = 3, byrow = T) -> fluorescence_boxplot_Grammica
 
-fluorescence_boxplot_Grammica_new 
+fluorescence_boxplot_Grammica 
 
-pdf("../output/boxplots/fluorescence_boxplot_Grammica_new.pdf", width=9,height=5.5) 
-fluorescence_boxplot_Grammica_new
+pdf("../output/boxplots/fluorescence_boxplot_Grammica.pdf", width=9,height=5.5) 
+fluorescence_boxplot_Grammica
 dev.off()
 
 

@@ -72,33 +72,7 @@ pam
 dev.off()
 
 
-#### PAM v2 ####
-pamv2 <- ggplot() +
-  ylim (0,0.7) +
-  geom_point(data = pam_df, aes(x=Distance.from.AM, y=Fv.Fm), shape = 19, size = 2.5, stroke = 0, color = FvFm, alpha = 0.5) +
-  geom_line(data = pam_df, color = FvFm, aes(x=Distance.from.AM, y=predict(HLM), group=Sample), linewidth = 0.4) + 
-  
-  geom_point(data = pam_df, aes(x=Distance.from.AM, y=PSII), shape = 19, size = 2.5, stroke = 0, color = PhiPSII, alpha = 0.5) +
-  geom_line(data = pam_df, color = PhiPSII, aes(x=Distance.from.AM, y=predict(HLM2), group=Sample), linewidth = 0.4) +
-  
-  theme_minimal() +
-  theme(text = element_text(size = 14),
-        strip.text.x = element_text(angle = 0, face = "bold"),
-        strip.text.y.left = element_text(angle = 0, face = "bold"), 
-        legend.position = "none") +
-  labs(x = "Distance from apical meristem (cm)", 
-       y = "Fluorescence") 
-pamv2 
-
-
-pdf("../output/boxplots/pam_along_stem_v2.pdf", width=6,height=3.5) 
-pamv2
-dev.off()
-
-
 #### npq ####
-
-
 phiNPQ <- ggplot() +
   ylim (0,0.5) +
   geom_point(data = pam_df, aes(x=Distance.from.AM, y=phiNPQ), shape = 19, size = 2.5, color = PhiNPQ, alpha = 0.5, stroke = 0) +
