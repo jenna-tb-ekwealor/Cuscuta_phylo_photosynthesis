@@ -394,13 +394,24 @@ for (met in plotted_mets) {
 
 
 # save pairwise dunn test with a different sheet for each metric
-write.xlsx(excel_list[["Fv.Fm"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="Fv.Fm", row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["φPSII"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="φPSII", append=TRUE, row.names=FALSE, col.names=FALSE)
-write.xlsx(excel_list[["ΦNPQ"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="ΦNPQ", append=TRUE, row.names=FALSE, col.names=FALSE)
+# Define output file path
+output_file <- "../output/stat_results/dataset_S3_p-values-fluoresence.xlsx"
+
+# Create a new workbook
+wb <- createWorkbook()
+
+# Loop over each plotted metric and write to a tab
+for (met in plotted_mets) {
+  addWorksheet(wb, sheetName = met)
+  writeData(wb, sheet = met, x = excel_list[[met]], rowNames = FALSE, colNames = FALSE)
+}
+
+# Save workbook
+saveWorkbook(wb, file = output_file, overwrite = TRUE)
+
+
 
 #### summary ####
-
-
 # summary stats per Individual (summarizes those that have replicates): mean, n, and std dev  
 summary_individual <- data_no_outliers %>%
   group_by(Subgenus, Species, Accession., Individual, Tissue.edit, Metric)  %>%

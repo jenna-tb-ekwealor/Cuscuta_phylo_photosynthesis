@@ -138,6 +138,13 @@ stats$sig_neg[stats$BF_negative >6 & stats$BF_negative <10] <- "**"
 stats$sig_neg[stats$BF_negative >10] <- "***"
 
 
+
+
+
+
+
+
+
 # combine data into one df for a density plot of all life stages 
 seedling_corr <- samples_combined[[1]][["correlations[1]"]]
 young_corr <- samples_combined[[2]][["correlations[1]"]]
@@ -225,6 +232,10 @@ fill_viol<-function(v,gr){
                          y=c(quants$y,rev(quants$y)),       # double up the y values to match
                          id=c(quants$cuts,rev(quants$cuts)),# cut by quantile to create polygon id
                          grp = as.factor(rep(gr)))
+  
+  # 🧼 Remove NAs from `cut()` before interaction
+  plotquants <- plotquants[!is.na(plotquants$id), ]
+  
   plotquants$interaction <- interaction(as.numeric(plotquants$id), plotquants$grp)
   plotquants <- dplyr::filter(plotquants, !grepl("1.",interaction)) # drop bottom 2.5% 
   plotquants <- dplyr::filter(plotquants, !grepl("3.",interaction)) # drop top 2.5% 

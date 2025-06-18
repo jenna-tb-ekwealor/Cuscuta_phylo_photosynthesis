@@ -225,6 +225,10 @@ fill_viol<-function(v,gr){
                          y=c(quants$y,rev(quants$y)),       # double up the y values to match
                          id=c(quants$cuts,rev(quants$cuts)),# cut by quantile to create polygon id
                          grp = as.factor(rep(gr)))
+  
+  # 🧼 Remove NAs from `cut()` before interaction
+  plotquants <- plotquants[!is.na(plotquants$id), ]
+  
   plotquants$interaction <- interaction(as.numeric(plotquants$id), plotquants$grp)
   plotquants <- dplyr::filter(plotquants, !grepl("1.",interaction)) # drop bottom 2.5% 
   plotquants <- dplyr::filter(plotquants, !grepl("3.",interaction)) # drop top 2.5% 
@@ -255,9 +259,6 @@ p +
   ggpubr::stat_pvalue_manual(data = stats, label = "sig_pos", x = "group1", y.position = "y.position_pos") +
   ggpubr::stat_pvalue_manual(data = stats, label = "sig_neg", x = "group1", y.position = "y.position_neg") -> density_viol
 density_viol
-
-
-
 
 
 pdf("../output/plots/correlations_le_phipsii_density_violin.pdf", width=6,height=5) 
