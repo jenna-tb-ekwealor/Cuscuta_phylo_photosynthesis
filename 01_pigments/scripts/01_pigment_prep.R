@@ -1,13 +1,13 @@
 # http://www.sthda.com/english/wiki/r-xlsx-package-a-quick-start-guide-to-manipulate-excel-files-in-r
 # https://www.oracle.com/java/technologies/javase-jdk16-downloads.html
 # library(rJava)
-library(openxlsx) # new
+library(openxlsx)
 library(tidyverse)
 library(plyr)
 library(rstatix)
 library(gtools)
 library(rstudioapi)
-library(FSA) # new
+library(FSA)
 library(data.table) # new
 
 # Getting the path of your current open file
