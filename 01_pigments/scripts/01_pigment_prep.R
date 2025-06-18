@@ -180,9 +180,13 @@ ipo_le <- data_long_calcs %>% filter(Species == "Ipomoea_nil") %>% filter(Pigmen
 write.csv(ipo_le, file = "../output/stat_results/ipomoea_le.csv", row.names = F)
 
 #### overall patterns stats ####
+# export only plotted pigments
+plotted_pigs <- c("Tot.Chl", "Chl.a", "Chl.b", "Chl.a.b", "Tot.Car", "VAZ.Car", "Neo.Car", "Lut.Car", "Lut.epo.Car",  "a.Car.Car", "b.Car.Car")
+
 # is pigment composition different across subgenera (and tissues)?
 # shapiro test for normality per pigment 
 data_long_calcs[sample(nrow(data_long_calcs), 5000), ] %>% ungroup() %>% 
+  dplyr::filter(Pigment %in% plotted_pigs) %>% 
   rstatix::shapiro_test(FW.norm, data = .) -> shapiro_sub
 shapiro_sub %>%  add_significance("p") -> shapiro_sub
 shapiro_sub
@@ -190,6 +194,7 @@ shapiro_sub
 
 # kruskal wallace per pigment 
 data_long_calcs %>% ungroup() %>% 
+  dplyr::filter(Pigment %in% plotted_pigs) %>% 
   rstatix::kruskal_test(FW.norm ~ Subgenus, data = .) -> kruskal_sub
 kruskal_sub
 
@@ -203,6 +208,7 @@ write.csv(kruskal_sub, file = "../output/stat_results/kruskal_sub.csv", row.name
 # is pigment composition different across tissues (and subgenera)?
 # shapiro test for normality per pigment 
 data_long_calcs[sample(nrow(data_long_calcs), 5000), ] %>% ungroup() %>% 
+  dplyr::filter(Pigment %in% plotted_pigs) %>% 
   rstatix::shapiro_test(FW.norm, data = .) -> shapiro_tiss
 shapiro_tiss %>%  add_significance("p") -> shapiro_tiss
 shapiro_tiss
@@ -210,6 +216,7 @@ shapiro_tiss
 
 # kruskal wallace tissues
 data_long_calcs %>% ungroup() %>% 
+  dplyr::filter(Pigment %in% plotted_pigs) %>% 
   rstatix::kruskal_test(FW.norm ~ Tissue.code, data = .) -> kruskal_tiss
 kruskal_tiss
 
@@ -224,14 +231,16 @@ write.csv(kruskal_tiss, file = "../output/stat_results/kruskal_tiss.csv", row.na
 # is each pigment different across subgenera?
 # shapiro test for normality per pigment 
 data_long_calcs %>% ungroup() %>% 
+  dplyr::filter(Pigment %in% plotted_pigs) %>% 
   group_by(Pigment) %>% 
   rstatix::shapiro_test(FW.norm, data = .) -> shapiro_perpigment_sub
 shapiro_perpigment_sub %>%  add_significance("p") -> shapiro_perpigment_sub
 shapiro_perpigment_sub
-# most are not normal, use kruskal-wallace
+# not normal, use kruskal-wallace
 
 # kruskal wallace per pigment 
 data_long_calcs %>% ungroup() %>% 
+  dplyr::filter(Pigment %in% plotted_pigs) %>% 
   group_by(Pigment) %>% 
   rstatix::kruskal_test(FW.norm ~ Subgenus, data = .) -> kruskal_Subgenus_perpigment
 kruskal_Subgenus_perpigment
@@ -255,7 +264,7 @@ data_long_calcs$Subgenus.Tissue <- paste0(data_long_calcs$Subgenus, "__", data_l
 
 # kruskal wallace in loop, per pigment among all subgenera-tissues
 kruskal_big_list <- list()
-pigment_list <- unique(data_long_calcs$Pigment)
+pigment_list <- plotted_pigs
 for(pig in pigment_list) {
   data_loop_kruskal <- data_long_calcs %>% filter(Pigment == pig) 
   data_loop_kruskal$Tissue.code_names <- droplevels(data_loop_kruskal$Tissue.code_names)
@@ -264,9 +273,8 @@ for(pig in pigment_list) {
 
 
 # all highly sig, move on to post hoc 
-# REPLACED wilcox WITH dunnTest
 dunn_big_list <- list()
-pigment_list <- unique(data_long_calcs$Pigment)
+pigment_list <- plotted_pigs
 
 for(pig in pigment_list) {
   data_loop_dunn <- data_long_calcs %>% filter(Pigment == pig)
@@ -275,9 +283,6 @@ for(pig in pigment_list) {
   # dunnTest requires a formula: response ~ group
   dunnTest(FW.norm ~ Subgenus.Tissue, data = data_loop_dunn, method = "bh") -> dunn_big_list[[pig]]
 }
-
-# export only plotted pigments
-plotted_pigs <- c("Tot.Chl", "Chl.a", "Chl.b", "Chl.a.b", "Tot.Car", "VAZ.Car", "Neo.Car", "Lut.Car", "Lut.epo.Car",  "a.Car.Car", "b.Car.Car")
 
 excel_list <- list()
 for(pig in plotted_pigs) {
@@ -301,6 +306,9 @@ for(pig in plotted_pigs) {
     pmat[g1, g2] <- p
     pmat[g2, g1] <- p  # fill both halves for symmetry
   }
+  
+  # keep only lower triangle
+  pmat[upper.tri(pmat, diag = TRUE)] <- NA
   
   # cleanup to match your existing formatting
   rownames(pmat) <- gsub("__", ".Tissue.", rownames(pmat))
@@ -476,6 +484,7 @@ write.csv(dat_text_plot_kruskal, file = "../output/stat_results/dat_text_plot_kr
 # summary stats per Accession.No (summarizes those that have replicates), which is also per species: mean, n, and std dev  
 
 summary_accession <- data_long_calcs %>%
+  dplyr::filter(Pigment %in% plotted_pigs) %>%
   group_by(Subgenus, Species, Accession.No, Tissue.code, Pigment)  %>%
   dplyr::summarize(Mean = mean(FW.norm, na.rm = TRUE), n = sum(!is.na(FW.norm)), sd = sd(FW.norm, na.rm = TRUE))
 # replace NaN with NA (for 0/0 ratios)
@@ -488,6 +497,7 @@ write_csv(summary_accession, file = "../output/stat_results/pigments_species_sum
 
 # summary stats per subgenus x tissue x pigment: mean, n, and std dev  
 summary_subgenus <- data_long_calcs %>%
+  dplyr::filter(Pigment %in% plotted_pigs) %>%
   group_by(Subgenus, Tissue.code, Pigment)  %>%
   dplyr::summarize(Mean = mean(FW.norm, na.rm = TRUE), n = sum(!is.na(FW.norm)), sd = sd(FW.norm, na.rm = TRUE))
 
@@ -531,7 +541,10 @@ data_long_calcs_Grammica_plot <- dplyr::filter(data_long_calcs, Species %in% Gra
 
 # identify species with n = 1
 summary_accession_Grammica <- dplyr::filter(summary_accession, Species %in% Grammica )
-average_ns <- summary_accession_Grammica %>% group_by(Subgenus, Species, Accession.No, Tissue.code) %>% dplyr::summarize(average_n = mean(n))
+average_ns <- summary_accession_Grammica %>% 
+  dplyr::filter(Pigment %in% plotted_pigs) %>%
+  group_by(Subgenus, Species, Accession.No, Tissue.code) %>% 
+  dplyr::summarize(average_n = mean(n))
 
 summary_accession_n1 <- dplyr::filter(average_ns, average_n == 1 )
 summary_accession_n1 %>% select(Subgenus, Species, Accession.No, Tissue.code) -> summary_accession_n1
@@ -563,6 +576,7 @@ data_long_calcs_Grammica_plot$Species <- factor(data_long_calcs_Grammica_plot$Sp
 # some pigs were causing an error because it is 0 across all tissues in this species
 # i identified them manually with:
 data_long_calcs_Grammica_plot %>% 
+  dplyr::filter(Pigment %in% plotted_pigs) %>% 
   group_by(Pigment, Species) %>% 
   dplyr::summarize(mean = mean(FW.norm)) %>% 
   dplyr::filter(mean == 0) -> test_means_Grammica
@@ -581,6 +595,7 @@ test_means_Grammica
 
 # shapiro test for normality per pigment per species in Grammica only
 data_long_calcs_Grammica_plot %>% ungroup() %>% 
+  dplyr::filter(Pigment %in% plotted_pigs) %>% 
   dplyr::filter(., Subgenus == "Grammica") %>%
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_sandwichiana")) %>% 
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_californica")) %>% 
@@ -598,6 +613,7 @@ shapiro_pig_spe_Grammica
 
 # kruskal wallace per pigment per species in Grammica only
 data_long_calcs_Grammica_plot %>% ungroup() %>%
+  dplyr::filter(Pigment %in% plotted_pigs) %>% 
   dplyr::filter(., Subgenus == "Grammica") %>%
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_sandwichiana")) %>% 
   dplyr::filter(!(Pigment == "Neo.Car" & Species == "C_californica")) %>% 

@@ -1,14 +1,14 @@
 # http://www.sthda.com/english/wiki/r-xlsx-package-a-quick-start-guide-to-manipulate-excel-files-in-r
 # https://www.oracle.com/java/technologies/javase-jdk16-downloads.html
 # library(rJava)
-library(openxlsx) # new
+library(openxlsx) 
 library(tidyverse)
 library(plyr)
 library(rstatix)
 library(gtools)
 library(rstudioapi)
-library(FSA) # new
-library(data.table) # new
+library(FSA) 
+library(data.table) 
 
 # Getting the path of your current open file
 # if not using rstudio, simply set your working directory to the scripts/ location of this script
@@ -116,7 +116,7 @@ samples <- samples[!is.na(samples$Species), ]
 #### check for outliers ####
 
 # list of the metrics
-metrics.used <- c("Fm", "Ft", "Fo", "Fo.", "Fv.Fm", "φPSII", "ΦNPQ", "Φf.D", "NPQ", "X1.qP")
+metrics.used <- c("Fv.Fm", "φPSII", "ΦNPQ")
 # An observation with Cook’s distance larger than 4 times the mean Cook’s distance might be an outlier
 # http://r-statistics.co/Outlier-Treatment-With-R.html
 
@@ -256,23 +256,57 @@ data_no_outliers$Subgenus.Metric <- paste0(data_no_outliers$Subgenus, "__", data
 filter(data_no_outliers, Subgenus.Metric %in% kruskal_met_sub_sig_vector) -> only_sig_met
 
 # perform posthoc on these
-# filter for one Metric x subgenus then do a pairwise wilcox on those
+# filter for one Metric x subgenus then do a pairwise dunn on those
 # after getting it working for one, set up loop to do for all combos (for those that had a positive kruskal-wallace at least)
 # add these to individual plots that then get arranged with patchwork package
 
 only_sig_met$Metric <- droplevels(only_sig_met$Metric)
 subgenusMetric_list <- unique(only_sig_met$Subgenus.Metric)
 
-wilcox_list <- list()
+dunn_list <- list()
 for(submet in subgenusMetric_list) {
-  data_loop_wilcox <- only_sig_met %>% dplyr::filter(Subgenus.Metric == submet) 
-  data_loop_wilcox$Tissue.edit <- droplevels(data_loop_wilcox$Tissue.edit)
-  data_loop_wilcox$Metric <- droplevels(data_loop_wilcox$Metric)
-  pairwise.wilcox.test(data_loop_wilcox$Value, data_loop_wilcox$Tissue.edit, p.adjust.method = "BH") -> wilcox_list[[submet]]
+  data_loop_dunn <- only_sig_met %>% dplyr::filter(Subgenus.Metric == submet) 
+  data_loop_dunn$Tissue.edit <- droplevels(data_loop_dunn$Tissue.edit)
+  data_loop_dunn$Metric <- droplevels(data_loop_dunn$Metric)
+  
+  dunn_result <- dunnTest(Value ~ Tissue.edit, data = data_loop_dunn, method = "bh")
+  
+  # Extract comparisons and construct a lower-triangle matrix in your preferred tissue order
+  comps <- strsplit(dunn_result$res$Comparison, " - ")
+  desired_order <- c("l", "sdlg", "y", "o", "h", "f", "s")
+  group_names <- unique(unlist(comps))
+  ordered_groups <- desired_order[desired_order %in% group_names]
+  
+  pmat <- matrix(NA, nrow = length(ordered_groups), ncol = length(ordered_groups),
+                 dimnames = list(ordered_groups, ordered_groups))
+  
+  for (i in seq_along(comps)) {
+    g1 <- comps[[i]][1]
+    g2 <- comps[[i]][2]
+    pval <- dunn_result$res$P.adj[i]
+    if (g1 %in% ordered_groups && g2 %in% ordered_groups) {
+      if (which(ordered_groups == g1) > which(ordered_groups == g2)) {
+        pmat[g1, g2] <- pval
+      } else {
+        pmat[g2, g1] <- pval
+      }
+    }
+  }
+  
+  diag(pmat) <- NA
+  # ✅ Keep only lower triangle
+  pmat[upper.tri(pmat, diag = TRUE)] <- NA
+  
+  dunn_list[[submet]] <- structure(list(
+    method = "Dunn test with BH correction",
+    data.name = submet,
+    p.value = pmat
+  ), class = "pairwise.htest")
 }
 
+
 # save this list for later use 
-saveRDS(wilcox_list, file="../output/stat_results/wilcox_list.RData")
+saveRDS(dunn_list, file = "../output/stat_results/dunn_list.RData")
 
 
 #### all tissues x subgenera comparison, per metric ####
@@ -294,39 +328,72 @@ for(met in metric_list) {
 }
 
 # all highly sig, move on to post hoc 
-wilcox_big_list <- list()
+dunn_big_list <- list()
 metric_list <- unique(data_no_outliers$Metric)
-for(met in metric_list) {
-  data_loop_wilcox <- data_no_outliers %>% dplyr::filter(Metric == met) 
-  data_loop_wilcox$Tissue.edit_names <- droplevels(data_loop_wilcox$Tissue.edit_names)
-  pairwise.wilcox.test(data_loop_wilcox$Value, data_loop_wilcox$Subgenus.Tissue, p.adjust.method = "BH") -> wilcox_big_list[[met]]
+
+for (met in metric_list) {
+  data_loop_dunn <- data_no_outliers %>% dplyr::filter(Metric == met)
+  data_loop_dunn$Tissue.edit_names <- droplevels(data_loop_dunn$Tissue.edit_names)
+  
+  # Run Dunn test using formula syntax
+  dunn_result <- dunnTest(Value ~ Subgenus.Tissue, data = data_loop_dunn, method = "bh")
+  
+  # Store result
+  dunn_big_list[[met]] <- dunn_result
 }
+
 
 # export only plotted metrics
 plotted_mets <- c("Fv.Fm", "φPSII", "ΦNPQ")
-# format p-values, NAs, and column headers
 excel_list <- list()
-for(met in plotted_mets) {
-  sheet_loop <- wilcox_big_list[[met]][["p.value"]] 
-  rownames(sheet_loop) <- gsub(x = rownames(sheet_loop), pattern = "__", replacement = ".Tissue.")  
-  colnames(sheet_loop) <- gsub(x = colnames(sheet_loop), pattern = "__", replacement = ".Tissue.")
-  rownames(sheet_loop) <- gsub(x = rownames(sheet_loop), pattern = "_", replacement = ". ")  
-  colnames(sheet_loop) <- gsub(x = colnames(sheet_loop), pattern = "_", replacement = ". ") 
-  sheet_loop[is.na(sheet_loop)] <- "-"
-  rownames(sheet_loop) <- gsub(x = rownames(sheet_loop), pattern = ".Tissue.", replacement = "__")  
-  colnames(sheet_loop) <- gsub(x = colnames(sheet_loop), pattern = ".Tissue.", replacement = "__")  
-  rbind(colnames(sheet_loop), sheet_loop) -> sheet_loop
-  cbind(rownames(sheet_loop), sheet_loop) -> sheet_loop
-  setNames(rbind(names(sheet_loop), sheet_loop), names(sheet_loop)) -> sheet_loop
-  sheet_loop <- separate(as.data.frame(sheet_loop), 1, into = c("Subgenus", "Tissue"), sep = "__")
+
+for (met in plotted_mets) {
+  dunn_df <- dunn_big_list[[met]]$res
+  
+  # Parse comparison strings
+  dunn_df <- dunn_df %>%
+    separate(Comparison, into = c("Group1", "Group2"), sep = " - ") %>%
+    select(Group1, Group2, P.adj)
+  
+  # Create square matrix of adjusted p-values
+  group_levels <- unique(c(dunn_df$Group1, dunn_df$Group2))
+  pmat <- matrix(NA, nrow = length(group_levels), ncol = length(group_levels),
+                 dimnames = list(group_levels, group_levels))
+  
+  for (i in 1:nrow(dunn_df)) {
+    g1 <- dunn_df$Group1[i]
+    g2 <- dunn_df$Group2[i]
+    p <- dunn_df$P.adj[i]
+    pmat[g1, g2] <- p
+    pmat[g2, g1] <- p
+  }
+  
+  # ✅ Add this line to mask upper triangle and diagonal:
+  pmat[upper.tri(pmat, diag = TRUE)] <- NA
+  
+  # Format and clean up
+  rownames(pmat) <- gsub("__", ".Tissue.", rownames(pmat))
+  colnames(pmat) <- gsub("__", ".Tissue.", colnames(pmat))
+  rownames(pmat) <- gsub("_", ". ", rownames(pmat))
+  colnames(pmat) <- gsub("_", ". ", colnames(pmat))
+  pmat[is.na(pmat)] <- "-"
+  rownames(pmat) <- gsub(".Tissue.", "__", rownames(pmat))
+  colnames(pmat) <- gsub(".Tissue.", "__", colnames(pmat))
+  
+  pmat <- rbind(colnames(pmat), pmat)
+  pmat <- cbind(rownames(pmat), pmat)
+  pmat <- setNames(rbind(names(pmat), pmat), names(pmat))
+  sheet_loop <- separate(as.data.frame(pmat), 1, into = c("Subgenus", "Tissue"), sep = "__")
   sheet_loop <- as.data.frame(data.table::transpose(sheet_loop))
   sheet_loop <- separate(sheet_loop, 1, into = c("Subgenus", "Tissue"), sep = "__")
-  sheet_loop <- data.frame(lapply(sheet_loop, function(x) {gsub("Ipomoea.", "Ipomoea", x)})) 
+  sheet_loop <- data.frame(lapply(sheet_loop, function(x) {gsub("Ipomoea.", "Ipomoea", x)}))
   sheet_loop <- data.table::transpose(sheet_loop)
+  
   excel_list[[met]] <- sheet_loop
 }
 
-# save pairwise wilcox test with a different sheet for each metric
+
+# save pairwise dunn test with a different sheet for each metric
 write.xlsx(excel_list[["Fv.Fm"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="Fv.Fm", row.names=FALSE, col.names=FALSE)
 write.xlsx(excel_list[["φPSII"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="φPSII", append=TRUE, row.names=FALSE, col.names=FALSE)
 write.xlsx(excel_list[["ΦNPQ"]], file="../output/stat_results/pairwise_allmetsxtissues.xlsx", sheetName="ΦNPQ", append=TRUE, row.names=FALSE, col.names=FALSE)
@@ -368,14 +435,14 @@ write_csv(summary_subgenus, file = "../output/stat_results/fluorescence_subgenus
 # edit scientific notation 
 kruskal_met_sub$p.adj <- kruskal_met_sub$p.adj %>% p_round(digits = 2)
 
-# # will need to add wilcox test asterisks to each tissue in each box of the subgenus boxplot from posthoc_met_sub (including ns?)
+# # will need to add dunn test asterisks to each tissue in each box of the subgenus boxplot from posthoc_met_sub (including ns?)
 # # edit scientific notation
-# wilcox_df$p.adj <- wilcox_df$p.adj %>% p_round(digits = 2)
+# dunn_df$p.adj <- dunn_df$p.adj %>% p_round(digits = 2)
 
 
-# #### add significance groups to wilcox results, will want to peform per metmnet x subgenus (in a loop or pipe) ####
+# #### add significance groups to dunn results, will want to peform per metmnet x subgenus (in a loop or pipe) ####
 # # for now, pick one
-# wilcox_df %>% dplyr::filter(Metric == "Chl.a" & Subgenus == "Monogynella") -> wilcox_df_mono_Chl.a
+# dunn_df %>% dplyr::filter(Metric == "Chl.a" & Subgenus == "Monogynella") -> dunn_df_mono_Chl.a
 # ?multcompLetters
 
 
@@ -506,30 +573,65 @@ filter(data_no_outliers_Grammica_plot, Species.Metric %in% kruskal_Tissue_met_sp
 
 ####### #######
 # perform posthoc on these
-# filter for one fluorescence x subgenus then do a pairwise wilcox on those
+# filter for one fluorescence x subgenus then do a pairwise dunn on those
 # after getting it working for one, set up loop to do for all combos (for those that had a positive kruskal-wallace at least)
 # add these to individual plots that then get arranged with patchwork package
 
 only_sig_met_Grammica$Metric <- droplevels(only_sig_met_Grammica$Metric)
 specisfluorescence_list <- unique(only_sig_met_Grammica$Species.Metric)
 
-wilcox_list_Grammica <- list()
+dunn_list_Grammica <- list()
 for(spepig in specisfluorescence_list) {
-  data_loop_wilcox <- only_sig_met_Grammica %>% dplyr::filter(Species.Metric == spepig) 
-  data_loop_wilcox$Tissue.edit <- droplevels(data_loop_wilcox$Tissue.edit)
-  data_loop_wilcox$Metric <- droplevels(data_loop_wilcox$Metric)
-  pairwise.wilcox.test(data_loop_wilcox$Value, data_loop_wilcox$Tissue.edit, p.adjust.method = "BH") -> wilcox_list_Grammica[[spepig]]
+  data_loop_dunn <- only_sig_met_Grammica %>% dplyr::filter(Species.Metric == spepig)
+  data_loop_dunn$Tissue.edit <- droplevels(data_loop_dunn$Tissue.edit)
+  data_loop_dunn$Metric <- droplevels(data_loop_dunn$Metric)
+  
+  dunn_result <- dunnTest(Value ~ Tissue.edit, data = data_loop_dunn, method = "bh")
+  
+  # Extract comparisons and create a lower triangle matrix
+  comps <- strsplit(dunn_result$res$Comparison, " - ")
+  desired_order <- c("l", "sdlg", "y", "o", "h", "f", "s")
+  group_names <- unique(unlist(comps))
+  ordered_groups <- desired_order[desired_order %in% group_names]
+  
+  pmat <- matrix(NA, nrow = length(ordered_groups), ncol = length(ordered_groups),
+                 dimnames = list(ordered_groups, ordered_groups))
+  
+  for (i in seq_along(comps)) {
+    g1 <- comps[[i]][1]
+    g2 <- comps[[i]][2]
+    pval <- dunn_result$res$P.adj[i]
+    if (g1 %in% ordered_groups && g2 %in% ordered_groups) {
+      if (which(ordered_groups == g1) > which(ordered_groups == g2)) {
+        pmat[g1, g2] <- pval
+      } else {
+        pmat[g2, g1] <- pval
+      }
+    }
+  }
+  
+  diag(pmat) <- NA
+  
+  dunn_list_Grammica[[spepig]] <- structure(list(
+    method = "Dunn test with BH correction",
+    data.name = spepig,
+    p.value = pmat
+  ), class = "pairwise.htest")
 }
 
+# Save for later use
+saveRDS(dunn_list_Grammica, file = "../output/stat_results/dunn_list_Grammica.RData")
+
+
 # save this list for later use 
-saveRDS(wilcox_list_Grammica, file="../output/stat_results/wilcox_list_Grammica.RData")
+saveRDS(dunn_list_Grammica, file="../output/stat_results/dunn_list_Grammica.RData")
 
 
 # will need to add kruskal wallace results to each box of the subgenus boxplot from kruskal_Tissue_met_spe (including not significant global result)
 # edit scientific notation 
 kruskal_Tissue_met_spe_Grammica$p.adj <- kruskal_Tissue_met_spe_Grammica$p.adj %>% p_round(digits = 3)
 
-# # will need to add wilcox test asterisks to each tissue in each box of the subgenus boxplot from posthoc_met_spe (including ns?)
+# # will need to add dunn test asterisks to each tissue in each box of the subgenus boxplot from posthoc_met_spe (including ns?)
 
 
 # create a dataframe using the kruskal wallace results
