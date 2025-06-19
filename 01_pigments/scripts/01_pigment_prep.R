@@ -494,7 +494,7 @@ for (name in names(dunn_list)) {
 }
 
 # Save workbook
-saveWorkbook(wbdunn, file = "../output/stat_results/Appendix_S6_dunn_pairwise_pvalues_perpigpersubgenus.xlsx", overwrite = TRUE)
+saveWorkbook(wbdunn, file = "../output/stat_results/Appendix S6_dunn_pairwise_pvalues_perpigpersubgenus.xlsx", overwrite = TRUE)
 
 
 ##### prep for plotting #####

@@ -40,6 +40,9 @@ ase <- processAncStates('../output/output_ase_rjmcmc_10/ancestral_states_cuscuta
 # ?plotAncStatesPIE()
 # ?plotAncStatesMAP()
 
+# change Ipomoea tip label
+ase@phylo$tip.label[ase@phylo$tip.label == "Ipomoea_spp_AF146016_MG973745"] <- "Ipomoea nil"
+
 # plot
 dir.create("../output/plots")
 plotAncStatesPie(t = ase,
@@ -47,15 +50,16 @@ plotAncStatesPie(t = ase,
                  tip_labels_size = 2.25,
                  tip_pie_size = 1.0,
                  node_pie_size =1.5,
-                 node_labels_size = 2.25,
+                 # node_labels_size = 2.25,
                  tip_labels_italics = T,
-                 node_labels_as = "state_posterior"
+                 # node_labels_as = "state_posterior"
 ) +
   theme(legend.position = c(0.2,0.8),
         legend.text=element_text(size=6)) -> ase_rj_pie
 
 
-pdf("../output/plots/ASE_neoxanthin_rj_pie_10event_w_PP.pdf", width=6,height=3) 
+pdf("../output/plots/ASE_neoxanthin_rj_pie_10event.pdf", width=6,height=3) 
+# pdf("../output/plots/ASE_neoxanthin_rj_pie_10event_w_PP.pdf", width=6,height=3) 
 ase_rj_pie
 dev.off()
 
