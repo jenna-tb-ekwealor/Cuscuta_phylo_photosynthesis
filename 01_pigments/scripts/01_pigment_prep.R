@@ -177,12 +177,6 @@ is.na(data_long_calcs$FW.norm) <- sapply(data_long_calcs$FW.norm, is.nan)
 data_long_calcs %>% drop_na(FW.norm) -> data_long_calcs 
 
 
-# create table of just ipomoea lutein epoxide for correlation analysis
-ipo_le <- data_long_calcs %>% filter(Species == "Ipomoea_nil") %>% filter(Pigment == "Lutein.epoxide")
-# save a copy of this dataset
-write.csv(ipo_le, file = "../output/stat_results/ipomoea_le.csv", row.names = F)
-
-
 # STATISTICAL TESTS -------------------------------------------------------
 ##### overall patterns stats ##### 
 # export only plotted pigments
