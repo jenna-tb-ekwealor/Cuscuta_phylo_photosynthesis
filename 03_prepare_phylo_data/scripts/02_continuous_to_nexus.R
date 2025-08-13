@@ -3,6 +3,7 @@ library(plyr)
 library(ape)
 library(data.table)
 library(rstudioapi)
+library(stringr)
 
 # Getting the path of your current open file
 # if not using rstudio, simply set your working directory to the scripts/ location of this script
@@ -1178,4 +1179,82 @@ write.nexus.data(le_b.Car_seed, file = "../output/le_b.Car_seed.nex", format = "
 
 
 #  NEOXANTHIN ------------------------------------------------------------
+# ---- 1) Species -> tree-name mapping (edit if needed) ----
+species_map <- c(
+  "C_australis"      = "Cuscuta_australis",
+  "C_californica"    = "Cuscuta_californica",
+  "C_sandwichiana"   = "Cuscuta_sandwichiana",
+  "C_polygonorum"    = "Cuscuta_polygonorum",
+  "C_compacta"       = "Cuscuta_compacta",
+  "C_cephalanthii"   = "Cuscuta_cephalanthi",
+  "C_denticulata"    = "Cuscuta_denticulata",
+  "C_tasmanica"      = "Cuscuta_tasmanica",
+  "C_costaricensis"  = "Cuscuta_costaricensis",
+  "C_gracillima"     = "Cuscuta_gracillima",
+  "C_indecora"       = "Cuscuta_indecora",
+  "C_purpurata"      = "Cuscuta_purpurata",
+  "C_africana"       = "Cuscuta_africana",
+  "C_epithymum"      = "Cuscuta_epithymum",
+  "C_monogyna"       = "Cuscuta_monogyna",
+  "C_lupuliformis"   = "Cuscuta_lupuliformis",
+  "Ipomoea_nil"      = "Ipomoea_spp_AF146016_MG973745"
+)
+
+# ---- 2) Build presence/absence per species across all stages ----
+# neo = your full table with columns: Subgenus, Species, Accession.No, Tissue.code, Pigment, Mean, n, sd
+binary_anylife <- 
+  neo %>%
+  dplyr::group_by(Species) %>%
+  dplyr::summarise(
+    all_na  = all(is.na(Mean)),
+    any_pos = any(Mean > 0, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  dplyr::mutate(Species_tree = dplyr::recode(Species, !!!species_map, .default = NA_character_)) %>%
+  dplyr::filter(!is.na(Species_tree)) %>%
+  dplyr::mutate(code = dplyr::case_when(
+    all_na  ~ "?",
+    any_pos ~ "1",
+    TRUE    ~ "0"
+  )) %>%
+  dplyr::select(Species_tree, code)
+
+
+# add ? for Cuscuta africana
+binary_anylife <- 
+  binary_anylife %>%
+  bind_rows(tibble(Species_tree = "Cuscuta_africana", code = "?")) %>%
+  distinct(Species_tree, .keep_all = TRUE) %>%  # avoid duplicates if it already existed
+  arrange(Species_tree)
+
+# ---- 3) Write a 1-char NEXUS (STANDARD 0/1/?), nicely aligned ----
+write_binary_nexus <- function(df, file) {
+  stopifnot(all(c("Species_tree","code") %in% names(df)))
+  taxa  <- df$Species_tree
+  codes <- df$code
+  
+  pad   <- max(nchar(taxa)) + 2L
+  matrix_lines <- sprintf("%-*s%s", pad, taxa, codes)
+  
+  ntax  <- length(taxa)
+  nexus <- c(
+    "#NEXUS",
+    "",
+    "BEGIN DATA;",
+    sprintf("\tDIMENSIONS NTAX=%d NCHAR=1;", ntax),
+    '\tFORMAT DATATYPE=STANDARD SYMBOLS="01" MISSING=? GAP=-;',
+    "MATRIX",
+    matrix_lines,
+    "\t;",
+    "END;"
+  )
+  writeLines(nexus, file)
+  invisible(file)
+}
+
+# ---- 4) Run it ----
+# Sort to a consistent order if you like (here alphabetic)
+binary_anylife <- binary_anylife %>% arrange(Species_tree)
+
+write_binary_nexus(binary_anylife, file = "../output/neoxanthin.nex")
 
