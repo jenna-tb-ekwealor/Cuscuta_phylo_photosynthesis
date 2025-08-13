@@ -16,7 +16,7 @@
 T <- readTrees("../data/Cuscuta_rbcL_26S.raxml.support_chrom_sandwichiaina_omitted.tre")[1]
 
 ### Read in the continuous-character data
-data <- readContinuousCharacterData("../data/neo_phipsii_young.nex")
+data <- readContinuousCharacterData("../data/le_b.Car_old.nex")
 nchar <- data.nchar()
 
 ### Prune the tree to match the nexus character data tip list
@@ -74,7 +74,7 @@ X.clamp(data)
 mymodel = model(sigma2)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="../output/neo_phipsii_young/multivariate_BM.log", printgen=10) )
+monitors.append( mnModel(filename="../output/le_bCar_old/multivariate_BM.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, sigma2) )
 
 
