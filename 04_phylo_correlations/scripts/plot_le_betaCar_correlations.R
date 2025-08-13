@@ -39,7 +39,7 @@ BF_negative <- list()
 
 for(i in 1:length(lifestages)) {
   
-  filename <- paste0("../output/le_bCarCar_",lifestages[i],"/multivariate_BM.log")
+  filename <- paste0("../output/le_bCar_",lifestages[i],"/multivariate_BM.log")
   print(filename)
   
   samples <- RevGadgets::readTrace(filename)
@@ -114,12 +114,12 @@ stats <- data.frame(file_name, BF_correlated, BF_positive, BF_negative)
 
 stats %>%
   dplyr::mutate("Life stage" = case_when(
-    file_name == "../output/le_bCarCar_seedling/multivariate_BM.log" ~ "1", 
-    file_name == "../output/le_bCarCar_young/multivariate_BM.log" ~ "2", 
-    file_name == "../output/le_bCarCar_old/multivariate_BM.log" ~ "3", 
-    file_name == "../output/le_bCarCar_haustorium/multivariate_BM.log" ~ "4", 
-    file_name == "../output/le_bCarCar_flower/multivariate_BM.log" ~ "5", 
-    file_name == "../output/le_bCarCar_seed/multivariate_BM.log" ~ "6"), .before = file_name) %>% dplyr::select("Life stage", BF_correlated, BF_positive, BF_negative) -> stats
+    file_name == "../output/le_bCar_seedling/multivariate_BM.log" ~ "1", 
+    file_name == "../output/le_bCar_young/multivariate_BM.log" ~ "2", 
+    file_name == "../output/le_bCar_old/multivariate_BM.log" ~ "3", 
+    file_name == "../output/le_bCar_haustorium/multivariate_BM.log" ~ "4", 
+    file_name == "../output/le_bCar_flower/multivariate_BM.log" ~ "5", 
+    file_name == "../output/le_bCar_seed/multivariate_BM.log" ~ "6"), .before = file_name) %>% dplyr::select("Life stage", BF_correlated, BF_positive, BF_negative) -> stats
 
 # add significance asterisks to stats table, a la  kass and raftery 1995
 # 0 to 2 ns
@@ -269,7 +269,7 @@ density_viol
 
 
 
-pdf("../output/plots/correlations_le_b.Car.Car_density_violin.pdf", width=6,height=5) 
+pdf("../output/plots/correlations_le_b.Car_density_violin.pdf", width=6,height=5) 
 density_viol
 dev.off()
 
