@@ -1,0 +1,23 @@
+#NEXUS
+[Data written by write.nexus.data.R, Wed Aug 13 19:20:23 2025]
+BEGIN DATA;
+  DIMENSIONS NTAX=14 NCHAR=2;
+  FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=- INTERLEAVE=NO;
+  MATRIX
+    Cuscuta_purpurata          2.39287636246389	3.59165012538338
+    Cuscuta_epithymum          3.50393514998551	4.74282362650689
+    Cuscuta_australis          5.823282445756	45.0028463344113
+    Cuscuta_californica        6.72804989961386	15.1293402063939
+    Cuscuta_cephalanthi        8.36379658686826	8.72973707194583
+    Cuscuta_compacta           11.6251258998005	8.51601058162261
+    Cuscuta_costaricensis      4.27157378496852	28.4772603023674
+    Cuscuta_denticulata        5.24193091778794	13.996258502171
+    Cuscuta_gracillima         10.9560355714532	9.38798697874845
+    Cuscuta_indecora           0.59069552614896	17.6472475901363
+    Cuscuta_polygonorum        17.0762596599236	46.7479971494687
+    Cuscuta_sandwichiana       7.50496051409009	10.0436039386976
+    Cuscuta_tasmanica          6.49447343308458	15.3840654129758
+    Cuscuta_monogyna           2.76375668958402	10.3535800329575
+  ;
+END;
+
