@@ -188,7 +188,7 @@ write.csv(ipo_b.Car, file = "../output/ipomoea_b.Car.csv", row.names = F)
 # STATISTICAL TESTS -------------------------------------------------------
 ##### overall patterns stats ##### 
 # export only correlation pigments
-correlation_pigs <- c("Neoxanthin", "Lutein.epoxide", "b.Carotene")
+correlation_pigs <- c("Neoxanthin", "Lutein.epoxide", "b.Carotene", "Lutein")
 
 ##### summary stats #####
 # summary stats per Accession.No (summarizes those that have replicates), which is also per species: mean, n, and std dev  

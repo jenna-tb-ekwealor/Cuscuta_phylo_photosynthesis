@@ -15,6 +15,7 @@ setwd(dirname(current_path ))
 pigments <- read.csv("../output/pigments_species_summary_corrs.csv")
 
 le <- pigments %>% filter(Pigment == "Lutein.epoxide")
+lut <- pigments %>% filter(Pigment == "Lutein")
 neo <- pigments %>% filter(Pigment == "Neoxanthin")
 b.Car <- pigments %>% filter(Pigment == "b.Carotene")
 
@@ -1176,6 +1177,377 @@ rownames(le_b.Car_seed) <- c("le", "b.Car") # did not need perhaps
 write.nexus.data(le_b.Car_seed, file = "../output/le_b.Car_seed.nex", format = "continuous", datablock = TRUE)
 
 
+# BETA CAROTENE LUTEIN ------------------------------------------------------------
+##### for seedling #####
+lut_seedling <- lut %>% filter(Tissue.code == "sdlg") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(lut_seedling)[colnames(lut_seedling) == 'Mean'] <- 'le'
+
+b.Car_seedling <- b.Car %>% filter(Tissue.code == "sdlg") %>% dplyr::select(Species, Mean)
+# change "mean" to b.Car
+colnames(b.Car_seedling)[colnames(b.Car_seedling) == 'Mean'] <- 'b.Car'
+
+
+# join lut and b.Car 
+lut_b.Car_seedling <- full_join(lut_seedling, b.Car_seedling, by = "Species")
+
+# replace species names with how they are listed in the tree
+lut_b.Car_seedling %>%
+  dplyr::mutate(Species_tree = case_when(
+    Species == "C_australis"  ~  "Cuscuta_australis", 
+    Species == "C_californica"  ~  "Cuscuta_californica",
+    Species == "C_sandwichiana" ~  "Cuscuta_sandwichiana",
+    Species == "C_sandwichiana_2"	~ "Cuscuta_sandwichiana",
+    Species == "C_polygonorum"	~ "Cuscuta_polygonorum",
+    Species == "C_compacta"	~ "Cuscuta_compacta",
+    Species == "C_cephalanthii"	~ "Cuscuta_cephalanthi",
+    Species == "C_denticulata"	~ "Cuscuta_denticulata",
+    Species == "C_tasmanica"	~ "Cuscuta_tasmanica",
+    Species == "C_costaricensis"	~ "Cuscuta_costaricensis", 
+    Species == "C_gracillima"	~ "Cuscuta_gracillima",
+    Species == "C_indecora"	~ "Cuscuta_indecora",
+    Species == "C_purpurata"	~ "Cuscuta_purpurata", 
+    Species == "C_africana"	~ "Cuscuta_africana",
+    Species == "C_epithymum"	~ "Cuscuta_epithymum",
+    Species == "C_monogyna"	~ "Cuscuta_monogyna",
+    Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> lut_b.Car_seedling
+
+# omit Ipomoea 
+lut_b.Car_seedling <- lut_b.Car_seedling %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+
+lut_b.Car_seedling <- lut_b.Car_seedling %>% dplyr::select(Species_tree, le, b.Car)
+
+lut_b.Car_seedling <- na.omit(lut_b.Car_seedling)
+
+# transpose df 
+lut_b.Car_seedling <- data.table::transpose(lut_b.Car_seedling)
+names(lut_b.Car_seedling) <- lut_b.Car_seedling[1,] # move row 1 to col names
+lut_b.Car_seedling <- lut_b.Car_seedling[-1,] # delete first row
+# add rownames
+rownames(lut_b.Car_seedling) <- c("lut" , "b.Car") # did not need perhaps 
+
+# write to nexus 
+write.nexus.data(lut_b.Car_seedling, file = "../output/lut_b.Car_seedling.nex", format = "continuous", datablock = TRUE)
+
+
+
+
+
+
+##### for young stem #####
+lut_young <- lut %>% filter(Tissue.code == "y") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(lut_young)[colnames(lut_young) == 'Mean'] <- 'le'
+
+b.Car_young <- b.Car %>% filter(Tissue.code == "y") %>% dplyr::select(Species, Mean)
+# change "mean" to b.Car
+colnames(b.Car_young)[colnames(b.Car_young) == 'Mean'] <- 'b.Car'
+
+
+# join lut and b.Car 
+lut_b.Car_young <- full_join(lut_young, b.Car_young, by = "Species")
+
+
+# make a duplicate of C_sandwichiana
+# lut_b.Car_young_C_sandwichiana <- lut_b.Car_young %>% filter(Species == "C_sandwichiana") 
+# lut_b.Car_young_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", lut_b.Car_young_C_sandwichiana$Species)
+
+# join second sandwichiana to full 
+# lut_b.Car_young <- rbind(lut_b.Car_young, lut_b.Car_young_C_sandwichiana)
+
+# replace species names with how they are listed in the tree
+lut_b.Car_young %>%
+  dplyr::mutate(Species_tree = case_when(
+    Species == "C_australis"  ~  "Cuscuta_australis", 
+    Species == "C_californica"  ~  "Cuscuta_californica",
+    Species == "C_sandwichiana" ~  "Cuscuta_sandwichiana",
+    Species == "C_sandwichiana_2"	~ "Cuscuta_sandwichiana",
+    Species == "C_polygonorum"	~ "Cuscuta_polygonorum",
+    Species == "C_compacta"	~ "Cuscuta_compacta",
+    Species == "C_cephalanthii"	~ "Cuscuta_cephalanthi",
+    Species == "C_denticulata"	~ "Cuscuta_denticulata",
+    Species == "C_tasmanica"	~ "Cuscuta_tasmanica",
+    Species == "C_costaricensis"	~ "Cuscuta_costaricensis", 
+    Species == "C_gracillima"	~ "Cuscuta_gracillima",
+    Species == "C_indecora"	~ "Cuscuta_indecora",
+    Species == "C_purpurata"	~ "Cuscuta_purpurata", 
+    Species == "C_africana"	~ "Cuscuta_africana",
+    Species == "C_epithymum"	~ "Cuscuta_epithymum",
+    Species == "C_monogyna"	~ "Cuscuta_monogyna",
+    Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> lut_b.Car_young
+
+# omit Ipomoea 
+lut_b.Car_young <- lut_b.Car_young %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+
+lut_b.Car_young <- lut_b.Car_young %>% dplyr::select(Species_tree, le, b.Car)
+
+lut_b.Car_young <- na.omit(lut_b.Car_young)
+
+# transpose df 
+lut_b.Car_young <- data.table::transpose(lut_b.Car_young)
+names(lut_b.Car_young) <- lut_b.Car_young[1,] # move row 1 to col names
+lut_b.Car_young <- lut_b.Car_young[-1,] # delete first row
+# add rownames
+rownames(lut_b.Car_young) <- c("lut" , "b.Car") # did not need perhaps 
+
+# write to nexus 
+write.nexus.data(lut_b.Car_young, file  = "../output/lut_b.Car_young.nex", format = "continuous", datablock = TRUE)
+
+
+
+
+
+##### for old stem #####
+lut_old <- lut %>% filter(Tissue.code == "o") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(lut_old)[colnames(lut_old) == 'Mean'] <- 'le'
+
+b.Car_old <- b.Car %>% filter(Tissue.code == "o") %>% dplyr::select(Species, Mean)
+# change "mean" to b.Car
+colnames(b.Car_old)[colnames(b.Car_old) == 'Mean'] <- 'b.Car'
+
+
+# join lut and b.Car 
+lut_b.Car_old <- full_join(lut_old, b.Car_old, by = "Species")
+
+
+# make a duplicate of C_sandwichiana
+# lut_b.Car_old_C_sandwichiana <- lut_b.Car_old %>% filter(Species == "C_sandwichiana") 
+# lut_b.Car_old_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", lut_b.Car_old_C_sandwichiana$Species)
+
+# join second sandwichiana to full 
+# lut_b.Car_old <- rbind(lut_b.Car_old, lut_b.Car_old_C_sandwichiana)
+
+# replace species names with how they are listed in the tree
+lut_b.Car_old %>%
+  dplyr::mutate(Species_tree = case_when(
+    Species == "C_australis"  ~  "Cuscuta_australis", 
+    Species == "C_californica"  ~  "Cuscuta_californica",
+    Species == "C_sandwichiana" ~  "Cuscuta_sandwichiana",
+    Species == "C_sandwichiana_2"	~ "Cuscuta_sandwichiana",
+    Species == "C_polygonorum"	~ "Cuscuta_polygonorum",
+    Species == "C_compacta"	~ "Cuscuta_compacta",
+    Species == "C_cephalanthii"	~ "Cuscuta_cephalanthi",
+    Species == "C_denticulata"	~ "Cuscuta_denticulata",
+    Species == "C_tasmanica"	~ "Cuscuta_tasmanica",
+    Species == "C_costaricensis"	~ "Cuscuta_costaricensis", 
+    Species == "C_gracillima"	~ "Cuscuta_gracillima",
+    Species == "C_indecora"	~ "Cuscuta_indecora",
+    Species == "C_purpurata"	~ "Cuscuta_purpurata", 
+    Species == "C_africana"	~ "Cuscuta_africana",
+    Species == "C_epithymum"	~ "Cuscuta_epithymum",
+    Species == "C_monogyna"	~ "Cuscuta_monogyna",
+    Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> lut_b.Car_old
+
+# omit Ipomoea 
+lut_b.Car_old <- lut_b.Car_old %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+
+lut_b.Car_old <- lut_b.Car_old %>% dplyr::select(Species_tree, le, b.Car)
+
+lut_b.Car_old <- na.omit(lut_b.Car_old)
+
+# transpose df 
+lut_b.Car_old <- data.table::transpose(lut_b.Car_old)
+names(lut_b.Car_old) <- lut_b.Car_old[1,] # move row 1 to col names
+lut_b.Car_old <- lut_b.Car_old[-1,] # delete first row
+# add rownames
+rownames(lut_b.Car_old) <- c("lut" , "b.Car") # did not need perhaps 
+
+# write to nexus 
+write.nexus.data(lut_b.Car_old, file  = "../output/lut_b.Car_old.nex", format = "continuous", datablock = TRUE)
+
+
+
+
+##### for haustorium #####
+lut_haustorium <- lut %>% filter(Tissue.code == "h") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(lut_haustorium)[colnames(lut_haustorium) == 'Mean'] <- 'le'
+
+b.Car_haustorium <- b.Car %>% filter(Tissue.code == "h") %>% dplyr::select(Species, Mean)
+# change "mean" to b.Car
+colnames(b.Car_haustorium)[colnames(b.Car_haustorium) == 'Mean'] <- 'b.Car'
+
+
+# join lut and b.Car 
+lut_b.Car_haustorium <- full_join(lut_haustorium, b.Car_haustorium, by = "Species")
+
+
+# make a duplicate of C_sandwichiana
+# lut_b.Car_haustorium_C_sandwichiana <- lut_b.Car_haustorium %>% filter(Species == "C_sandwichiana") 
+# lut_b.Car_haustorium_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", lut_b.Car_haustorium_C_sandwichiana$Species)
+
+# join second sandwichiana to full 
+# lut_b.Car_haustorium <- rbind(lut_b.Car_haustorium, lut_b.Car_haustorium_C_sandwichiana)
+
+# replace species names with how they are listed in the tree
+lut_b.Car_haustorium %>%
+  dplyr::mutate(Species_tree = case_when(
+    Species == "C_australis"  ~  "Cuscuta_australis", 
+    Species == "C_californica"  ~  "Cuscuta_californica",
+    Species == "C_sandwichiana" ~  "Cuscuta_sandwichiana",
+    Species == "C_sandwichiana_2"	~ "Cuscuta_sandwichiana",
+    Species == "C_polygonorum"	~ "Cuscuta_polygonorum",
+    Species == "C_compacta"	~ "Cuscuta_compacta",
+    Species == "C_cephalanthii"	~ "Cuscuta_cephalanthi",
+    Species == "C_denticulata"	~ "Cuscuta_denticulata",
+    Species == "C_tasmanica"	~ "Cuscuta_tasmanica",
+    Species == "C_costaricensis"	~ "Cuscuta_costaricensis", 
+    Species == "C_gracillima"	~ "Cuscuta_gracillima",
+    Species == "C_indecora"	~ "Cuscuta_indecora",
+    Species == "C_purpurata"	~ "Cuscuta_purpurata", 
+    Species == "C_africana"	~ "Cuscuta_africana",
+    Species == "C_epithymum"	~ "Cuscuta_epithymum",
+    Species == "C_monogyna"	~ "Cuscuta_monogyna",
+    Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> lut_b.Car_haustorium
+
+# omit Ipomoea 
+lut_b.Car_haustorium <- lut_b.Car_haustorium %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+
+lut_b.Car_haustorium <- lut_b.Car_haustorium %>% dplyr::select(Species_tree, le, b.Car)
+
+lut_b.Car_haustorium <- na.omit(lut_b.Car_haustorium)
+
+# transpose df 
+lut_b.Car_haustorium <- data.table::transpose(lut_b.Car_haustorium)
+names(lut_b.Car_haustorium) <- lut_b.Car_haustorium[1,] # move row 1 to col names
+lut_b.Car_haustorium <- lut_b.Car_haustorium[-1,] # delete first row
+# add rownames
+rownames(lut_b.Car_haustorium) <- c("lut" , "b.Car") # did not need perhaps 
+
+# write to nexus 
+write.nexus.data(lut_b.Car_haustorium, file  = "../output/lut_b.Car_haustorium.nex", format = "continuous", datablock = TRUE)
+
+
+
+
+##### for flower #####
+lut_flower <- lut %>% filter(Tissue.code == "f") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(lut_flower)[colnames(lut_flower) == 'Mean'] <- 'le'
+
+b.Car_flower <- b.Car %>% filter(Tissue.code == "f") %>% dplyr::select(Species, Mean)
+# change "mean" to b.Car
+colnames(b.Car_flower)[colnames(b.Car_flower) == 'Mean'] <- 'b.Car'
+
+
+# join lut and b.Car 
+lut_b.Car_flower <- full_join(lut_flower, b.Car_flower, by = "Species")
+
+
+# make a duplicate of C_sandwichiana
+# lut_b.Car_flower_C_sandwichiana <- lut_b.Car_flower %>% filter(Species == "C_sandwichiana") 
+# lut_b.Car_flower_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", lut_b.Car_flower_C_sandwichiana$Species)
+
+# join second sandwichiana to full 
+# lut_b.Car_flower <- rbind(lut_b.Car_flower, lut_b.Car_flower_C_sandwichiana)
+
+# replace species names with how they are listed in the tree
+lut_b.Car_flower %>%
+  dplyr::mutate(Species_tree = case_when(
+    Species == "C_australis"  ~  "Cuscuta_australis", 
+    Species == "C_californica"  ~  "Cuscuta_californica",
+    Species == "C_sandwichiana" ~  "Cuscuta_sandwichiana",
+    Species == "C_sandwichiana_2"	~ "Cuscuta_sandwichiana",
+    Species == "C_polygonorum"	~ "Cuscuta_polygonorum",
+    Species == "C_compacta"	~ "Cuscuta_compacta",
+    Species == "C_cephalanthii"	~ "Cuscuta_cephalanthi",
+    Species == "C_denticulata"	~ "Cuscuta_denticulata",
+    Species == "C_tasmanica"	~ "Cuscuta_tasmanica",
+    Species == "C_costaricensis"	~ "Cuscuta_costaricensis", 
+    Species == "C_gracillima"	~ "Cuscuta_gracillima",
+    Species == "C_indecora"	~ "Cuscuta_indecora",
+    Species == "C_purpurata"	~ "Cuscuta_purpurata", 
+    Species == "C_africana"	~ "Cuscuta_africana",
+    Species == "C_epithymum"	~ "Cuscuta_epithymum",
+    Species == "C_monogyna"	~ "Cuscuta_monogyna",
+    Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> lut_b.Car_flower
+
+# omit Ipomoea 
+lut_b.Car_flower <- lut_b.Car_flower %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+
+lut_b.Car_flower <- lut_b.Car_flower %>% dplyr::select(Species_tree, le, b.Car)
+
+lut_b.Car_flower <- na.omit(lut_b.Car_flower)
+
+# transpose df 
+lut_b.Car_flower <- data.table::transpose(lut_b.Car_flower)
+names(lut_b.Car_flower) <- lut_b.Car_flower[1,] # move row 1 to col names
+lut_b.Car_flower <- lut_b.Car_flower[-1,] # delete first row
+# add rownames
+rownames(lut_b.Car_flower) <- c("lut" , "b.Car") # did not need perhaps 
+
+# write to nexus 
+write.nexus.data(lut_b.Car_flower, file  = "../output/lut_b.Car_flower.nex", format = "continuous", datablock = TRUE)
+
+
+
+
+##### for seed #####
+lut_seed <- lut %>% filter(Tissue.code == "s") %>% dplyr::select(Species, Mean)
+# change "Mean" to le
+colnames(lut_seed)[colnames(lut_seed) == 'Mean'] <- 'le'
+
+b.Car_seed <- b.Car %>% filter(Tissue.code == "s") %>% dplyr::select(Species, Mean)
+# change "mean" to b.Car
+colnames(b.Car_seed)[colnames(b.Car_seed) == 'Mean'] <- 'b.Car'
+
+
+# join lut and b.Car 
+lut_b.Car_seed <- full_join(lut_seed, b.Car_seed, by = "Species")
+
+
+# make a duplicate of C_sandwichiana
+# lut_b.Car_seed_C_sandwichiana <- lut_b.Car_seed %>% filter(Species == "C_sandwichiana") 
+# lut_b.Car_seed_C_sandwichiana$Species <- gsub("C_sandwichiana", "C_sandwichiana_2", lut_b.Car_seed_C_sandwichiana$Species)
+
+# join second sandwichiana to full 
+# lut_b.Car_seed <- rbind(lut_b.Car_seed, lut_b.Car_seed_C_sandwichiana)
+
+# replace species names with how they are listed in the tree
+lut_b.Car_seed %>%
+  dplyr::mutate(Species_tree = case_when(
+    Species == "C_australis"  ~  "Cuscuta_australis", 
+    Species == "C_californica"  ~  "Cuscuta_californica",
+    Species == "C_sandwichiana" ~  "Cuscuta_sandwichiana",
+    Species == "C_sandwichiana_2"	~ "Cuscuta_sandwichiana",
+    Species == "C_polygonorum"	~ "Cuscuta_polygonorum",
+    Species == "C_compacta"	~ "Cuscuta_compacta",
+    Species == "C_cephalanthii"	~ "Cuscuta_cephalanthi",
+    Species == "C_denticulata"	~ "Cuscuta_denticulata",
+    Species == "C_tasmanica"	~ "Cuscuta_tasmanica",
+    Species == "C_costaricensis"	~ "Cuscuta_costaricensis", 
+    Species == "C_gracillima"	~ "Cuscuta_gracillima",
+    Species == "C_indecora"	~ "Cuscuta_indecora",
+    Species == "C_purpurata"	~ "Cuscuta_purpurata", 
+    Species == "C_africana"	~ "Cuscuta_africana",
+    Species == "C_epithymum"	~ "Cuscuta_epithymum",
+    Species == "C_monogyna"	~ "Cuscuta_monogyna",
+    Species == "C_lupuliformis" ~ "Cuscuta_lupuliformis",
+    Species == "Ipomoea_nil" ~ "Ipomoea_spp_AF146016_MG973745"), .before = Species) -> lut_b.Car_seed
+
+# omit Ipomoea 
+lut_b.Car_seed <- lut_b.Car_seed %>% filter(Species_tree != "Ipomoea_spp_AF146016_MG973745")
+
+lut_b.Car_seed <- lut_b.Car_seed %>% dplyr::select(Species_tree, le, b.Car)
+
+lut_b.Car_seed <- na.omit(lut_b.Car_seed)
+
+# transpose df 
+lut_b.Car_seed <- data.table::transpose(lut_b.Car_seed)
+names(lut_b.Car_seed) <- lut_b.Car_seed[1,] # move row 1 to col names
+lut_b.Car_seed <- lut_b.Car_seed[-1,] # delete first row
+# add rownames
+rownames(lut_b.Car_seed) <- c("lut" , "b.Car") # did not need perhaps 
+
+
+# write to nexus 
+write.nexus.data(lut_b.Car_seed, file  = "../output/lut_b.Car_seed.nex", format = "continuous", datablock = TRUE)
 
 
 #  NEOXANTHIN ------------------------------------------------------------
